@@ -1,0 +1,19 @@
+skills:
+  - name: design-agent-tool
+    description: Use when adding, modifying, or reviewing a model-callable tool.
+    path: .claude/skills/design-agent-tool/SKILL.md
+  - name: design-agent-memory
+    description: Use when adding or reviewing memory search, memory writes, promotion, contradiction, or recall behavior.
+    path: .claude/skills/design-agent-memory/SKILL.md
+  - name: design-source-lane
+    description: Use when adding a source lane, source-authority rule, identity-resolution path, or noisy-lane promotion policy.
+    path: .claude/skills/design-source-lane/SKILL.md
+  - name: design-context-engine
+    description: Use when changing context assembly, compaction, retrieval, or prompt budgeting.
+    path: .claude/skills/design-context-engine/SKILL.md
+  - name: build-agent-eval
+    description: Use when adding tests or evals for agentic behavior.
+    path: .claude/skills/build-agent-eval/SKILL.md
+  - name: review-agentic-architecture
+    description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
+    path: .claude/skills/review-agentic-architecture/SKILL.md

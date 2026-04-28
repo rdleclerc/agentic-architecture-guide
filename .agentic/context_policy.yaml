@@ -1,0 +1,38 @@
+budget:
+  max_context_tokens: 120000
+  reserved_for_response: 8000
+  reserved_for_tool_results: 20000
+always_include:
+  - root_instructions
+  - current_user_request
+  - active_task_state
+  - safety_policy
+  - source_authority_summary
+include_by_retrieval:
+  - semantic_memory
+  - episodic_memory
+  - source_records
+  - relevant_files
+  - prior_artifacts
+include_by_activation:
+  - full_tool_schema
+  - full_skill_body
+  - long_reference_docs
+compaction:
+  trigger_at_context_fraction: 0.75
+  preserve:
+    - user_goal
+    - constraints
+    - open_questions
+    - decisions
+    - evidence
+    - source_handles
+    - identity_resolution_state
+    - source_authority_decisions
+    - contradictions
+    - attention_policy
+    - adoption_state
+    - pending_tool_results
+    - pending_approvals
+    - artifacts
+source_ledger_required: true

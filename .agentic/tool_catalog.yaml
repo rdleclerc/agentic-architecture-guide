@@ -1,0 +1,86 @@
+tools:
+  - name: context_inspect
+    description_for_model: Inspect what context is currently loaded and why.
+    side_effects: none
+    permission_level: public
+    idempotency_required: false
+  - name: context_request_more
+    description_for_model: Request additional files, memory, source records, tool schemas, or skill bodies when current context is insufficient.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: tool_search
+    description_for_model: Search available tools by task need.
+    side_effects: none
+    permission_level: public
+    idempotency_required: false
+  - name: tool_inspect
+    description_for_model: Load the full schema and usage guidance for a named tool.
+    side_effects: none
+    permission_level: public
+    idempotency_required: false
+  - name: skill_search
+    description_for_model: Search available procedural skills by task need.
+    side_effects: none
+    permission_level: public
+    idempotency_required: false
+  - name: skill_load
+    description_for_model: Load the full instructions and supporting files for a named skill.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: memory_search
+    description_for_model: Search durable memory by semantic query, namespace, entity, freshness, and filters.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: memory_get
+    description_for_model: Retrieve a specific memory by id with provenance and status.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: memory_write_candidate
+    description_for_model: Propose a memory write with claim, scope, evidence, confidence, and sensitivity.
+    side_effects: write
+    permission_level: workspace
+    idempotency_required: true
+  - name: memory_promote
+    description_for_model: Promote a candidate memory according to memory policy.
+    side_effects: write
+    permission_level: sensitive
+    idempotency_required: true
+  - name: source_authority_lookup
+    description_for_model: Determine which source roles can establish, override, corroborate, or only suggest a claim category.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: identity_resolve
+    description_for_model: Resolve an entity, person, account, project, or source handle before promoting claims or merging evidence.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: source_lane_health
+    description_for_model: Inspect freshness, last run status, contradictions, and open review items for a source lane.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: attention_gate
+    description_for_model: Decide whether to stay silent, record internally, ask, notify, interrupt, or request approval.
+    side_effects: none
+    permission_level: workspace
+    idempotency_required: false
+  - name: request_human_approval
+    description_for_model: Pause and ask a human to approve, reject, or edit a risky proposed action.
+    side_effects: external_write
+    permission_level: approval_required
+    idempotency_required: true
+  - name: checkpoint_save
+    description_for_model: Save current agent state for durability and replay.
+    side_effects: write
+    permission_level: workspace
+    idempotency_required: true
+  - name: run_eval
+    description_for_model: Run an agentic behavior eval or test suite.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false

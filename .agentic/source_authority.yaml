@@ -1,0 +1,41 @@
+artifact_roles:
+  raw_source: Original evidence captured from an external or internal system.
+  structured_truth: Normalized claims, entities, relationships, commitments, and state.
+  retrieval_index: Search surface over evidence; retrieves but does not decide authority.
+  recall_memory: Operator or session continuity; useful but not automatically authoritative.
+  synthesis_artifact: Human-readable page, report, dashboard, brief, or memo.
+  candidate_signal: Open question, contradiction, stale lane, alert candidate, or review item.
+  sidecar: Helper system that may improve workflow without owning truth by default.
+  outbound_artifact: External or user-visible output such as email, memo, alert, or report.
+
+source_lane_contract_required_fields:
+  - lane_id
+  - owner
+  - raw_capture_path_or_table
+  - idempotency_key
+  - identity_resolution_policy
+  - claim_categories
+  - authority_by_claim_category
+  - freshness_policy
+  - contradiction_policy
+  - promotion_policy
+  - health_check
+  - synthesis_targets
+  - external_sharing_policy
+
+adoption_states:
+  - reference_only
+  - shadow_mode
+  - read_only
+  - candidate_write
+  - write_enabled
+  - canonical
+  - deprecated
+  - retired
+
+policies:
+  synthesis_artifacts_are_not_truth_by_default: true
+  retrieval_indexes_cannot_override_structured_truth: true
+  sidecars_start_reference_only_or_shadow_mode: true
+  noisy_lanes_promote_to_review_queue_by_default: true
+  identity_resolution_required_before_entity_claim_promotion: true

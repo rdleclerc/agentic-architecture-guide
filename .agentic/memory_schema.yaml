@@ -1,0 +1,41 @@
+memory:
+  required_fields:
+    - id
+    - type
+    - scope
+    - claim
+    - evidence
+    - confidence
+    - sensitivity
+    - status
+    - created_at
+    - updated_at
+  type:
+    enum: [working, episodic, semantic, procedural]
+  status:
+    enum: [candidate, promoted, superseded, refuted, expired]
+  sensitivity:
+    enum: [public, internal, confidential, restricted]
+  scope:
+    user_id: optional string
+    org_id: optional string
+    repo: optional string
+    project: optional string
+    entity: optional string
+  evidence_item:
+    source_type: file | message | tool_result | human_review | external_doc | source_record | synthesis_artifact
+    source_ref: string
+    summary: string
+    authority_role: optional string
+    observed_at: optional datetime
+  authority:
+    source_lane: optional string
+    claim_category: optional string
+    authority_rank: optional integer
+    synthesis_only: optional boolean
+  policy:
+    promote_requires_evidence: true
+    contradiction_handling_required: true
+    identity_resolution_required_for_entity_claims: true
+    trace_usage_required: true
+    synthesis_artifacts_are_not_truth_by_default: true

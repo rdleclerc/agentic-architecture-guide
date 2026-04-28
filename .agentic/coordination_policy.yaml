@@ -1,0 +1,28 @@
+roles:
+  integrator:
+    owns:
+      - final design choice
+      - shared-file edits
+      - file ownership plan
+      - final verification
+      - final handoff
+  contributor:
+    owns:
+      - research
+      - evidence notes
+      - proposal files
+    default_write_permission: proposal_only
+
+rules:
+  one_integrator_for_shared_work: true
+  contributors_need_disjoint_write_set_for_implementation: true
+  durable_coordination_in_files_not_private_transcripts: true
+  final_verification_owner_required: true
+  adoption_state_required_for_sidecars_model_paths_and_workflows: true
+
+recommended_artifacts:
+  - brief.md
+  - constraints.md
+  - proposal-<session-name>.md
+  - integration-plan.md
+  - verification.md
