@@ -1,14 +1,26 @@
 # AGENTS.md
 
-This repository builds agentic operating systems. Before editing agent logic, read:
+This repository builds agentic operating systems. Read this whole file (it is short). For deeper detail, load only the doc(s) relevant to the task you are about to do — do not load everything by default.
 
-- docs/agentic-coding-for-agentic-systems.md
-- docs/agentic-systems-engineering.md
-- docs/source-authority-and-truth-lanes.md
-- docs/cross-agent-operating-model.md
-- docs/tool-design.md
-- docs/memory-architecture.md
-- docs/context-engineering.md
+## Topic → file routing (lazy load)
+
+Read the matching doc only when the listed task applies:
+
+| If you are working on… | Load |
+|---|---|
+| Coding agents that build agent systems | `docs/agentic-coding-for-agentic-systems.md` |
+| End-to-end systems engineering for agents | `docs/agentic-systems-engineering.md` |
+| Source lanes, truth vs. retrieval/sidecars, candidate signals | `docs/source-authority-and-truth-lanes.md` |
+| Multi-agent coordination, owner/integrator pattern, shared edits | `docs/cross-agent-operating-model.md` |
+| Tools, tool registries, tool design, typed enforcement | `docs/tool-design.md` |
+| Memory architecture, durability, retrieval boundaries | `docs/memory-architecture.md` |
+| Context engines, context assembly, context budgets | `docs/context-engineering.md` |
+| Durable execution, checkpoints, resumability | `docs/durable-execution.md` |
+| Evals, observability, regression coverage | `docs/evals.md` |
+| Skills (design, registration, invocation) | `docs/skills.md` |
+| Subagents and delegation | `docs/subagents.md` |
+
+Do **not** load `agentic_architecture_singlefile.md` — it is a compiled human reference and will eat the context window.
 
 Core rule: deterministic harness, adaptive policy.
 
