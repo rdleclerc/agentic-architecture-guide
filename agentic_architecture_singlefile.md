@@ -17,18 +17,46 @@ A second claim matters for real operating systems: agentic software must disting
 
 A third claim comes from operating live agentic systems: incidents should become contracts, not folklore. If a production failure teaches a lesson, translate it into the harness layer it belongs to, the acceptance test that would catch it, the eval or replay fixture that preserves it, and the adoption rule that prevents one lucky demo from becoming production truth.
 
+A fourth claim is about causal depth. Coding agents often stop at the first plausible proximate cause: the timeout was too short, the parser missed a field, the router chose the wrong branch, the worker retried, the subagent lacked context. Those may be true, but they are rarely the ultimate cause. Agentic systems fail because a deeper contract was missing: the wrong layer owned the decision, memory was not consulted, source authority was unclear, state was not durable, ownership was ambiguous, an eval did not exist, or the harness allowed an unsafe action. Agents must be willing to go several causal layers deep before claiming they found the problem.
+
+A fifth claim is about spend authority. Paid API keys are not ordinary context.
+If an OAuth or tenant-scoped plan exists for coding-agent work, raw API-key
+access must be treated as a privileged exception path owned by the harness, not
+something agents discover in environment variables and use opportunistically.
+Model-provider keys need a gateway, attribution, budgets, rate limits, and
+tests that fail when direct key reads come back.
+
+A sixth claim is about coupling cost asymmetry. The token cost of declaring a
+clean module seam now is roughly linear: a name, a contract, a few lines of
+glue, and the discipline of routing access through the contract instead of
+reaching across modules. The cost of untangling shortcut-coupled code later is
+super-linear in the number of callers, the number of agents that have since
+edited around the shortcut, and the number of facts that quietly came to depend
+on the leaked internal. Coding agents do not feel this asymmetry inside a single
+task because the local diff is smaller without the seam, the test still passes,
+and the cost only appears weeks later in a different session. The harness must
+therefore push the bias forward: every non-trivial change declares the seams it
+touches, defines, or changes, and a reflection pass at the end of the task
+checks whether any new shortcut, hidden dependency, or convenient cross-module
+read was introduced. Modularity is the substrate that makes parallelization,
+reflection, exception classification, A2A contracts, cost-aware routing,
+learning loops, and prioritization possible at all. Without declared seams,
+each of those collapses back into folklore.
+
 ---
 
 ## Table of contents
 
 1. [Core architecture](#core-architecture)
-2. [Mermaid diagrams](#mermaid-diagrams)
-3. [How to rebuild the multifile pack](#how-to-rebuild-the-multifile-pack)
-4. [Repository tree](#repository-tree)
-5. [Bundle manifest](#bundle-manifest)
-6. [Embedded file payloads](#embedded-file-payloads)
-7. [Research boundary: leaked or derivative Claude Code source](#research-boundary-leaked-or-derivative-claude-code-source)
-8. [Reference sources used for architecture framing](#reference-sources-used-for-architecture-framing)
+2. [Causal depth: proximate and ultimate causes](#causal-depth-proximate-and-ultimate-causes)
+3. [Modularity, parallelization, and seam design](#modularity-parallelization-and-seam-design)
+4. [Mermaid diagrams](#mermaid-diagrams)
+5. [How to rebuild the multifile pack](#how-to-rebuild-the-multifile-pack)
+6. [Repository tree](#repository-tree)
+7. [Bundle manifest](#bundle-manifest)
+8. [Embedded file payloads](#embedded-file-payloads)
+9. [Research boundary: leaked or derivative Claude Code source](#research-boundary-leaked-or-derivative-claude-code-source)
+10. [Reference sources used for architecture framing](#reference-sources-used-for-architecture-framing)
 
 ---
 
@@ -45,6 +73,162 @@ When handing work to a coding agent, require it to classify every change as one 
 The practical anti-pattern is not determinism. The anti-pattern is using deterministic branch logic where the system was supposed to rely on adaptive policy plus the right tools, memories, and skills.
 
 For operating systems that serve an organization or long-lived project, add one more anti-pattern: collapsing every artifact into memory. Raw sources, structured truth, retrieval indexes, human-readable synthesis, sidecar helpers, candidate signals, and outbound reports have different authority. Treating them as the same thing eventually makes the agent confidently wrong.
+
+---
+
+## Causal depth: proximate and ultimate causes
+
+Agentic debugging must distinguish proximate causes from ultimate causes.
+
+A proximate cause explains the immediate symptom:
+
+- a timeout fired
+- a parser missed a field
+- a Slack post duplicated
+- a subagent acted without context
+- a workflow chose a brittle branch
+- a retry loop amplified a failure
+
+An ultimate cause explains why the system allowed that failure shape to exist:
+
+- the wrong layer owned the decision
+- memory or prior-action state was not consulted
+- source authority was unclear
+- the context engine did not retrieve the decisive fact
+- the tool contract was too vague
+- the idempotency, budget, or approval boundary was missing
+- multi-agent ownership was ambiguous
+- traces or evals could not preserve and replay the failure
+
+Coding agents should not stop at the first true local explanation. A proximate cause can be accurate and still be insufficient. The acceptance standard for a serious incident, architecture review, or multi-agent workflow bug is a causal ladder deep enough to identify the missing contract.
+
+Use this ladder before declaring root cause:
+
+1. What user-visible symptom or system invariant failed?
+2. What local component, tool, agent, state transition, or model decision immediately caused it?
+3. What did that component believe, omit, or assume?
+4. What context, memory, source authority, tool contract, or coordination state should have changed the decision?
+5. Which harness boundary should have made the unsafe path impossible or reviewable?
+6. Why did existing traces, tests, evals, health checks, or reviews fail to catch it?
+7. What durable contract, fixture, replay, eval, ownership rule, or adoption gate prevents the whole failure class?
+
+If the investigation cannot answer the deeper layers, say so. Report the causal ladder and name the remaining uncertainty instead of confidently presenting another proximate cause as root cause.
+
+This matters more in multi-agent systems. Patching every edge case at every agent boundary creates a thicket of local fixes and contradictory behavior. Prefer a shared contract, source-of-truth rule, memory/writeback rule, coordination protocol, or eval fixture that makes the failure class harder to reproduce across all agents.
+
+---
+
+## Modularity, parallelization, and seam design
+
+This section is a peer of "Core architecture" and "Causal depth," not an aside. The reason it deserves its own section is that the failure mode it describes does not look like a failure when it happens. It looks like progress.
+
+### The asymmetry
+
+Coding agents are rewarded by the local diff: tests pass, the change is small, the task is declared done. The tokens spent declaring a clean module seam are visible inside the task. The cost of *not* declaring the seam is invisible inside the task and lands later, in a different session, on a different agent, when several callers have come to depend on the leaked internal.
+
+```text
+declare a seam now:           cost ~ linear (one contract + a few lines of glue)
+untangle a shortcut later:    cost ~ super-linear (callers x editors x dependent facts)
+```
+
+Humans hold this asymmetry in working memory because they have lived through it. Coding agents do not. They optimize for the diff in front of them and for the test that runs in the next thirty seconds. The harness is therefore the right place to install the bias.
+
+### What gets built on top of seams
+
+Several patterns in this architecture only work if seams exist:
+
+```text
+parallelization        : two agents cannot work on the same surface in parallel without colliding
+                         unless the surface has a declared seam between their work
+reflection             : a self-critique pass needs an interface to critique against
+                         (was the seam respected? was a shortcut introduced?)
+exception classes      : graceful degradation needs a contract that says what partial
+                         results are acceptable when one module fails
+A2A contracts          : "agent A asks agent B for X" is folklore unless X has a schema
+cost-aware routing     : escalate-vs-spillover-vs-degrade requires a contract for what
+                         each lane is allowed to return
+learning loops         : you cannot promote a working pattern into a skill if the pattern
+                         is buried inside a tightly coupled blob
+prioritization         : task queues need work units that can be reasoned about
+                         independently, which requires seams between units
+```
+
+Modularity is therefore not one pattern among many. It is the substrate. Skipping it does not make the system simpler; it makes the other patterns impossible.
+
+### Six coupling smells
+
+A change that exhibits any of these smells is creating coupling. The harness should make these visible at review time, not at incident time.
+
+1. **God-object state bag.** A new function takes a `context`, `state`, `request`, or similarly named bag and reads four or more fields from it. The function does not depend on the bag; it depends on the four fields. Pass the four fields.
+2. **Reaching through a module to read its internals.** Module A imports module B and accesses `B._internal_thing` or a field that is conventionally private. The author justifies it as "it is right there." This is the most reliable predictor of expensive future untangling.
+3. **Runtime type-switch on payload.** A function receives an opaque payload and switches on a `kind`, `type`, or `event_name` field, dispatching to N branches. Each branch knows about the others by absence. Each new branch is a coupling event. Prefer a registry of handlers keyed by type, where each handler is independently addressable.
+4. **Hidden temporal dependency.** Function A must be called before function B, but the requirement is encoded only in the order they appear in the calling code. Make the dependency explicit: B accepts the output of A as a typed input, or A is composed into B, or a state machine refuses B before A.
+5. **"Just one more parameter" creep.** A function gains its sixth, seventh, eighth optional parameter, each added by a different agent in a different session for a different caller. Each parameter is conditionally read and conditionally meaningful. Either the function is doing several jobs (split it) or the parameters belong on a typed config object that only includes the fields actually used by each caller.
+6. **Test that requires more than one module to instantiate.** A unit test imports four modules to construct the system under test. The test is honest about the coupling: there is no seam between those modules. Fix the seam, not the test.
+
+### The seam-declaration rule
+
+Every non-trivial change brief must answer four questions before code is written. This goes in the architecture brief alongside component classification and harness/policy split:
+
+```text
+1. Modules touched
+   Which modules does this change read, write, or import?
+
+2. Interfaces depended on
+   Which contracts (function signatures, schemas, message types, tool contracts,
+   memory APIs, source-authority lookups) does this change consume?
+
+3. Interfaces defined or changed
+   Which contracts does this change introduce, modify, deprecate, or extend?
+   For each, what is the public surface and what is intentionally private?
+
+4. Substitutability
+   What would have to change if the implementation behind each interface were
+   swapped (different store, different model, different transport, different
+   provider)? If the answer is "many things in many places," the seam is in the
+   wrong place.
+```
+
+A coding agent that cannot answer these questions has not understood the change yet. That is not a stylistic preference. It is the precondition for the other harness primitives to work.
+
+### Parallelization as the payoff
+
+The reason this section is named "Modularity, parallelization, and seam design" rather than just "Modularity" is that parallelization is the operational payoff that makes the up-front cost visible. A codebase where two agents collide on shared files every session has a seam problem, not a coordination problem. The right fix is not better merge tooling; it is to find which interface is missing and declare it.
+
+```text
+symptom                                   diagnosis
+two agents keep editing the same file     surface needs a seam between their work
+agent edit lands and breaks unrelated     module exposed an internal that other
+  callers it had no reason to know         callers reached through
+adding a new lane requires touching N     N call sites are all reading the same
+  call sites                                internal directly instead of through
+                                            a contract
+removing a feature touches more files     the feature was never encapsulated; it
+  than adding it did                        leaked into N modules during build
+```
+
+Parallelization is therefore both a pattern and a diagnostic. If the system cannot be worked on in parallel without folklore-level coordination, the seams are wrong.
+
+### Reflection as the safeguard
+
+Section 5.14 (Reflection) formalizes the per-task self-critique loop. The required reflection checklist explicitly includes:
+
+```text
+Did this change introduce any of the six coupling smells?
+Did this change reach across a module boundary that previously had a seam?
+Did this change add a parameter, branch, or field that another module now
+  depends on by absence rather than by contract?
+If a future task had to swap the implementation behind any interface this
+  change touches, what would have to change with it?
+```
+
+A reflection pass that cannot answer "no" to the first three and bound the answer to the fourth is not done.
+
+### What this section is not
+
+This section is not a license to invent abstractions for hypothetical future requirements. The bias is toward declaring seams *for the modules this change actually touches*, not toward speculative interface design. Three similar lines is better than a premature abstraction that picks the wrong axis. The cost asymmetry argument applies to seams that turn out to matter; the canonical signal that a seam matters is that more than one caller needs the contract or more than one agent will edit on either side of it.
+
+The corresponding anti-pattern is in section 9.9 ("Convenient coupling"). The corresponding field lesson is in section 12.10 ("Modularity is a runtime property"). The detailed contract is in `docs/modularity-and-seams.md` in the rebuild pack.
 
 ---
 
@@ -322,20 +506,20 @@ agentic_architecture_pack/
 ```yaml
 files:
   - path: AGENTS.md
-    bytes: 3136
-    sha256: a69819babe289d6fa05a7cb8a1b36d2555a26c1f7682ba67048c931393cc5c67
+    bytes: 7416
+    sha256: 637de1ed013ff0dd00d84365c634b47f341ac1e08a746c855433083a35c93fd1
     trailing_newline: true
   - path: CLAUDE.md
-    bytes: 1350
-    sha256: e8d1233d4fe85eac84d9317bf3947697ac27569719ec6303c4dd12464e80af35
+    bytes: 3661
+    sha256: 61c0d887af174770b7f7944542c8ca3584190f075c98f31c0e90df38d04f0ccf
     trailing_newline: true
   - path: docs/agentic-coding-for-agentic-systems.md
-    bytes: 61052
-    sha256: e80d582aa1e19879e2c0e573e0aa2344e4d268684347e74c54abf2a7dd59e94b
+    bytes: 101405
+    sha256: 8755de28ef0153d93b9bffdc77e73d2f4093d9ea7f0eb969489692b1b7ab47a6
     trailing_newline: true
   - path: docs/agentic-systems-engineering.md
-    bytes: 55194
-    sha256: 442b8d3bfdccfc4ceb1dad4bad1bd7cd796251d1092e0776141af8f9adf50361
+    bytes: 58374
+    sha256: 562c531f7d8865f109473a498b25657d8fc2484b24958c5aacbc83f7eaf4b419
     trailing_newline: true
   - path: docs/tool-design.md
     bytes: 1987
@@ -358,8 +542,8 @@ files:
     sha256: ff6f53b55383976ddcf89a1160b166afc3ceb62c3ff673a7cb852931d92e2dc6
     trailing_newline: true
   - path: docs/evals.md
-    bytes: 1740
-    sha256: 7492a801b4ccf62607d8a81d94a9b47fa1399925e847f636a3b29da7765cecb5
+    bytes: 1961
+    sha256: 48ee3ab6402fee9ca6ff0b01fb1cc3bf5150dcc86309104341ff355784c26905
     trailing_newline: true
   - path: docs/subagents.md
     bytes: 1044
@@ -382,8 +566,8 @@ files:
     sha256: 2a272ab199ed59cd3e8efef5b8c5d168466d3cf220dd20fb2241f76f227abe85
     trailing_newline: true
   - path: .agentic/eval_matrix.yaml
-    bytes: 1771
-    sha256: 07a88862dbb14afbbebcaea504e6ad8cf1481b4bca2aa4b9a926a142d2a3c385
+    bytes: 2050
+    sha256: 2195ead1d60217ceadaf59bbfbb2c5b6b4c44ba0ff97260ddd2036ac0328b798
     trailing_newline: true
   - path: .claude/skills/design-agent-tool/SKILL.md
     bytes: 623
@@ -398,16 +582,16 @@ files:
     sha256: 34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4
     trailing_newline: true
   - path: .claude/skills/build-agent-eval/SKILL.md
-    bytes: 531
-    sha256: 89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c
+    bytes: 574
+    sha256: 6459b4c53c093e69aca8f1fec6f0e9d4ae588bc41abb1fc55ebf080f7251c60d
     trailing_newline: true
   - path: .claude/skills/review-agentic-architecture/SKILL.md
-    bytes: 812
-    sha256: 16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164
+    bytes: 915
+    sha256: 7a5543668a3f9cf1f3a8a290f141ca7434d54bc20abf38514f5ed731c322814a
     trailing_newline: true
   - path: .github/pull_request_template.md
-    bytes: 751
-    sha256: fb154d255244ac42ddc474f01219463629f39878f6dade61de1dc77fee3f6afe
+    bytes: 795
+    sha256: b3df7fd37f8120c24dd9aaada3d7ec31c7138cfd7b16abc542f34cecc8a08d4f
     trailing_newline: true
   - path: .agentic/source_authority.yaml
     bytes: 1487
@@ -428,6 +612,38 @@ files:
   - path: .claude/skills/design-source-lane/SKILL.md
     bytes: 1208
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
+    trailing_newline: true
+  - path: docs/modularity-and-seams.md
+    bytes: 9239
+    sha256: 8515130c76849d2c5deb27deb5c1ca67199a5553cb09237b684dc81a2d86d73b
+    trailing_newline: true
+  - path: docs/reflection-and-planning.md
+    bytes: 6753
+    sha256: aa7905927bf871cb0e12a05ef4daf0147d196c8af829386d6cec903ed3487839
+    trailing_newline: true
+  - path: docs/exception-taxonomy.md
+    bytes: 5173
+    sha256: a7cd06584f134b521da2a02183f4f9fe22977ea7fbd3661a055c69c2343a96c3
+    trailing_newline: true
+  - path: docs/a2a-contracts.md
+    bytes: 6980
+    sha256: 950e9d057cac968230e8b3969e70cc0f3fcc1fc0712660c0279101f4fe951d31
+    trailing_newline: true
+  - path: docs/cost-aware-routing.md
+    bytes: 5318
+    sha256: f699d090bbc0f2bceb41aafbef99a57182f5814fb1eab60370689762707d15f4
+    trailing_newline: true
+  - path: docs/learning-loops.md
+    bytes: 5311
+    sha256: 3cc2113b22c63666e76787eaef9664b962d8b437a761f539208d8c605da44d88
+    trailing_newline: true
+  - path: docs/task-prioritization.md
+    bytes: 5331
+    sha256: 6b7d5db57a2d032f0cf83e26044493d2b9fcc7651c9bb8ef448c07c217bbf6ec
+    trailing_newline: true
+  - path: docs/QUICK_REFERENCE.md
+    bytes: 13277
+    sha256: 9a81e99e4c624d62a881425326ccf554646b75bcb0d379b6452a4bc0306b2295
     trailing_newline: true
 empty_directories:
   - tests/agentic/
@@ -473,19 +689,38 @@ Each payload is wrapped in markers that the rebuild script can parse. Do not rem
 
 ### File: `AGENTS.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="a69819babe289d6fa05a7cb8a1b36d2555a26c1f7682ba67048c931393cc5c67" bytes="3136" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="637de1ed013ff0dd00d84365c634b47f341ac1e08a746c855433083a35c93fd1" bytes="7416" trailing_newline="true" -->
 `````````` markdown
 # AGENTS.md
 
-This repository builds agentic operating systems. Before editing agent logic, read:
+This repository builds agentic operating systems.
 
-- docs/agentic-coding-for-agentic-systems.md
-- docs/agentic-systems-engineering.md
-- docs/source-authority-and-truth-lanes.md
-- docs/cross-agent-operating-model.md
-- docs/tool-design.md
-- docs/memory-architecture.md
-- docs/context-engineering.md
+**Cold-start (always read first, ~5K tokens combined with this file):**
+
+- docs/QUICK_REFERENCE.md — lossy distillation of the full architecture pack (rules only, no examples)
+
+**Deep docs (load only the topic you are actually touching):**
+
+- docs/agentic-coding-for-agentic-systems.md — full architecture, executive thesis, worked anti-patterns, field lessons, canonical prompt
+- docs/agentic-systems-engineering.md — engineering posture for coding agents
+- docs/source-authority-and-truth-lanes.md — when authority work
+- docs/cross-agent-operating-model.md — when multi-agent or coordination work
+- docs/tool-design.md — when tool work
+- docs/memory-architecture.md — when memory work
+- docs/context-engineering.md — when context work
+- docs/skills.md — when skill work
+- docs/subagents.md — when subagent work
+- docs/durable-execution.md — when checkpoint, retry, or replay work
+- docs/evals.md — when eval work
+- docs/modularity-and-seams.md — when seams, refactors, or non-trivial structural change
+- docs/reflection-and-planning.md — when planning a non-trivial change (always at end of one)
+- docs/exception-taxonomy.md — when failure paths, retry, fallback, degradation
+- docs/a2a-contracts.md — when agent-to-agent message work
+- docs/cost-aware-routing.md — when paid lane or routing work
+- docs/learning-loops.md — when skill promotion or system-level critique
+- docs/task-prioritization.md — when queue, scheduling, or staleness work
+
+If you are constrained on context, the quick reference above this list is enough for orientation; the deep docs are reference, not required reading.
 
 Core rule: deterministic harness, adaptive policy.
 
@@ -494,6 +729,16 @@ Use deterministic code for schemas, permissions, idempotency, budgets, checkpoin
 Use model-owned adaptive behavior for ambiguous intent, context gathering, tool choice, memory retrieval, task decomposition, plan revision, recovery, and synthesis.
 
 Second rule: truth, retrieval, recall, synthesis, sidecars, candidate signals, and external reports are different architectural roles. Do not let a convenient artifact become a source of truth by accident.
+
+Third rule: distinguish proximate causes from ultimate causes. Do not stop at the first true local explanation. For incidents, debugging, and multi-agent workflow failures, follow the causal ladder until you can name the missing contract in memory, context, tool semantics, source authority, durable state, ownership, guardrails, or evals.
+
+Fourth rule: coupling cost is asymmetric. Declaring a clean module seam now is roughly linear; untangling shortcut-coupled code later is super-linear in the number of callers and editors involved. Every non-trivial change declares the seams it touches, defines, or changes. Reaching across module boundaries to read internals, runtime type-switches on opaque payloads, and "just one more parameter" creep are coupling smells, not shortcuts. The bias is forward: declare the seam now even when the local diff would be smaller without it.
+
+Fifth rule: reflect before declaring done. Run the section 5.14 reflection checklist on every non-trivial change: goal drift, coupling and seams, shortcuts, hidden state, failure modes, tests and evals, causal depth. Record the answers. Hidden gaps are worse than known gaps because the next agent inherits them without warning.
+
+Sixth rule: failures are classes, not surprises. Every retry, fallback, or degraded-result path attaches to one of three exception classes (recoverable, degraded, unrecoverable) explicitly. Silent degradation is a bug. Silent paid spillover is a bug. Silent retry past the budget is a bug.
+
+Seventh rule: agent-to-agent messages need contracts. Schema, direction, idempotency, versioning, authority, failure attribution, audit. A2A traffic without a contract is folklore that breaks silently the next time either side is edited.
 
 Do not replace open-ended agent behavior with brittle keyword routing, regex parsing, lookup tables, or fixed orchestration unless the task is genuinely deterministic and tested as such.
 
@@ -524,6 +769,8 @@ Define done in system terms, not personal activity terms. For autonomous behavio
 
 For live or long-running systems, convert incidents into enforceable contracts. Backpressure, budgets, caller attribution, adoption state, rollback, and human attention are harness concerns, not prompt vibes. Never add silent paid fallbacks, silent provider spillover, or production promotion from one good demo.
 
+Root-cause work is not done when you identify a proximate bug. Ask 6-7 layers deep if needed: what failed, what believed the wrong thing, what context or memory was missing, which harness boundary should have prevented it, why evals/traces missed it, and what durable contract prevents the class.
+
 In the final summary, state:
 
 - component classification
@@ -540,7 +787,16 @@ In the final summary, state:
 - attention/notification behavior
 - backpressure, budget, and fallback behavior
 - adoption state and rollback plan
+- causal ladder from proximate cause to ultimate cause when debugging or repairing failures
 - acceptance proof, manual-proof gaps, and tests/evals added
+- plan and goal as observable system behavior, with goal-drift check at the end
+- seam declaration: modules touched, interfaces depended on, interfaces defined or changed, substitutability
+- exception classes in scope; behavior under slow, unavailable, partial, or garbage external responses
+- A2A contract changes (schema, direction, idempotency, versioning, authority, audit) if any
+- routing and cost lane chosen and why; degraded or fallback lane if any
+- prioritization inputs (urgency, importance, preemptability, cost, staleness) for queued work
+- learning destination for any recurring pattern, candidate skill, missing eval, or contract change surfaced
+- reflection checklist results: goal drift, coupling and seams, shortcuts, hidden state, failure modes, tests and evals, causal depth
 ``````````
 <!-- AGENTIC_BUNDLE_FILE_END path="AGENTS.md" -->
 
@@ -548,11 +804,13 @@ In the final summary, state:
 
 ### File: `CLAUDE.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="CLAUDE.md" sha256="e8d1233d4fe85eac84d9317bf3947697ac27569719ec6303c4dd12464e80af35" bytes="1350" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="CLAUDE.md" sha256="61c0d887af174770b7f7944542c8ca3584190f075c98f31c0e90df38d04f0ccf" bytes="3661" trailing_newline="true" -->
 `````````` markdown
 # CLAUDE.md
 
-Read AGENTS.md first. This repo builds agentic operating systems.
+Read AGENTS.md first. For context-constrained sessions, the cold-start trio (this file + AGENTS.md + docs/QUICK_REFERENCE.md) is ~5K tokens and contains every doctrinal rule. Load deep docs only for the topic you are actually touching.
+
+This repo builds agentic operating systems.
 
 Use deterministic code for the harness: schemas, permissions, idempotency, state, checkpoints, compaction, source authority, identity resolution, tool execution, human approval, traces, and evals.
 
@@ -561,6 +819,22 @@ Use model-owned adaptive behavior for ambiguous intent, context gathering, memor
 Do not implement open-ended agent behavior as keyword routers, regex intent detection, hardcoded branches, or giant always-loaded prompts unless explicitly justified and tested.
 
 Do not collapse source-of-truth stores, retrieval indexes, recall memory, human-readable synthesis, sidecars, and candidate signals into one vague memory layer. Name the role of each artifact.
+
+Distinguish proximate causes from ultimate causes. When debugging failures or reviewing multi-agent behavior, do not stop at the first plausible local explanation. Go deep enough to identify the missing contract in memory, context, source authority, tool design, durable state, ownership, guardrails, or evals.
+
+Coupling cost is asymmetric. Every non-trivial change declares the seams it touches, defines, or changes. Reaching across module boundaries to read internals, runtime type-switches on opaque payloads, and "just one more parameter" creep are coupling smells, not shortcuts. Decoupling later is super-linear in callers and editors; declare the seam now. See docs/modularity-and-seams.md.
+
+Reflect before declaring done. Run the reflection checklist on every non-trivial change: goal drift, coupling and seams, shortcuts, hidden state, failure modes, tests and evals, causal depth. Record the answers. Hidden gaps are worse than known gaps. See docs/reflection-and-planning.md.
+
+Failures are classes, not surprises. Every retry, fallback, and degraded-result path attaches to one of three exception classes (recoverable, degraded, unrecoverable) explicitly. Silent degradation, silent paid spillover, and silent retry past budget are bugs. See docs/exception-taxonomy.md.
+
+Agent-to-agent messages need contracts: schema, direction, idempotency, versioning, authority, failure attribution, audit. A2A traffic without a contract is folklore that breaks silently. See docs/a2a-contracts.md.
+
+Routing decisions are recorded with the task. Lane choice combines difficulty, evidence sensitivity, consequence, budget state, lane health, and explicit override. No silent paid spillover. See docs/cost-aware-routing.md.
+
+Recurring findings have destinations: candidate skill, contract change proposal, missing eval, candidate signal, or deprecation. A finding without a destination is a smell. See docs/learning-loops.md.
+
+Queued tasks declare urgency, importance, preemptability, cost, and staleness. First-come-first-served is not the default; it is folklore. See docs/task-prioritization.md.
 
 For any agentic change, inspect relevant tools, skills, memory, source lanes, identity policy, context policy, coordination rules, durability, and evals before editing code.
 
@@ -574,7 +848,7 @@ Keep this file short. Put reusable procedures in skills. Put detailed architectu
 
 ### File: `docs/agentic-coding-for-agentic-systems.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-coding-for-agentic-systems.md" sha256="e80d582aa1e19879e2c0e573e0aa2344e4d268684347e74c54abf2a7dd59e94b" bytes="61052" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-coding-for-agentic-systems.md" sha256="7de632b3e17293a501b7a6dd8580faeccbf8f8de998f2e42d3bed09655e625b9" bytes="105823" trailing_newline="true" -->
 `````````` markdown
 # Agentic Coding for Agentic Systems
 
@@ -616,6 +890,10 @@ For systems that serve a real organization, project, or long-lived workflow, the
 
 The strongest field lesson is that agentic failures rarely stay inside one layer. A stalled publish, runaway retry storm, false memory, or bad handoff usually crosses context, tools, state, model policy, budget, and human attention. Treat each incident as a request to improve the architecture: name the contract that was missing, preserve a replay or eval, and promote the fix only after evidence.
 
+The related discipline is causal depth. Coding agents often find a real proximate cause and stop too early. A short timeout, malformed payload, weak router, missing branch, or under-scoped subagent prompt may explain the symptom while hiding the ultimate cause: the harness had no durable state, the model policy lacked the right tool or memory, source authority was undefined, ownership was split, or no eval preserved the failure. Multi-agent systems cannot be repaired by endlessly patching local edge cases. They need causal ladders that go deep enough to expose the missing shared contract.
+
+A sibling discipline is coupling cost asymmetry. The same coding agents that stop at the first proximate cause also reach across module boundaries, attach a fifth special case to a switch, pass a giant context bag forward, or read another module's internals because "it is right there." The local diff is smaller; the test still passes; the task is declared done. The cost arrives later, when four more callers come to depend on the leaked internal and any future change must touch all of them. Decoupling later is super-linear in the number of callers and editors involved. The fix is not heroic refactoring; it is a standing bias toward declaring the seam now, even when the local diff would be smaller without it. A coding agent that cannot name which interfaces it depends on, defines, or changes has not yet understood the change it is about to make.
+
 ---
 
 ## 1. The frame: using agentic coding to build agentic systems
@@ -636,6 +914,8 @@ agentic system:
 ```
 
 The coding-agent trap is that a coding model tends to convert “ambiguous adaptive policy” into “explicit branch logic.” It does this because most software examples it has seen are built that way, and because coding tasks often reward concrete implementation over architectural uncertainty.
+
+The debugging version of the same trap is stopping at the first plausible proximate cause. The agent says "the parser failed," "the timeout was too short," or "the worker did not receive context" and treats that as root cause. Those statements may be true, but they usually describe the last broken link, not why the system was shaped so that one broken link caused user-visible failure.
 
 That is why a repo building agents needs standing architectural instructions. A one-off prompt saying “make this agentic” is too weak. The coding agent needs a durable architectural contract that it reads before editing.
 
@@ -829,6 +1109,36 @@ removed or compressed:
 ```
 
 The context engine should also produce a source ledger: a machine-readable list of what was included and why.
+
+#### 5.2.1 Worked example: lazy-load operational docs (TOOLS.md refactor)
+
+A common anti-pattern in agentic systems is treating bootstrap as a dumping ground for every "useful" reference doc. Bootstrap files get injected into every session prompt, which means every byte of bootstrap is paid for on every turn (cost) AND crowds out tokens that could be used for the live task (signal-to-noise). The temptation is real: if a doc is sometimes useful, just put it in bootstrap so the model can always see it. The cost of this temptation compounds quickly — the bootstrap grows monotonically as the project grows, and eventually the runtime starts truncating files (losing the very content the bootstrap was supposed to provide).
+
+The discipline: **bootstrap is for high-signal-everywhere content.** For everything else, build a lazy-load path.
+
+A concrete refactor that demonstrates the pattern (AgFunder/Gaia, May 2026):
+
+**Before.** A single `TOOLS.md` (~55K chars) covered ~32 distinct operational lanes (Brex, Lightfield, Gmail ingest, Airtable, Slack, LP monitoring, document extraction, podcast ingest, etc.). It was loaded into every Gaia session as bootstrap. The runtime's per-file cap (12K chars) truncated it to ~22% of original content, dropping ~78% of the operational facts that Gaia might need on any given turn — and the truncation was silent except for a once-per-session warning. Every turn paid the cost of injecting 12K of bootstrap that was 78% wrong-content for the active task.
+
+**After.** Three changes:
+
+1. **Split the monolith into per-lane sub-docs** under `tools/<lane>.md` (one file per operational area). Each sub-doc is self-contained for that lane (paths, env vars, helpers, conventions, policy notes). Total content is unchanged; only the file boundaries moved.
+
+2. **Replace `TOOLS.md` with a thin index** (~3.5K chars, 93% reduction). The index lists each lane name + one-line description + relative path to the sub-doc. The index fits trivially under the per-file cap, so the runtime stops truncating, and bootstrap stops paying for content the model doesn't need.
+
+3. **Wire the workflow oracle to surface relevant lane sub-docs by query.** The oracle (a read-only retriever) scores docs against the active query; the per-lane filename pattern (`tools/<lane>.md`) gets a filename-match boost so a query like "Brex spend by category" surfaces `tools/gaia-brex.md` ahead of a 50K-char broader doc that mentions Brex in passing. The model sees the lane sub-doc path in the workflow preflight output and reads it on demand via the standard file-read tool.
+
+The result: the model gets the *right* operational facts for the active task (better signal), without paying to inject all 32 lanes' worth of facts on every turn (lower cost, no truncation).
+
+**The pattern generalizes.** Anywhere you find yourself writing a "comprehensive reference doc" and dumping it into bootstrap, ask:
+
+- Is every section of this doc relevant on most turns? If yes, bootstrap is right; raise the cap.
+- Is each section relevant only on turns that match its lane/topic? If yes, split into sub-docs and rely on retrieval.
+- Is some intro/index content relevant on every turn (orientation, conventions) but the detail is task-specific? Split: keep the intro as bootstrap, lazy-load the detail.
+
+The third case is by far the most common, and it's the one that bootstrap-dumping silently mishandles for years until something breaks. The fix is cheap (split + index + retriever boost) and the cost savings compound across every turn forever.
+
+**The anti-pattern to recognize.** When a bootstrap file is described as "the canonical reference for X" and X is a *category* with many members (tools, integrations, workflows, lanes, services), it's a category index masquerading as a single doc. Treat the index as bootstrap; treat each member as lazy-load material. The fact that the original `TOOLS.md` had ~27 `## Header` sections each describing a distinct lane was the obvious signal that it was a category index, not a single coherent reference.
 
 ### 5.3 Tool registry and tool search
 
@@ -1175,6 +1485,392 @@ retired: removed from active use
 Do not promote a helper, sidecar, subagent, or new model path by vibes. Promotion requires a contract, evals, health checks, rollback, and a named owner.
 
 Cross-agent coding work needs the same discipline. If multiple coding agents or sessions touch the same system, assign one integrator and make contributors produce evidence-backed proposals unless they have disjoint write ownership. Durable coordination belongs in files, not in one agent's private chat context.
+
+### 5.14 Reflection as a runtime primitive
+
+Reflection is the per-task self-critique loop. It runs after the agent has produced a candidate result and before the result is declared done. It is a harness primitive, not a model habit.
+
+The reason reflection has to be in the harness is the same reason modularity has to be in the harness: the agent's reward signal inside one task does not include the costs that land in the next task. A coding agent that takes a shortcut, introduces coupling, or quietly redefines the goal will not flag any of those in a normal "summary" step. A reflection pass with a structured checklist will.
+
+Required reflection checklist for non-trivial changes:
+
+```text
+1. Goal drift
+   What was the original goal? Did the implementation drift toward
+   "make the local test pass" or "make the immediate symptom go away"?
+   Restate the original goal and confirm the change still serves it.
+
+2. Coupling and seams (links to section 9.9, 12.10, docs/modularity-and-seams.md)
+   Did this change introduce any of the six coupling smells?
+   Did this change reach across a module boundary?
+   Did this change add a parameter, branch, or field that another module
+   now depends on by absence rather than by contract?
+
+3. Shortcuts
+   Where did the change skip a step that the architecture says should exist
+   (input validation, schema check, idempotency, source-authority lookup,
+   memory write, eval coverage, durable-state record)?
+
+4. Hidden state
+   Does the change rely on global state, environment variables, file system
+   layout, time-of-day, or process startup order in ways that are not
+   documented in the contract?
+
+5. Failure modes
+   What happens when each external dependency this change calls is slow,
+   unavailable, returns a partial result, or returns garbage? Which of those
+   are handled and which are silently re-raised as the fall-through path?
+
+6. Tests and evals
+   What new behavior is now true that no test exercises? What incident class
+   is now reachable that no eval would catch?
+
+7. Causal depth
+   If this is a fix, what proximate cause did it address, and what ultimate
+   contract did it change? If only the proximate cause was addressed, what
+   class of incident is still reachable?
+```
+
+A reflection pass is not done when the agent has answers; it is done when the answers are written down in the change record and the agent has either fixed the items it found or named them as explicit gaps. Hidden gaps are worse than known gaps because the next agent inherits them without warning.
+
+Reflection is not the same as evals. Evals run from a fixture and grade behavior against expected output. Reflection runs against the architecture and grades the *change* against the contract. Both are required.
+
+The corresponding anti-pattern is in section 9.10 ("Skipping reflection").
+
+### 5.15 Plan-then-execute and goal-drift detection
+
+Plan-then-execute is the discipline of separating *what the agent is going to do* from *the agent doing it*. The plan is a first-class artifact: written before action, referenced during action, compared against at the end of action.
+
+The failure mode this prevents is goal drift. A coding agent that starts with "make the system survive a malformed payload" can quietly redefine the goal to "make this one test pass" once it gets into the weeds. The user-visible symptom looks like the original task, but the underlying contract was never fixed. The next malformed payload exposes the same class of failure.
+
+The plan artifact contains:
+
+```text
+1. Goal
+   One sentence. What does the world look like after this change that it
+   does not look like now? Stated as observable system behavior, not as
+   "the test passes."
+
+2. Acceptance proof
+   How will we know the goal was met? What is the acceptance test in system
+   terms? What manual-proof gaps will remain after implementation?
+
+3. Component classification
+   Which kind of component is being added or changed (workflow, augmented
+   LLM, agent loop, subagent, tool, skill, memory, source lane, identity,
+   context, durable execution, guardrail, coordination, attention, adoption,
+   eval).
+
+4. Seam declaration (links to section 3 and docs/modularity-and-seams.md)
+   Modules touched, interfaces depended on, interfaces defined or changed,
+   substitutability.
+
+5. Failure-mode budget
+   Which exception classes (section 5.16) are in scope for this change?
+   What partial-result or degraded-result behavior is acceptable?
+
+6. Out of scope
+   What deliberately is not being done, and why? This list catches the
+   scope creep that would otherwise drift the goal.
+```
+
+Goal-drift detection runs at three points in the loop:
+
+```text
+- before each tool call:   does this action serve the original goal?
+- before declaring done:   does the result match the acceptance proof?
+- inside reflection:       did the change end up serving the goal stated in
+                            the plan, or a quietly redefined version of it?
+```
+
+If the goal genuinely needs to change mid-task, change the plan explicitly and record why. A change in goal that is not recorded becomes folklore; the next agent inherits a goal it did not see written down.
+
+The corresponding anti-pattern is in section 9.10 ("Skipping reflection") and the corresponding field lesson is in section 12.1 ("Define done as system behavior").
+
+### 5.16 Exception taxonomy and graceful degradation
+
+Durable execution (section 5.8) and checkpointing answer "what happens if the process dies." Exception taxonomy answers a different question: "what does this change do when something it depends on misbehaves?"
+
+A coding agent that does not classify failure tends to write code where every failure becomes a re-raised exception that propagates upward and stops the lane. This is the right behavior for a small subset of failures and the wrong behavior for the rest. The harness needs an explicit error taxonomy so the agent can choose the right behavior per class.
+
+Three exception classes:
+
+```text
+recoverable   the operation can be retried with the same inputs and is
+              expected to succeed within the configured retry budget.
+              Examples: transient network error, rate-limited provider,
+              optimistic-lock conflict, leader election handoff.
+              Required behavior: retry per policy, surface only on retry
+              budget exhaustion, log the retry path, do not poison
+              durable state.
+
+degraded      the operation cannot succeed fully, but a partial result is
+              meaningful and the calling lane can continue.
+              Examples: enrichment lookup unavailable but core record
+              still valid, one of three sources missing for a synthesis,
+              one of N parallel subtasks failed but the task is set up
+              to tolerate it, expensive lane budget exhausted so a
+              cheaper lane is used.
+              Required behavior: produce the partial result, mark the
+              missing pieces, surface a structured signal (not a silent
+              gap), record what would have been there.
+
+unrecoverable the operation cannot succeed and a partial result would be
+              wrong. The lane must stop and surface the failure to a
+              human or to a higher coordination layer.
+              Examples: schema mismatch on durable input, source
+              authority disagreement that cannot be resolved by policy,
+              identity collision, irreversible side-effect failure
+              detected after the side effect committed.
+              Required behavior: stop, do not retry, do not produce a
+              degraded result, write a structured failure record, alert
+              on the appropriate channel per attention policy.
+```
+
+Every retry policy, fallback, or degradation path attaches to one of these classes explicitly. A retry without a class is a guess.
+
+Graceful degradation is the discipline of allowing a *degraded* result to be produced *with a structured signal*, never silently. The signal is what allows the next layer (a synthesizer, a UI, a reviewer, a downstream agent) to know whether it is reading complete data or partial data. Silent degradation is more dangerous than unrecoverable failure because it produces a confidently wrong output.
+
+The corresponding anti-pattern is in section 9.11 ("Unclassified errors"). The detailed contract is in `docs/exception-taxonomy.md` in the rebuild pack.
+
+### 5.17 A2A message contracts
+
+Cross-agent coordination (section 5.13) covers ownership, integrator role, adoption state, and durable coordination artifacts. A2A message contracts cover the message itself.
+
+The failure mode this prevents is folklore A2A: agent A and agent B work together because someone wrote a script that hardcoded what A produces and what B expects. There is no schema, no version, no contract for partial messages, no idempotency rule, no replay rule, and no audit trail. The pair works until either A or B is edited, at which point the coupling breaks silently and the next incident exposes that no one knew the contract because there wasn't one.
+
+A2A messages need contracts in the same way tools do (section 8). Each agent-to-agent message type declares:
+
+```text
+Schema
+   Typed shape of the message. Required fields, optional fields, types,
+   units, allowed values. No payload field is "any."
+
+Direction
+   Request, reply, broadcast, signal, event. Reply messages reference
+   the request they answer. Broadcasts have no required reply.
+
+Idempotency
+   Is sending the same message twice safe? If yes, by what mechanism
+   (idempotency key, content hash, dedup window). If no, what is the
+   replay rule and what state in the receiver tracks "already handled."
+
+Versioning
+   How does the contract evolve? Field additions are usually safe; field
+   removals or semantic changes require an explicit version bump and a
+   migration plan. The receiver should know which versions it accepts.
+
+Authority
+   Which agent is authorized to send this message type. Which agent is
+   authorized to act on it. Senders that do not have authority should be
+   rejected at the receiver, not at the network.
+
+Failure
+   How does the sender know the receiver failed? How does the receiver
+   know the sender did not get the reply? Which class of failure (5.16)
+   does each side attribute to, and what does each side do next.
+
+Audit
+   Where is the message recorded? A2A traffic that does not appear in
+   any audit surface is invisible to operators and to future agents
+   debugging what happened.
+```
+
+A2A contracts are message-level seams. They are the cross-agent equivalent of module seams (section 3) and they enable the same things: parallel work, replacement of one side without breaking the other, and reflection that has something concrete to critique. Without them, multi-agent systems regress to the shape they were warned about in section 9.5 (multi-agent theater) the moment they hit production load.
+
+The corresponding anti-pattern is in section 9.12 ("Implicit A2A folklore"). The detailed contract is in `docs/a2a-contracts.md` in the rebuild pack.
+
+### 5.18 Cost-aware routing doctrine
+
+Attention budgets (section 5.12) cover human attention. Spend authority (the fifth claim in the executive thesis) covers paid API keys. Cost-aware routing covers the runtime decision: given a task, which lane runs it.
+
+A long-lived agentic system typically has at least three lanes available:
+
+```text
+default lane    cheaper, faster, broadly capable. Used for the bulk of
+                routine work. Token cost per task is low; capability
+                ceiling is moderate.
+
+escalated lane  more expensive, more capable on hard tasks, often slower.
+                Used when task difficulty, evidence sensitivity, or
+                consequence severity justifies the cost.
+
+degraded lane   cheapest, possibly local, possibly cached. Used when the
+                default lane is unavailable or budget is exhausted, and
+                when a degraded result (5.16) is acceptable.
+```
+
+Without doctrine, lane choice tends to drift toward whichever lane is currently ergonomic. Three failure modes are common:
+
+```text
+1. Silent escalation    every task goes to the escalated lane because the
+                        default lane felt unreliable in one bad demo. Cost
+                        leaks accumulate without anyone owning the choice.
+
+2. Silent fallback      the default lane fails, the harness silently routes
+                        to a paid fallback, and no one realizes the burn
+                        rate has changed until the bill arrives.
+
+3. Wrong-axis routing   lane choice keys off task length, prompt-token
+                        count, or whatever was easiest to measure, instead
+                        of off the actual axis (difficulty, sensitivity,
+                        consequence).
+```
+
+Cost-aware routing requires an explicit routing decision per task. The decision combines several inputs:
+
+```text
+- task difficulty (does the default lane handle this class reliably in
+  evals?)
+- evidence sensitivity (data subject, jurisdiction, confidentiality tier)
+- consequence (is this a draft for review, a durable claim, or an
+  irreversible side effect?)
+- budget state (rolling spend, per-lane budget, per-tenant budget)
+- lane health (current error rate, current latency, current rate-limit
+  posture of each lane)
+- explicit overrides (this task requires the escalated lane for
+  doctrine reasons unrelated to difficulty)
+```
+
+The routing decision is recorded with the task. A routing decision that is not recorded cannot be audited and cannot be evaluated.
+
+Spillover policy is part of routing, not a separate fallback. When the default lane fails, the choice between "escalate to a more expensive lane," "degrade to a cheaper lane," and "stop" is a doctrine decision, not an emergent behavior. Silent paid spillover is a bug.
+
+The corresponding anti-pattern is in section 9.11 ("Unclassified errors") for the failure-handling angle and section 12.12 ("Cost asymmetry is a routing input") for the operational framing. The detailed contract is in `docs/cost-aware-routing.md` in the rebuild pack.
+
+### 5.19 Learning loops and skill evolution
+
+The architecture so far has emphasized stable contracts: tools, memory, source authority, A2A messages, exception classes, routing rules. Stable contracts are the substrate. Learning loops are how the system gets better at using them over time.
+
+The failure mode this prevents is a system that does not improve. Coding agents add features, fix bugs, extend tools. None of that is learning. A system without learning loops handles each new task as if it were the first; patterns that worked are not promoted into skills, patterns that failed are not deprecated, and the agent rediscovers the same answer every week.
+
+Three kinds of learning loop matter for agentic systems:
+
+```text
+within-task    reflection (section 5.14). Catches shortcuts, drift, and
+               coupling inside one task. Operates on the change, not on
+               the system.
+
+across-task    skill promotion. A pattern that has worked across N tasks
+               is promoted from ad-hoc agent behavior into a documented
+               skill (section 5.4) with a clear when-to-use rule. The
+               threshold (N, the success criterion, the owner who
+               approves) is part of the harness, not the agent's
+               judgment.
+
+system-level   external critique. A separate agent or human, on a
+               different cadence than the working agent, reviews
+               aggregate behavior: which patterns are recurring, which
+               failures are repeating, which contracts need to change,
+               which skills are stale. Operates on the system, not on
+               any one task.
+```
+
+Learning loops have to obey the same source-authority and adoption-state rules as everything else (section 5.11, 5.13). A pattern that "felt right" in three tasks is not yet a skill. Promotion from candidate to canonical requires evals, owner review, and a rollback story.
+
+The most common learning-loop failure is the loop that exists but is not closed. A reflection pass that produces findings nobody reads is not a learning loop. A weekly external critique that nobody acts on is not a learning loop. Closing the loop means the harness has a path from finding to action: file it as a candidate skill, file it as a contract change proposal, file it as a missing eval, file it as an open signal for human decision. A finding without a destination is a smell.
+
+The corresponding anti-pattern is in section 9.13 ("No learning loop"). The detailed contract is in `docs/learning-loops.md` in the rebuild pack.
+
+### 5.20 Task prioritization and queue discipline
+
+Attention budgets (section 5.12) decide when humans should be interrupted. Cost-aware routing (section 5.18) decides which lane runs a task. Prioritization decides which task runs next when several are ready and they cannot all run at once.
+
+A long-lived agentic system runs many concurrent lanes: scheduled cron tasks, ingest workers, claim compilers, retrieval surfaces, conversation surfaces, review queues, alerts. Without discipline, the order tends to be first-come-first-served by accident, and the failure mode is that an urgent task waits behind a long-running batch because no one declared which mattered more.
+
+Prioritization requires explicit inputs per task:
+
+```text
+- urgency       does the task have a deadline? what is the cost of late
+                completion (none, soft, hard, irreversible)?
+- importance    does completion change a downstream state that other
+                tasks depend on? does failure block other lanes?
+- preemptability  can the task be paused and resumed without loss? if
+                yes, it can yield to a higher-priority task; if no,
+                starting it commits the lane.
+- cost          how expensive is this task in the lane it would run in?
+                a cheap urgent task should not wait behind an expensive
+                non-urgent one.
+- staleness     does the task lose value if delayed (a daily digest is
+                useless once the day is over) or does it accumulate
+                value (a backlog cleanup gets more valuable the older
+                it is)?
+```
+
+Queue discipline is the rule for combining those inputs into a runnable order. The simplest defensible rule is:
+
+```text
+1. Run preemption-immune tasks (an irreversible side effect already
+   committed, a durable-state migration in progress) to completion
+   regardless of priority.
+
+2. Among ready tasks, prefer higher importance. Among equally important
+   tasks, prefer higher urgency. Among equally urgent tasks, prefer
+   cheaper.
+
+3. Allow explicit overrides recorded with rationale. An override that is
+   not recorded becomes folklore; record it.
+
+4. If the queue is consistently saturated, the lane is under-resourced
+   or the upstream is producing too fast. Surface that as a signal,
+   not as silent task drops.
+```
+
+The harness owns this rule, not the agent. A coding agent that picks the next task by feel will reliably pick the easiest one; this is a known bias, not a moral failing.
+
+The corresponding anti-pattern is in section 9.14 ("FCFS task scheduling"). The detailed contract is in `docs/task-prioritization.md` in the rebuild pack.
+
+### 5.21 Dependency awareness, upstream and downstream
+
+Agents default to in-context-only reasoning. The file in front of them feels like the only file that matters; upstream contracts they consume and downstream consumers they affect are invisible unless explicit mechanisms force attention. This is a known bias and the source of most refactor breakage: the agent makes a "local" change that violates a contract held by code it never read.
+
+The harness has to provide the awareness. Six patterns, ordered cheapest to strongest, each catching a different failure mode:
+
+```text
+1. Seam declaration before code
+   catches: "I didn't think about who else uses this"
+   cost: zero (one structured response from the agent)
+   when: every non-trivial change
+
+2. Source ledger on context assembly
+   catches: "I read this file but didn't know why or who else owns it"
+   cost: per-context-item metadata (source, reason, freshness)
+   when: every context engine, every retrieval
+
+3. Reverse-lookup retriever
+   catches: "I'm about to change X — what reads X today?"
+   cost: a tool invocation
+   when: any change to a contract, schema, path, or shared symbol
+
+4. Adoption-state tracking
+   catches: "I changed the contract but didn't migrate the consumers"
+   cost: a per-consumer state field (legacy, migrating, migrated, deprecated)
+   when: any cross-component contract under migration
+
+5. Static analysis in CI
+   catches: "I missed a stale reference (broken link, renamed symbol, moved file)"
+   cost: a CI check
+   when: every commit touching shared paths, links, or names
+
+6. Replay tests against the dependency graph
+   catches: "the contract drifted at runtime even though static checks passed"
+   cost: a fixture per critical flow
+   when: every change to a high-blast-radius component
+```
+
+Pick one or more based on the failure mode you're trying to prevent, not on aesthetic preference. The cheapest patterns are not always sufficient; the strongest are not always necessary. A specific failure deserves the cheapest pattern that would have caught it.
+
+The seam-declaration rule (pattern 1) is the universal floor. Every non-trivial change starts with the agent stating: modules touched, interfaces depended on, interfaces defined or changed, substitutability. Without this, the other five patterns are bolt-on cleanups for a problem that should have been surfaced before the first edit. With this, the other five become targeted defenses for specific known failure shapes.
+
+Reverse-lookup is the most underused. Most agentic systems have a forward-lookup retriever (workflow oracle, semantic search, skill resolver) that answers "given my task, what should I use?" Few have the reverse: "given this file/path/symbol I'm about to change, what already depends on it?" Building the reverse-lookup is usually one script — same scoring machinery, different query shape — and pays for itself on the first refactor it saves.
+
+Adoption-state tracking is the most often skipped because it requires writing down the migration explicitly. A migration that lives only in one agent's head ends in inconsistent partial state — some consumers updated, some not, no source of truth for which is which. Pattern 4 forces the migration into the schema (or registry, or coordination doc), so any agent in the next session can see what's done and what isn't.
+
+Replay tests (pattern 6) are the strongest defense and the highest cost. They are not appropriate for every component — only for components whose breakage would propagate widely (provider gateway, memory schema, authentication, billing). For everything else, the seam rule + reverse-lookup + static analysis covers the cost-benefit tradeoff better.
+
+The corresponding anti-pattern is "blind local edit": an agent edits a file as if it were standalone, ships it, and discovers via downstream breakage that the file was a contract held by other code. The fix is one of the six patterns above, picked for the specific failure shape — not a vague reminder to "be more careful."
+
+The detailed contract for upstream/downstream awareness in coding-agent workflow is in `docs/dependency-awareness.md` in the rebuild pack (when present); meanwhile the most relevant adjacent docs are `docs/modularity-and-seams.md` (seam declaration), `docs/context-engineering.md` (source ledger), and `docs/cross-agent-operating-model.md` (adoption state for multi-agent contracts).
 
 ---
 
@@ -2177,6 +2873,152 @@ Better:
 Track adoption state. Promote only after contracts, shadow runs, evals, health checks, rollback, and owner review.
 ```
 
+### 9.9 Convenient coupling
+
+Bad:
+
+```python
+# In module A
+from b import _internal_state_bag
+def do_thing():
+    cfg = _internal_state_bag["cfg"]
+    return cfg["host"] + ":" + cfg["port"]
+```
+
+```python
+# Six months later, four more callers in C, D, E, F also read _internal_state_bag.
+# A change in B's storage shape now requires editing five modules in lockstep.
+```
+
+Better:
+
+```python
+# In module B
+def get_endpoint() -> Endpoint:
+    return Endpoint(host=self._cfg["host"], port=self._cfg["port"])
+
+# In module A
+from b import get_endpoint
+def do_thing():
+    ep = get_endpoint()
+    return f"{ep.host}:{ep.port}"
+```
+
+The cost of declaring `get_endpoint` is one function and one type. The cost of *not* declaring it grows with every additional caller that reaches into `_internal_state_bag`. The bias is forward: declare the seam now even when the local diff would be smaller without it. See section 3 and `docs/modularity-and-seams.md`.
+
+### 9.10 Skipping reflection
+
+Bad:
+
+```text
+Implement change. Tests pass. Mark task done. Move on.
+```
+
+Better:
+
+```text
+Implement change. Run the section 5.14 reflection checklist. Record the
+answers. If reflection finds a coupling smell, hidden state, unhandled
+failure mode, or goal drift, fix it or name it as an explicit gap before
+declaring done.
+```
+
+A change that has not been reflected on is not done; it is in an undocumented state. The next agent inherits the undocumented state without knowing it exists.
+
+### 9.11 Unclassified errors
+
+Bad:
+
+```python
+try:
+    result = call_external()
+except Exception:
+    return None
+```
+
+```python
+# Caller has no way to distinguish "transient, retry me" from "the input
+# was wrong, do not retry" from "the side effect committed and we lost
+# the receipt, escalate." Every failure becomes the same silent None.
+```
+
+Better:
+
+```python
+try:
+    return call_external()
+except TransientError:
+    raise  # let the retry policy handle it (recoverable, see 5.16)
+except PartialResultError as e:
+    return DegradedResult(value=e.partial, missing=e.missing)
+except SchemaError:
+    raise  # unrecoverable, do not retry, do not degrade
+```
+
+Every retry, fallback, or degraded-result path attaches to one of the three exception classes (recoverable, degraded, unrecoverable) explicitly. See section 5.16 and `docs/exception-taxonomy.md`.
+
+### 9.12 Implicit A2A folklore
+
+Bad:
+
+```text
+Agent A writes summaries to a file. Agent B reads them. The format is
+"whatever A produces this week." The contract is a script that happens
+to work today. When A is updated, B silently breaks.
+```
+
+Better:
+
+```text
+Define the message contract: schema, direction, idempotency, versioning,
+authority, failure attribution, audit. Treat A2A messages as message-level
+seams. See section 5.17 and docs/a2a-contracts.md.
+```
+
+A2A traffic without a contract is the multi-agent version of reaching across module boundaries. It looks like coordination; it is folklore.
+
+### 9.13 No learning loop
+
+Bad:
+
+```text
+Reflection finds a recurring pattern. The finding is captured in a chat
+summary that nobody reads. Next week, the same pattern is rediscovered.
+The week after, the same pattern is rediscovered again.
+```
+
+Better:
+
+```text
+Every recurring finding has a destination: a candidate skill, a contract
+change proposal, a missing eval, a candidate signal for human review,
+or a deprecation. A finding without a destination is a smell. See
+section 5.19 and docs/learning-loops.md.
+```
+
+A loop that produces findings nobody acts on is not a learning loop. It is a journal.
+
+### 9.14 FCFS task scheduling
+
+Bad:
+
+```text
+Three tasks become ready at the same minute. The scheduler runs them in
+arrival order. The urgent one waits behind a half-hour batch. The team
+notices when the urgent task misses its deadline.
+```
+
+Better:
+
+```text
+Each task carries declared urgency, importance, preemptability, cost, and
+staleness. The scheduler combines them into a runnable order with explicit
+rules and an audit trail of overrides. See section 5.20 and
+docs/task-prioritization.md.
+```
+
+First-come-first-served is the default that emerges when no one declares the rule. It is rarely the right rule.
+
 ---
 
 ## 10. Canonical coding-agent prompt for agentic changes
@@ -2192,6 +3034,13 @@ You are editing an agentic system. First read AGENTS.md, CLAUDE.md if present, a
 - docs/memory-architecture.md
 - docs/context-engineering.md
 - docs/evals.md
+- docs/modularity-and-seams.md
+- docs/reflection-and-planning.md
+- docs/exception-taxonomy.md
+- docs/a2a-contracts.md
+- docs/cost-aware-routing.md
+- docs/learning-loops.md
+- docs/task-prioritization.md
 
 Before coding, produce a short architecture brief:
 
@@ -2206,10 +3055,19 @@ Before coding, produce a short architecture brief:
 9. Which tests/evals will prove this is not brittle deterministic orchestration.
 10. What observable system acceptance test defines done, and which manual-proof gaps remain.
 11. What backpressure, budget, fallback, adoption-state, and rollback rules apply.
+12. Plan and goal: state the goal as observable system behavior (not "tests pass"), the acceptance proof, and what is deliberately out of scope. Goal drift will be checked at the end.
+13. Seam declaration: which modules are touched, which interfaces are depended on, which interfaces are defined or changed, and what would have to change if the implementation behind each were swapped. If you cannot answer these, you have not yet understood the change.
+14. Exception classes: which exception classes (recoverable, degraded, unrecoverable) are in scope. For each external dependency, state what happens when it is slow, unavailable, partial, or returns garbage. No silent degradation.
+15. A2A contracts: if this change introduces or modifies an agent-to-agent message, declare its schema, direction, idempotency, versioning, authority, failure attribution, and audit surface.
+16. Routing and cost: which lane runs this work and why. If a degraded or fallback lane is in scope, state it explicitly. No silent paid spillover.
+17. Prioritization inputs: if this change adds a task to a queue, declare its urgency, importance, preemptability, cost, and staleness behavior.
+18. Learning destination: if this change reveals a recurring pattern, candidate skill, missing eval, contract change, or candidate signal, name where the finding goes.
 
 Do not implement ambiguous agent behavior with keyword routing, regex intent detection, lookup tables, fixed branches, or giant always-loaded prompts unless you explicitly justify why the task is deterministic.
 
 Implement deterministic harness controls for safety, schemas, permissions, idempotency, checkpoints, traces, and evals. Implement adaptive behavior through the model policy layer with the right tools, memory, skills, and context.
+
+Before declaring done, run the section 5.14 reflection checklist: goal drift, coupling and seams, shortcuts, hidden state, failure modes, tests and evals, causal depth. Record the answers. If reflection finds an issue, either fix it or name it as an explicit gap. Hidden gaps are worse than known gaps.
 ```
 
 ---
@@ -2274,7 +3132,25 @@ A production incident is valuable only if it turns into an architectural artifac
 
 A recurring failure pattern should produce a falsifiable model of the system, not another patch note. Map parent workflows, dispatchers, work children, tools, providers, state transitions, and user-visible outputs as a graph of assumptions. Ask at every edge: is this contract enforced or merely hoped for?
 
-### 12.3 Backpressure and cost are harness responsibilities
+### 12.3 Proximate causes are not ultimate causes
+
+Agentic failures need causal depth. The proximate cause is the immediate explanation: the timeout fired, the parser missed a field, the subagent lacked context, the router chose a branch, the worker retried, or the post duplicated.
+
+The ultimate cause is the deeper system reason that failure shape was possible: the wrong layer owned the decision, the harness lacked durable state, memory was not consulted, source authority was unclear, the tool contract was underspecified, ownership was split across agents, or no eval/replay preserved the case.
+
+Do not declare root cause after one true local explanation. Build a causal ladder:
+
+1. What symptom or invariant failed?
+2. What local action immediately caused it?
+3. What did that actor believe or fail to know?
+4. What context, memory, source authority, tool contract, state, or ownership rule should have changed the action?
+5. Which deterministic harness boundary should have prevented or reviewed it?
+6. Why did traces, tests, evals, health checks, or review miss it?
+7. What durable contract prevents the class across agents and workflows?
+
+If you cannot answer the deeper layers, say the investigation has not yet reached ultimate cause. In multi-agent systems, prefer shared contracts and eval fixtures over patching every agent's local edge cases.
+
+### 12.4 Backpressure and cost are harness responsibilities
 
 Agents make calls, but the harness owns admission control. Long-running agent systems need caller attribution, per-caller budgets, queue or refuse behavior, lockout handling, provider-health signals, and retry policy in one place.
 
@@ -2282,7 +3158,7 @@ Never let each layer independently decide to retry, rerun, spawn, or spill over.
 
 Cost is also a safety boundary. Paid provider fallback, model spillover, high-volume probes, and external sends require explicit policy, audit logs, and operator approval. A fallback that silently spends money is not resilience; it is an unreviewed side effect.
 
-### 12.4 Claims must reconcile with state
+### 12.5 Claims must reconcile with state
 
 Natural-language agent claims are not state transitions. If an agent says it accepted, assigned, published, approved, paid, emailed, deployed, or deleted something, the harness should be able to verify the corresponding state write or side-effect receipt.
 
@@ -2290,7 +3166,7 @@ The right design is not a brittle keyword detector over chat text. The right des
 
 A live operating system needs to answer: what did the agent claim, what changed in state, who owns the mismatch, and how old is it?
 
-### 12.5 Keep thesis, current state, and truth separate
+### 12.6 Keep thesis, current state, and truth separate
 
 Agentic systems often carry aspirational documents: strategy, roadmap, north star, desired persona, or future operating model. Those are useful, but they are not evidence that the system currently behaves that way.
 
@@ -2309,13 +3185,13 @@ sidecar output
 
 Coding agents should not implement against the aspiration while ignoring the current state. Conversely, they should not delete the aspiration because current behavior falls short. Use the gap as a roadmap.
 
-### 12.6 Promote through adoption states
+### 12.7 Promote through adoption states
 
 A new model path, source lane, sidecar agent, routing policy, or workflow should move through explicit adoption states: reference-only, shadow, read-only, candidate-write, write-enabled, canonical, deprecated, retired.
 
 One good demo is not production evidence. Require contracts, shadow runs, evals, health checks, rollback, and owner review before promotion. Cheap experiments are good; accidental promotion is not.
 
-### 12.7 Human attention is a scarce system resource
+### 12.8 Human attention is a scarce system resource
 
 Human review is not free. Agentic operating systems need attention budgets and notification gates just as much as token budgets. Interrupt for irreversible actions, degraded autonomy, unresolved contradictions, meaningful uncertainty, or decisions where human taste/authority is the product. Do not interrupt because a prompt said “keep the user updated.”
 
@@ -2328,7 +3204,7 @@ Will delay make the outcome materially worse?
 Can the system continue safely without interrupting?
 ```
 
-### 12.8 The coding agent is part of the operating system
+### 12.9 The coding agent is part of the operating system
 
 Coding agents are not outside observers. Their edits, session logs, claims, commits, evals, and summaries become part of the system’s memory and coordination surface. That means they need the same discipline they are adding to runtime agents: explicit ownership, no orphan sweeps, no silent assumption changes, tests tied to real incidents, and final handoffs that say what remains unproven.
 
@@ -2338,6 +3214,109 @@ For agentic coding, the meta-rule is simple:
 Do not merely add intelligence.
 Add the harness that lets intelligence act safely, learn honestly, and prove it worked.
 ```
+
+### 12.10 Modularity is a runtime property
+
+A codebase that two agents can work on in parallel without colliding is a property of the seams, not of the agents. If two parallel sessions keep editing the same files, keep contradicting each other's interpretations, or keep needing a human to merge, the seam between their work has not been declared. The fix is not better merge tooling, better coordination protocols, or fewer concurrent agents. The fix is to find which interface is missing and declare it.
+
+This generalizes. Every operational symptom of poor modularity has the same diagnostic shape: the symptom is observable at runtime; the cause is a missing or wrongly-placed seam in the codebase; the fix is to declare the seam, not to add another patch around it.
+
+```text
+symptom                                    diagnosis
+parallel sessions collide on shared files  surface needs a seam
+edits cascade across unrelated callers     internal was leaking
+removing a feature touches more files      feature was never encapsulated
+  than adding it did                         in the first place
+adding a new lane requires editing N       N call sites are reading the same
+  call sites in lockstep                     internal directly
+agents repeatedly re-derive the same       there is no contract for the result;
+  result in different shapes                 it is being recomputed inline
+                                             every time
+```
+
+The cost of declaring the seam is paid once. The cost of every additional caller that reaches across the missing seam is paid forever, by every agent that touches the system afterward. Coding agents do not feel this asymmetry on their own. The harness has to make it visible. See section 3 and the section 5.14 reflection checklist.
+
+### 12.11 Errors are classes, not surprises
+
+Production systems fail. The question is whether the failure has a class or whether it is a surprise.
+
+A failure with a class has known retry behavior, known degradation behavior, known escalation behavior, and known operator visibility. The lane reaches the failure, attributes it to the right class, behaves accordingly, and surfaces a structured signal to the next layer. A failure that is a surprise has none of those. The lane silently drops the work, silently retries forever, silently produces a partial result without saying so, or silently routes around the failure by spending money no one budgeted for.
+
+The discipline is to refuse surprises. Every external dependency, every retry path, every fallback, every degraded result attaches to one of the three exception classes (section 5.16) explicitly. Silent degradation is a bug. Silent retry past the budget is a bug. Silent paid spillover is a bug. A failure that does not appear in any audit surface is a bug.
+
+```text
+recoverable    retry per policy, surface on retry budget exhaustion,
+               do not poison durable state.
+degraded       produce the partial result, mark the missing pieces,
+               surface a structured signal, never silent.
+unrecoverable  stop, do not retry, write the failure record, alert
+               per attention policy.
+```
+
+Operators should be able to ask "what failed and why" and get a structured answer for every lane in the system. If the answer for any lane is "we don't know because the failure was not classified," that lane is not production-ready.
+
+### 12.12 Cost asymmetry is a routing input, not an afterthought
+
+Spend authority (the fifth claim in the executive thesis) treats paid API keys as privileged exception paths. Cost-aware routing (section 5.18) extends that posture into runtime. Every task has a cost; the harness decides which lane pays it.
+
+The operational lesson is that cost is rarely a runtime emergency and almost always a doctrine drift. The drift looks like this:
+
+```text
+Week 1: a flaky default lane breaks one demo. The agent silently routes
+        to the escalated lane to make the demo work.
+Week 4: a new lane is built. The author copies the routing pattern
+        from Week 1 because it is the visible example.
+Week 8: every lane silently escalates. Spend has tripled. No one made
+        a doctrine decision; it accumulated as folklore.
+Week 12: the bill arrives.
+```
+
+The fix is not to add a budget alert at week 12. The fix is to never let routing be folklore in the first place. Every routing decision is recorded with the task. Every escalation, fallback, and degradation is a doctrine decision attached to a class (5.16) and a routing rule (5.18). Lane health, budget state, and override rationale are first-class inputs.
+
+The cost of declaring the routing rule is small. The cost of recovering from accumulated routing folklore is large and disproportionately hits the people who did not write the original code.
+
+### 12.13 Systems that don't learn get worse
+
+Stability is the default state of a contract; improvement is not. A system without learning loops (section 5.19) is not standing still. It is regressing relative to the world it operates in.
+
+Two failure modes show up in practice:
+
+```text
+1. Patterns that worked are not promoted into skills. Each agent
+   rediscovers the same answer every week. Effort accumulates;
+   competence does not.
+
+2. Patterns that failed are not deprecated. Stale skills, stale
+   contracts, stale evals quietly produce wrong answers. Newer
+   patterns work around the stale ones instead of removing them.
+   The system gets harder to reason about over time.
+```
+
+A weekly external critique that nobody acts on is not a learning loop; it is a journal. A reflection pass whose findings have no destination is not a learning loop; it is a confession. Closing the loop means the harness has a path from finding to action: a candidate skill, a contract change proposal, a missing eval, a candidate signal for human review, or a deprecation. A finding without a destination is a smell, not a feature.
+
+The most reliable predictor of a system that improves over time is that its findings have visible, audited destinations. The most reliable predictor of a system that quietly gets worse is that its findings accumulate in chat summaries no one reads.
+
+### 12.14 Priority is not optional
+
+In a single-task system, prioritization is implicit: the one task is the priority. In a long-lived agentic system with many concurrent lanes, prioritization is the difference between "the urgent thing happens" and "the urgent thing waits behind a batch nobody knew was running."
+
+The failure mode is not that priorities are wrong. It is that priorities are not declared. A queue with no rule defaults to first-come-first-served. First-come-first-served is rarely the right rule and is almost never the rule a human would choose if asked.
+
+```text
+Bad:  three tasks become ready at the same minute. The scheduler runs
+      them in arrival order. The urgent one waits behind a half-hour
+      batch. The team notices when the urgent task misses its
+      deadline.
+
+Good: each task carries declared urgency, importance, preemptability,
+      cost, and staleness. The scheduler combines them into a
+      runnable order with explicit rules and an audit trail of
+      overrides.
+```
+
+The harness owns the rule, not the agent. A coding agent picking the next task by feel will reliably pick the easiest one; this is a known bias, not a moral failing. A scheduler with no declared rule will silently drift toward whatever the easiest implementation produces. Both fail in the same direction: urgent work waits, important work yields to easy work, and the team finds out at the deadline.
+
+Declaring the rule is cheap. Recovering from a system where priority is folklore is not.
 
 ---
 
@@ -2398,7 +3377,7 @@ These are the public materials this architecture pack is designed to align with:
 
 ### File: `docs/agentic-systems-engineering.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-systems-engineering.md" sha256="442b8d3bfdccfc4ceb1dad4bad1bd7cd796251d1092e0776141af8f9adf50361" bytes="55194" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-systems-engineering.md" sha256="562c531f7d8865f109473a498b25657d8fc2484b24958c5aacbc83f7eaf4b419" bytes="58374" trailing_newline="true" -->
 `````````` markdown
 # Engineering Agentic Systems: Orientation for Codex, Claude Code, and Other Coding Agents
 
@@ -2460,6 +3439,8 @@ Use model-driven or agent-driven behavior for the policy:
 
 A good agentic system is not “less deterministic.” It is deterministic in the places that must be reliable and adaptive in the places where the environment, task, or information path cannot be known ahead of time.
 
+The same split applies to debugging. A proximate cause explains the immediate breakage; an ultimate cause explains the missing contract that let the breakage matter. Do not stop at "the timeout fired," "the parser failed," "the router chose the wrong branch," or "the subagent lacked context." Ask which memory, context, tool contract, source-authority rule, durable-state boundary, ownership rule, guardrail, or eval should have prevented or exposed the failure.
+
 ---
 
 ## 2. The failure mode this document prevents
@@ -2485,6 +3466,7 @@ Common bad substitutions:
 | Learn a reusable procedure | Add another special-case branch |
 | Delegate to specialist behavior | Add one more giant prompt and tool list to the main agent |
 | Evaluate quality | Check only that code compiles |
+| Find root cause | Report the first proximate cause without tracing the missing system contract |
 
 The correct implementation looks more like this:
 
@@ -3739,6 +4721,8 @@ Split into multiple agents only when at least one of these is true:
 - specialist evaluation is needed
 - ownership or permissions differ
 
+When a multi-agent system fails, do not patch the nearest subagent prompt and stop. Trace the causal ladder across parent, dispatcher, child agent, tool, state store, memory, source authority, and final output. If several agents need the same local patch, the ultimate cause is usually a missing shared contract or eval at the coordination layer.
+
 ### 14.1 Common patterns
 
 #### Manager with agents-as-tools
@@ -3776,6 +4760,7 @@ Avoid:
 - no budget per agent
 - no clear authority for final answer
 - hidden side effects from child agents
+- local edge-case patches instead of shared contracts
 
 ---
 
@@ -3799,6 +4784,7 @@ For agentic changes, add or update evals for:
 - recovery from tool failure
 - context budget behavior
 - final answer faithfulness to evidence
+- causal-depth behavior for incidents and regressions
 - latency and cost
 
 ### 15.2 Offline evals
@@ -4010,6 +4996,30 @@ Better:
 - split only for tool, policy, memory, context, or ownership reasons
 - structured subagent outputs
 - parent trace links
+
+### 16.9 Aggressive timeouts on reasoning calls
+
+This is the single most common cause of intermittent agent failures that look like "the model is broken." A client-side timeout fires mid-thinking, the harness sees an exception, the agent retries, and the same wall hits again. Reasoning/thinking lanes (extended-thinking Claude, OpenAI o-series, MiniMax-M2.7 on hard turns, DeepSeek R1, etc.) routinely take 30 seconds to 10 minutes for a single turn. Timeouts calibrated to chat-model latency will not survive contact with them.
+
+Bad:
+
+- a uniform 30s or 60s HTTP client timeout applied to every model call
+- a tool wrapper that buries `timeout=60` as a constant around a reasoning model
+- exponential-backoff retries with a low total budget cap that converges back into the same too-short window
+- one timeout number used for connect, read, and idle alike
+- treating a timeout-induced failure as a model error and tuning prompts instead of timeouts
+
+Better:
+
+- size each tool's timeout to the slowest realistic call on its lane, not the median
+- for reasoning/thinking lanes, default to a 5–10 minute total budget and confirm the upstream API actually supports it
+- prefer streaming with an idle-timeout (no tokens for N seconds) over total-duration timeouts; a 4-minute thinking turn that emits a token every 10 seconds should not be killed by a 90-second deadline
+- distinguish connect, read, and idle timeouts in the HTTP client; one number for all three is a leaky abstraction
+- when a tool wraps a model call, surface the upstream timeout as an explicit field in its contract — do not bury a constant inside the wrapper, and do not let `latency_expectation: low|medium|high` substitute for a real number
+- log when a timeout fires and capture how much progress was made; a turn that died at 95% of its budget needs a different fix than one that died before the first byte
+- when escalating from a fast lane to a reasoning lane, raise the timeout on the same edge that raises the model — escalation without timeout escalation just produces faster failures
+
+Calibrate timeouts to the slowest lane the harness actually uses, then forget about them.
 
 ---
 
@@ -4602,7 +5612,7 @@ When a memory is used to answer a high-stakes question, the system should expose
 
 ### File: `docs/context-engineering.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/context-engineering.md" sha256="5d352341c65c09b27f27741d75d14c35dd88b67c84a73d6c0d5d7a205b3a65ef" bytes="1741" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/context-engineering.md" sha256="4683e02a659f84dfa5ba795ea44108009da302c4ca9e9b05a0076ad8dc2e7e9a" bytes="2788" trailing_newline="true" -->
 `````````` markdown
 # Context Engineering for Agentic Systems
 
@@ -4642,6 +5652,16 @@ Use `.agentic/context_policy.yaml` as the source of truth.
 The context engine should include a source ledger for every run. The ledger should identify which source records, memories, synthesis artifacts, tool schemas, skills, and files were loaded; why they were loaded; their freshness; and whether they are authoritative, retrieval-only, recall, synthesis, or candidate material.
 
 Compaction must preserve source handles, identity decisions, unresolved contradictions, approval constraints, and attention policy. A short summary that loses those identifiers is not safe context.
+
+## Worked example: lazy-load category indexes
+
+A common bootstrap anti-pattern is treating a "comprehensive reference doc" as bootstrap material when its content is actually a category index — many distinct lanes/integrations/tools each described in their own section. Bootstrap pays the cost of every byte on every turn, and crowds out the tokens that should be carrying the live task. The fix:
+
+- Split the monolith into per-member sub-docs (one file per lane).
+- Replace the original doc with a thin index (one line per member + path).
+- Add a retriever boost so a query like "Brex spend by category" surfaces `tools/gaia-brex.md` ahead of any larger general doc that mentions Brex in passing.
+
+The diagnostic: if a doc has many `## Header` sections each describing a distinct member of a category, it is a category index masquerading as a single coherent reference. Treat the index as bootstrap; treat each member as lazy-load. Detail and a worked refactor (TOOLS.md, Gaia, May 2026): `docs/agentic-coding-for-agentic-systems.md` § 5.2.1.
 ``````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/context-engineering.md" -->
 
@@ -4750,7 +5770,7 @@ Replay must not duplicate external side effects, re-promote a candidate claim, r
 
 ### File: `docs/evals.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/evals.md" sha256="7492a801b4ccf62607d8a81d94a9b47fa1399925e847f636a3b29da7765cecb5" bytes="1740" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/evals.md" sha256="48ee3ab6402fee9ca6ff0b01fb1cc3bf5150dcc86309104341ff355784c26905" bytes="1961" trailing_newline="true" -->
 `````````` markdown
 # Evals for Agentic Systems
 
@@ -4772,6 +5792,8 @@ Evaluate:
 Use positive and negative cases. A negative case proves the agent does not call a risky tool, does not use stale memory, does not bypass approval, or does not fall back to keyword routing.
 
 When a real incident exists, make it the fixture. Sanitize logs or traces if needed, but preserve the causal shape: inputs, context, tool calls, state, side effects, failures, and expected recovery. Synthetic cases are useful after the incident replay exists; they should not replace it.
+
+Incident evals should capture the causal ladder, not only the failing output. The expected result should identify the proximate cause, the deeper missing contract, and the harness or coordination layer that must change.
 
 For prompt, skill, workflow, or agent-behavior changes intended to alter live behavior, require a live-safe end-to-end run, replay, shadow run, or forensics-backed verification. If not run, mark the layer as a known gap rather than calling the change done.
 
@@ -5060,7 +6082,7 @@ skills:
 
 ### File: `.agentic/eval_matrix.yaml`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/eval_matrix.yaml" sha256="07a88862dbb14afbbebcaea504e6ad8cf1481b4bca2aa4b9a926a142d2a3c385" bytes="1771" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/eval_matrix.yaml" sha256="2195ead1d60217ceadaf59bbfbb2c5b6b4c44ba0ff97260ddd2036ac0328b798" bytes="2050" trailing_newline="true" -->
 `````````` yaml
 cases:
   - id: tool_choice_memory_needed
@@ -5109,6 +6131,13 @@ cases:
     expected:
       production_write: false
       adoption_state_checked: true
+  - id: incident_requires_causal_depth
+    task: A multi-agent workflow failed after a subagent retried the wrong action.
+    expected:
+      names_proximate_cause: true
+      names_ultimate_missing_contract: true
+      no_local_patch_only: true
+      replay_or_eval_added: true
 ``````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".agentic/eval_matrix.yaml" -->
 
@@ -5206,7 +6235,7 @@ Return context policy changes and compaction eval cases.
 
 ### File: `.claude/skills/build-agent-eval/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/build-agent-eval/SKILL.md" sha256="89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c" bytes="531" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/build-agent-eval/SKILL.md" sha256="6459b4c53c093e69aca8f1fec6f0e9d4ae588bc41abb1fc55ebf080f7251c60d" bytes="574" trailing_newline="true" -->
 `````````` markdown
 ---
 name: build-agent-eval
@@ -5220,7 +6249,7 @@ description: Use when adding tests or evals for agentic behavior.
 1. Identify the behavior being tested.
 2. Create positive and negative cases.
 3. Test process, not only final answer.
-4. Capture tool choice, memory retrieval, context use, approval gates, recovery, and stop conditions.
+4. Capture tool choice, memory retrieval, context use, approval gates, recovery, stop conditions, and causal-depth reasoning for incident cases.
 5. Add cheap tests for CI and heavier tests for release or nightly runs.
 6. Ensure failures are traceable.
 
@@ -5234,7 +6263,7 @@ Return eval cases, expected traces, and pass/fail criteria.
 
 ### File: `.claude/skills/review-agentic-architecture/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/review-agentic-architecture/SKILL.md" sha256="16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164" bytes="812" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/review-agentic-architecture/SKILL.md" sha256="7a5543668a3f9cf1f3a8a290f141ca7434d54bc20abf38514f5ed731c322814a" bytes="915" trailing_newline="true" -->
 `````````` markdown
 ---
 name: review-agentic-architecture
@@ -5253,6 +6282,7 @@ description: Use before merging changes to agent loops, tools, memory, context, 
 - Is context assembled by policy rather than dumping everything?
 - Are risky side effects gated by approval and idempotency?
 - Are checkpoints and replay behavior safe?
+- For failures or incident repairs, does the analysis distinguish proximate cause from ultimate cause?
 - Are evals included for positive and negative cases?
 
 ## Output
@@ -5265,7 +6295,7 @@ Return pass/fail with required changes.
 
 ### File: `.github/pull_request_template.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".github/pull_request_template.md" sha256="fb154d255244ac42ddc474f01219463629f39878f6dade61de1dc77fee3f6afe" bytes="751" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".github/pull_request_template.md" sha256="b3df7fd37f8120c24dd9aaada3d7ec31c7138cfd7b16abc542f34cecc8a08d4f" bytes="795" trailing_newline="true" -->
 `````````` markdown
 ## Agentic architecture review
 
@@ -5297,6 +6327,8 @@ Guardrails and human approval gates:
 Cross-agent ownership or adoption-state changes:
 
 Attention/notification behavior:
+
+Causal ladder for incident/debugging work:
 
 Tests/evals added or updated:
 ``````````
@@ -5583,3 +6615,1484 @@ description: Use when adding or reviewing a source lane, source-authority rule, 
 Return a source-lane contract, affected artifact roles, identity policy, authority matrix, adoption state, attention policy, and eval cases.
 ``````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-source-lane/SKILL.md" -->
+
+---
+
+### File: `docs/modularity-and-seams.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/modularity-and-seams.md" sha256="8515130c76849d2c5deb27deb5c1ca67199a5553cb09237b684dc81a2d86d73b" bytes="9239" trailing_newline="true" -->
+`````````` markdown
+# Modularity and seam design
+
+Version: 1.0
+Audience: coding agents and human reviewers working on agentic systems.
+
+This document is the detailed contract for the modularity claim in the executive thesis and for the "Modularity, parallelization, and seam design" section of the architecture pack. Read it before beginning any non-trivial change. Re-read it during reflection.
+
+---
+
+## 1. Why this exists
+
+Coding agents systematically under-modularize. The reward signal inside one task does not include the costs that land in the next task. Tokens spent declaring a clean module seam are visible inside the task; the cost of *not* declaring the seam is invisible inside the task and lands later, in a different session, on a different agent.
+
+```text
+declare a seam now:           cost ~ linear (one contract + a few lines of glue)
+untangle a shortcut later:    cost ~ super-linear (callers x editors x dependent facts)
+```
+
+Humans hold this asymmetry in working memory because they have lived through it. Coding agents do not. The harness has to install the bias.
+
+---
+
+## 2. The seam-declaration rule
+
+Every non-trivial change brief answers four questions before code is written. These belong in the architecture brief alongside component classification and harness/policy split.
+
+```text
+1. Modules touched
+   Which modules does this change read, write, or import?
+
+2. Interfaces depended on
+   Which contracts (function signatures, schemas, message types, tool contracts,
+   memory APIs, source-authority lookups) does this change consume?
+
+3. Interfaces defined or changed
+   Which contracts does this change introduce, modify, deprecate, or extend?
+   For each, what is the public surface and what is intentionally private?
+
+4. Substitutability
+   What would have to change if the implementation behind each interface were
+   swapped (different store, different model, different transport, different
+   provider)? If the answer is "many things in many places," the seam is in the
+   wrong place.
+```
+
+A coding agent that cannot answer these has not understood the change yet.
+
+---
+
+## 3. The six coupling smells
+
+Any of these in a diff is creating coupling. The harness should catch them at review time, not at incident time.
+
+### 3.1 God-object state bag
+
+A new function takes a `context`, `state`, `request`, or similarly named bag and reads four or more fields from it. The function does not depend on the bag; it depends on the four fields.
+
+```python
+# Bad
+def render(context):
+    return f"{context.user.name}: {context.last_event.kind} at {context.now} ({context.locale})"
+
+# Better
+def render(name: str, event_kind: str, when: datetime, locale: str) -> str:
+    return f"{name}: {event_kind} at {when} ({locale})"
+```
+
+The bad version couples `render` to the entire `context` shape. The better version depends on four typed values and is independently callable from anywhere those values are available.
+
+### 3.2 Reaching through a module to read internals
+
+Module A imports module B and accesses `B._internal_thing` or a field that is conventionally private. The author justifies it as "it is right there." This is the most reliable predictor of expensive future untangling.
+
+```python
+# Bad
+from b import _config_dict
+host = _config_dict["host"]
+
+# Better
+from b import get_endpoint
+ep = get_endpoint()
+host = ep.host
+```
+
+If module B's storage shape changes, the bad version forces a coordinated edit in every caller that reached through. The better version isolates the change to module B.
+
+### 3.3 Runtime type-switch on opaque payload
+
+A function receives an opaque payload and switches on a `kind`, `type`, or `event_name` field, dispatching to N branches. Each branch knows about the others by absence. Each new branch is a coupling event.
+
+```python
+# Bad
+def handle(event):
+    if event["kind"] == "create":
+        ...
+    elif event["kind"] == "update":
+        ...
+    elif event["kind"] == "delete":
+        ...
+
+# Better
+HANDLERS: dict[str, Callable] = {}
+def register(kind):
+    def deco(fn): HANDLERS[kind] = fn; return fn
+    return deco
+
+@register("create")
+def _on_create(event): ...
+
+@register("update")
+def _on_update(event): ...
+
+def handle(event):
+    return HANDLERS[event["kind"]](event)
+```
+
+The better version makes each handler independently addressable. Adding a new event kind does not require editing the dispatcher.
+
+### 3.4 Hidden temporal dependency
+
+Function A must be called before function B, but the requirement is encoded only in the order they appear in the calling code.
+
+```python
+# Bad
+session.attach()
+session.send(msg)  # silently fails if attach was not called first
+
+# Better
+def send(attached_session: AttachedSession, msg: Message):
+    ...
+
+attached = session.attach()
+send(attached, msg)
+```
+
+The better version makes the dependency a type. `send` cannot be called without an attached session because the function signature refuses to accept anything else.
+
+### 3.5 "Just one more parameter" creep
+
+A function gains its sixth, seventh, eighth optional parameter, each added by a different agent in a different session for a different caller.
+
+```python
+# Bad
+def fetch(url, timeout=None, retries=None, cache=None, follow_redirects=None,
+          user_agent=None, headers=None, dry_run=None, trace_id=None):
+    ...
+```
+
+Either the function is doing several jobs (split it) or the parameters belong on a typed config object that includes only the fields each caller needs.
+
+```python
+# Better
+@dataclass
+class FetchOptions:
+    timeout: float = 30.0
+    retries: int = 3
+    cache: CachePolicy = CachePolicy.DEFAULT
+
+def fetch(url: str, options: FetchOptions = FetchOptions()) -> Response:
+    ...
+```
+
+### 3.6 Test that requires more than one module to instantiate
+
+A unit test imports four modules to construct the system under test. The test is honest about the coupling: there is no seam between those modules. Fix the seam, not the test.
+
+If the only way to test `analyzer` is to construct a `repository`, a `cache`, and a `client`, then `analyzer` is implicitly coupled to all three. A seam between `analyzer` and the others (an interface, a fake, a typed input) makes the test simple and the coupling explicit.
+
+---
+
+## 4. Parallelization as the diagnostic
+
+A codebase where two agents collide on shared files every session has a seam problem, not a coordination problem. The right fix is not better merge tooling; it is to find which interface is missing and declare it.
+
+```text
+symptom                                   diagnosis
+two agents keep editing the same file     surface needs a seam between their work
+agent edit lands and breaks unrelated     module exposed an internal that other
+  callers it had no reason to know         callers reached through
+adding a new lane requires touching N     N call sites are all reading the same
+  call sites                                internal directly instead of through
+                                            a contract
+removing a feature touches more files     the feature was never encapsulated; it
+  than adding it did                        leaked into N modules during build
+agents repeatedly re-derive the same      there is no contract for the result;
+  result in different shapes                 it is being recomputed inline
+                                             every time
+```
+
+If the system cannot be worked on in parallel without folklore-level coordination, the seams are wrong.
+
+---
+
+## 5. What this document is not
+
+This is not a license to invent abstractions for hypothetical future requirements. The bias is toward declaring seams *for the modules this change actually touches*, not toward speculative interface design.
+
+```text
+Three similar lines is better than a premature abstraction that picks the
+wrong axis. The cost asymmetry argument applies to seams that turn out to
+matter; the canonical signal that a seam matters is that more than one
+caller needs the contract or more than one agent will edit on either side
+of it.
+```
+
+When in doubt: prefer a small, named function with the right signature over an inlined snippet, but defer abstract base classes, plugin systems, and configurable strategies until the second or third caller appears.
+
+---
+
+## 6. Reflection ties this to the per-task loop
+
+The reflection checklist (`docs/reflection-and-planning.md`) explicitly asks:
+
+```text
+- Did this change introduce any of the six coupling smells?
+- Did this change reach across a module boundary that previously had a seam?
+- Did this change add a parameter, branch, or field that another module
+  now depends on by absence rather than by contract?
+- If a future task had to swap the implementation behind any interface
+  this change touches, what would have to change with it?
+```
+
+A reflection pass that cannot answer "no" to the first three and bound the answer to the fourth is not done.
+
+---
+
+## 7. Cross-references
+
+- Architecture: section 3 (Modularity, parallelization, and seam design)
+- Anti-pattern: section 9.9 (Convenient coupling)
+- Field lesson: section 12.10 (Modularity is a runtime property)
+- Reflection: section 5.14 and `docs/reflection-and-planning.md`
+- Parallel work and integrator/contributor roles: section 5.13 and `docs/cross-agent-operating-model.md`
+``````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/modularity-and-seams.md" -->
+
+---
+
+### File: `docs/reflection-and-planning.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/reflection-and-planning.md" sha256="aa7905927bf871cb0e12a05ef4daf0147d196c8af829386d6cec903ed3487839" bytes="6753" trailing_newline="true" -->
+`````````` markdown
+# Reflection and planning
+
+Version: 1.0
+Audience: coding agents working on agentic systems, plus human reviewers who set acceptance bars.
+
+Plan-then-execute and reflection are the two primitives that make every other harness pattern work in practice. Without them, modularity, exception classification, A2A contracts, cost routing, learning loops, and prioritization all collapse back to folklore at the first time pressure.
+
+---
+
+## 1. Plan as a first-class artifact
+
+The plan is written before action, referenced during action, and compared against at the end. It is not a chat-summary "I'm going to do X"; it is a structured artifact in the change record.
+
+```text
+1. Goal
+   One sentence. What does the world look like after this change that it
+   does not look like now? Stated as observable system behavior, not as
+   "the test passes."
+
+2. Acceptance proof
+   How will we know the goal was met? What is the acceptance test in system
+   terms? What manual-proof gaps will remain after implementation?
+
+3. Component classification
+   Which kind of component is being added or changed (workflow, augmented
+   LLM, agent loop, subagent, tool, skill, memory, source lane, identity,
+   context, durable execution, guardrail, coordination, attention, adoption,
+   eval).
+
+4. Seam declaration
+   Modules touched, interfaces depended on, interfaces defined or changed,
+   substitutability. See docs/modularity-and-seams.md.
+
+5. Failure-mode budget
+   Which exception classes are in scope (recoverable, degraded, unrecoverable)?
+   What partial-result or degraded-result behavior is acceptable? See
+   docs/exception-taxonomy.md.
+
+6. Routing decision
+   Which lane runs this work and why. Degraded or fallback lane if any.
+   See docs/cost-aware-routing.md.
+
+7. Out of scope
+   What deliberately is not being done, and why? This list catches the
+   scope creep that would otherwise drift the goal.
+```
+
+A plan that does not have all seven sections is a draft, not a plan.
+
+---
+
+## 2. Goal drift and where to catch it
+
+Goal drift is the failure mode where an agent that started with "make the system survive a malformed payload" quietly redefines the goal to "make this one test pass" once it gets into the weeds. The user-visible symptom looks like the original task, but the underlying contract was never fixed.
+
+Catch drift at three points:
+
+```text
+- before each tool call:   does this action serve the original goal stated
+                            in the plan?
+- before declaring done:   does the result match the acceptance proof?
+- inside reflection:       did the change end up serving the goal stated
+                            in the plan, or a quietly redefined version
+                            of it?
+```
+
+If the goal genuinely needs to change mid-task, change the plan explicitly and record why. A change in goal that is not recorded becomes folklore; the next agent inherits a goal it did not see written down.
+
+---
+
+## 3. Reflection: the per-task self-critique loop
+
+Reflection runs after the agent has produced a candidate result and before the result is declared done. It is a structured checklist, not a free-form summary.
+
+### 3.1 The checklist
+
+```text
+1. Goal drift
+   What was the original goal? Did the implementation drift toward
+   "make the local test pass" or "make the immediate symptom go away"?
+   Restate the original goal and confirm the change still serves it.
+
+2. Coupling and seams
+   Did this change introduce any of the six coupling smells (god-object
+   bag, reaching through internals, runtime type-switch, hidden temporal
+   dependency, parameter creep, multi-module test)? Did this change reach
+   across a module boundary that previously had a seam? Did this change
+   add a parameter, branch, or field that another module now depends on
+   by absence rather than by contract?
+
+3. Shortcuts
+   Where did the change skip a step that the architecture says should
+   exist (input validation, schema check, idempotency, source-authority
+   lookup, memory write, eval coverage, durable-state record)?
+
+4. Hidden state
+   Does the change rely on global state, environment variables, file
+   system layout, time-of-day, or process startup order in ways that
+   are not documented in the contract?
+
+5. Failure modes
+   What happens when each external dependency this change calls is
+   slow, unavailable, returns a partial result, or returns garbage?
+   Which of those are handled and which are silently re-raised as the
+   fall-through path?
+
+6. Tests and evals
+   What new behavior is now true that no test exercises? What incident
+   class is now reachable that no eval would catch?
+
+7. Causal depth
+   If this is a fix, what proximate cause did it address, and what
+   ultimate contract did it change? If only the proximate cause was
+   addressed, what class of incident is still reachable?
+```
+
+### 3.2 What "done" means
+
+Reflection is not done when the agent has answers; it is done when the answers are written down in the change record and the agent has either fixed the items it found or named them as explicit gaps.
+
+```text
+hidden gap > known gap
+```
+
+Hidden gaps are worse than known gaps because the next agent inherits them without warning.
+
+### 3.3 Reflection is not eval
+
+Evals run from a fixture and grade behavior against expected output. Reflection runs against the architecture and grades the *change* against the contract.
+
+| | Eval | Reflection |
+|---|---|---|
+| Input | Fixture or replay | The change diff and plan |
+| Grades | Behavior | Architecture compliance |
+| Cadence | Continuous, automated | Per-task, before "done" |
+| Catches | Wrong output | Shortcuts, coupling, drift, hidden state |
+
+Both are required. Neither replaces the other.
+
+---
+
+## 4. Anti-patterns
+
+```text
+- "I'll reflect later"          : reflection that is not done before
+                                   declaring done is reflection that
+                                   does not exist.
+- "the test passes, so it's    : the test is a proxy. The plan's
+   done"                          acceptance proof is the standard.
+- "I'll write the plan after"  : the plan exists to constrain action.
+                                   A retroactive plan does not.
+- "no scope creep here"         : every change has scope creep
+                                   pressure; the out-of-scope list
+                                   exists to make resisting it cheap.
+```
+
+---
+
+## 5. Cross-references
+
+- Architecture: sections 5.14 (Reflection), 5.15 (Plan-then-execute), 12.1 (Define done as system behavior)
+- Anti-pattern: section 9.10 (Skipping reflection)
+- Modularity: `docs/modularity-and-seams.md`
+- Exceptions: `docs/exception-taxonomy.md`
+- Cost routing: `docs/cost-aware-routing.md`
+- Eval design: `docs/evals.md`
+``````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/reflection-and-planning.md" -->
+
+---
+
+### File: `docs/exception-taxonomy.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/exception-taxonomy.md" sha256="a7cd06584f134b521da2a02183f4f9fe22977ea7fbd3661a055c69c2343a96c3" bytes="5173" trailing_newline="true" -->
+`````````` markdown
+# Exception taxonomy and graceful degradation
+
+Version: 1.0
+Audience: coding agents writing or auditing failure paths in agentic systems.
+
+Durable execution and checkpointing answer "what happens if the process dies." Exception taxonomy answers a different question: "what does this code do when something it depends on misbehaves?" A coding agent that does not classify failure tends to write code where every failure becomes a re-raised exception that propagates upward and stops the lane. This is the right behavior for a small subset of failures and the wrong behavior for the rest.
+
+---
+
+## 1. Three exception classes
+
+Every failure attaches to exactly one of these classes.
+
+### 1.1 Recoverable
+
+The operation can be retried with the same inputs and is expected to succeed within the configured retry budget.
+
+Examples:
+- Transient network error
+- Rate-limited provider
+- Optimistic-lock conflict
+- Leader election handoff
+- Temporary quota exhaustion that resets on a known cadence
+
+Required behavior:
+- Retry per policy (exponential backoff, jitter, max attempts).
+- Surface the failure to the caller only on retry budget exhaustion.
+- Log the retry path so operators can see what is happening.
+- Do not poison durable state with intermediate failures.
+
+### 1.2 Degraded
+
+The operation cannot succeed fully, but a partial result is meaningful and the calling lane can continue.
+
+Examples:
+- Enrichment lookup unavailable but the core record is still valid
+- One of three sources missing for a synthesis
+- One of N parallel subtasks failed but the task tolerates it
+- Expensive lane budget exhausted, cheaper lane used as fallback
+
+Required behavior:
+- Produce the partial result.
+- Mark the missing pieces explicitly in the result type.
+- Surface a structured signal (not a silent gap) to the next layer.
+- Record what would have been there so audit and replay are possible.
+
+### 1.3 Unrecoverable
+
+The operation cannot succeed and a partial result would be wrong. The lane must stop and surface the failure.
+
+Examples:
+- Schema mismatch on durable input
+- Source-authority disagreement that cannot be resolved by policy
+- Identity collision (two distinct entities resolved to one)
+- Irreversible side-effect failure detected after the side effect committed
+
+Required behavior:
+- Stop. Do not retry. Do not produce a degraded result.
+- Write a structured failure record.
+- Alert per attention policy (section 5.12).
+- Make the failure visible to operators and to durable state.
+
+---
+
+## 2. Class attribution rules
+
+Every retry policy, fallback, or degradation path attaches to one of the three classes explicitly. A retry without a class is a guess.
+
+```python
+# Bad
+try:
+    return call_external()
+except Exception:
+    return None
+
+# Better
+try:
+    return call_external()
+except TransientError:
+    raise  # recoverable: retry policy will handle
+except PartialResultError as e:
+    return DegradedResult(value=e.partial, missing=e.missing)
+except SchemaError:
+    raise  # unrecoverable: do not retry, do not degrade
+```
+
+The bad version collapses three different failures into the same silent `None`. The caller has no way to distinguish "transient, retry me" from "the input was wrong, do not retry" from "the side effect committed and we lost the receipt."
+
+---
+
+## 3. Graceful degradation discipline
+
+Graceful degradation means producing a *degraded* result *with a structured signal*, never silently. The signal is what allows the next layer to know whether it is reading complete or partial data.
+
+```python
+@dataclass
+class DegradedResult:
+    value: Any
+    missing: list[str]            # which fields or sources are absent
+    reasons: dict[str, str]       # per-missing-piece, why
+    completeness: float           # 0.0 to 1.0
+```
+
+Silent degradation is more dangerous than unrecoverable failure because it produces a confidently wrong output downstream. A reviewer reading a degraded result without the signal cannot tell that something is missing.
+
+---
+
+## 4. Retry policy contract
+
+Every retry attaches to:
+
+```text
+- the exception class it handles (always recoverable)
+- a budget (max attempts, max total time, max cost)
+- a backoff strategy (constant, exponential, fibonacci, with jitter)
+- a circuit breaker (when to stop trying for a window)
+- an audit surface (where retries are logged)
+```
+
+A retry policy that is not declared in code is a guess at runtime. Retry budgets that are not enforced lead to retry storms when a downstream is slow.
+
+---
+
+## 5. Common smells
+
+```text
+- bare except: catches everything, classifies nothing.
+- silent return None on error: hides degradation as a missing value.
+- unbounded retry loops: retry-storms a flaky downstream into outage.
+- silent paid spillover: see docs/cost-aware-routing.md.
+- "we'll add error handling later": the error handling is the contract.
+```
+
+---
+
+## 6. Cross-references
+
+- Architecture: section 5.16 (Exception taxonomy and graceful degradation)
+- Anti-pattern: section 9.11 (Unclassified errors)
+- Field lesson: section 12.11 (Errors are classes, not surprises)
+- Routing and spillover: `docs/cost-aware-routing.md`
+- Durable state and checkpoints: `docs/durable-execution.md`
+``````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/exception-taxonomy.md" -->
+
+---
+
+### File: `docs/a2a-contracts.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/a2a-contracts.md" sha256="950e9d057cac968230e8b3969e70cc0f3fcc1fc0712660c0279101f4fe951d31" bytes="6980" trailing_newline="true" -->
+`````````` markdown
+# Agent-to-agent message contracts
+
+Version: 1.0
+Audience: coding agents and architects working on multi-agent systems.
+
+Cross-agent coordination covers ownership and integrator role. A2A contracts cover the messages themselves. The failure mode this prevents is folklore A2A: two agents work together because someone wrote a script that hardcoded what one produces and what the other expects. There is no schema, no version, no contract for partial messages, no idempotency rule, no replay rule, and no audit trail. The pair works until either side is edited.
+
+---
+
+## 1. Every A2A message type declares seven things
+
+```text
+1. Schema
+   Typed shape of the message. Required fields, optional fields, types,
+   units, allowed values. No payload field is "any."
+
+2. Direction
+   Request, reply, broadcast, signal, or event. Reply messages reference
+   the request they answer. Broadcasts have no required reply.
+
+3. Idempotency
+   Is sending the same message twice safe? If yes, by what mechanism
+   (idempotency key, content hash, dedup window). If no, what is the
+   replay rule and what state in the receiver tracks "already handled."
+
+4. Versioning
+   How does the contract evolve? Field additions are usually safe; field
+   removals or semantic changes require an explicit version bump and a
+   migration plan. The receiver should know which versions it accepts.
+
+5. Authority
+   Which agent is authorized to send this message type. Which agent is
+   authorized to act on it. Senders that do not have authority should be
+   rejected at the receiver, not at the network.
+
+6. Failure attribution
+   How does the sender know the receiver failed? How does the receiver
+   know the sender did not get the reply? Which class of failure (see
+   docs/exception-taxonomy.md) does each side attribute to, and what
+   does each side do next.
+
+7. Audit
+   Where is the message recorded? A2A traffic that does not appear in
+   any audit surface is invisible to operators and to future agents
+   debugging what happened.
+```
+
+---
+
+## 2. Message schemas: minimum required structure
+
+Every A2A message has at least these fields:
+
+```python
+@dataclass
+class A2AMessage:
+    # Identity
+    message_id: str          # unique per send
+    correlation_id: str      # ties request and reply
+    causation_id: str | None # the message that caused this one
+
+    # Routing
+    from_agent: str
+    to_agent: str
+    type: str                # message type name (registry-keyed)
+    version: str             # semver of the type's schema
+
+    # Timing
+    sent_at: datetime
+    expires_at: datetime | None
+
+    # Authority
+    auth_token: str | None   # if cross-tenant or cross-trust-zone
+
+    # Payload
+    payload: dict            # typed per `type` and `version`
+```
+
+The payload type is keyed by the registered name and version. A receiver that does not recognize the type/version pair rejects the message; it does not "best-effort" decode it.
+
+---
+
+## 3. Idempotency patterns
+
+### 3.1 Idempotency key
+
+The sender supplies a key. The receiver records the key with the result. Repeated sends with the same key return the same result. This is the safest pattern when the receiver has durable state.
+
+### 3.2 Content hash
+
+The receiver hashes the payload and treats two messages with the same hash inside a dedup window as the same message. Useful when senders may re-send without remembering the previous send.
+
+### 3.3 At-most-once via reservation
+
+The receiver reserves a slot for the message_id, processes, and releases. A second send with the same message_id sees the reservation and returns the cached result.
+
+### 3.4 At-least-once with idempotent handler
+
+The handler itself is idempotent: the same input produces the same effect regardless of how many times it is invoked. Useful when the message bus cannot guarantee deduplication.
+
+The handler's idempotency must be documented. "It happens to be idempotent because of how it's written today" is folklore.
+
+---
+
+## 4. Versioning
+
+A2A contracts evolve. The rule is:
+
+```text
+safe (no version bump):
+  - add an optional field
+  - add a new enum value the receiver tolerates
+  - add a new message type
+
+unsafe (requires version bump and migration):
+  - remove a field
+  - rename a field
+  - change a field's type or units
+  - change a field's semantics
+  - tighten a validation rule
+```
+
+The receiver advertises which versions it accepts. The sender chooses the highest mutually supported version. Migration plans cover both forward and backward compatibility windows.
+
+---
+
+## 5. Authority and trust
+
+A2A authority answers "who is allowed to send this message type and who is allowed to act on it."
+
+```text
+- declared in a registry, not in agent prompts
+- enforced at the receiver (network and bus may not be trustworthy)
+- audited (every authority decision is logged)
+- revocable (deprecation path for retired agents)
+```
+
+A receiver that processes messages without checking authority will be exploited the moment any agent in the system is compromised, mis-configured, or replaced by a sidecar with weaker invariants.
+
+---
+
+## 6. Failure attribution between agents
+
+Both sides of an A2A pair need to know whose problem a failure is.
+
+```text
+sender's perspective                receiver's perspective
+- request acknowledged but no reply  - received message but cannot act
+   within timeout: receiver problem    on it: signal back unrecoverable
+- request rejected at validation:    - received valid message but
+   sender problem (bad payload)        downstream failed: signal back
+- network error: bus problem,         (recoverable, degraded, or
+   sender retries per recoverable      unrecoverable)
+   class
+```
+
+Each failure attaches to one of the three exception classes (`docs/exception-taxonomy.md`) and triggers the corresponding behavior.
+
+---
+
+## 7. Audit surface
+
+Every A2A message is recorded in at least one of:
+
+```text
+- structured event log (preferred for high volume)
+- durable state record (preferred for state-changing messages)
+- trace span (preferred for request/reply latency)
+```
+
+A2A traffic that does not appear in any audit surface is invisible. Invisible coordination is folklore by another name.
+
+---
+
+## 8. Common smells
+
+```text
+- payloads typed as `dict` or `any` with no schema
+- "we'll add versioning when we need it"
+- handlers that succeed differently on retry without saying so
+- broadcasts with no recorded receivers
+- replies that do not reference the request they answer
+- authority decisions made in agent system prompts instead of a registry
+```
+
+---
+
+## 9. Cross-references
+
+- Architecture: section 5.17 (A2A message contracts), section 5.13 (Adoption states and cross-agent coordination)
+- Anti-pattern: section 9.12 (Implicit A2A folklore)
+- Field lesson: section 12.10 (Modularity is a runtime property), section 12.11 (Errors are classes, not surprises)
+- Tool design (analogous contract for tool calls): `docs/tool-design.md`
+- Cross-agent operating model: `docs/cross-agent-operating-model.md`
+``````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/a2a-contracts.md" -->
+
+---
+
+### File: `docs/cost-aware-routing.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/cost-aware-routing.md" sha256="f699d090bbc0f2bceb41aafbef99a57182f5814fb1eab60370689762707d15f4" bytes="5318" trailing_newline="true" -->
+`````````` markdown
+# Cost-aware routing
+
+Version: 1.0
+Audience: coding agents and operators of agentic systems with multiple model lanes or paid providers.
+
+Attention budgets cover human attention. Spend authority covers paid API keys. Cost-aware routing covers the runtime decision: given a task, which lane runs it.
+
+---
+
+## 1. Lanes
+
+A long-lived agentic system typically has at least three lanes available.
+
+```text
+default lane    cheaper, faster, broadly capable. Used for the bulk of
+                routine work. Token cost per task is low; capability
+                ceiling is moderate.
+
+escalated lane  more expensive, more capable on hard tasks, often slower.
+                Used when task difficulty, evidence sensitivity, or
+                consequence severity justifies the cost.
+
+degraded lane   cheapest, possibly local, possibly cached. Used when the
+                default lane is unavailable or budget is exhausted, and
+                when a degraded result is acceptable. See
+                docs/exception-taxonomy.md.
+```
+
+Real systems often have more lanes (a coding-specific lane, a vision lane, a long-context lane), but the routing doctrine is the same.
+
+---
+
+## 2. The routing decision
+
+Lane choice combines several inputs. None of them is sufficient alone.
+
+```text
+- task difficulty
+   does the default lane handle this class reliably in evals? if no, the
+   escalated lane is justified by capability, not by intuition.
+
+- evidence sensitivity
+   data subject (founder, customer, employee, public), jurisdiction,
+   confidentiality tier. some lanes may be doctrinally barred from
+   handling some classes of evidence regardless of difficulty.
+
+- consequence
+   is this a draft for review, a durable claim, or an irreversible side
+   effect? higher-consequence work bears more cost.
+
+- budget state
+   rolling spend, per-lane budget, per-tenant budget. routing must
+   refuse to escalate when the budget is exhausted, not silently
+   pretend the budget does not exist.
+
+- lane health
+   current error rate, current latency, current rate-limit posture of
+   each lane. unhealthy lanes are routed away from, not retried into.
+
+- explicit overrides
+   the operator or doctrine has said "this task class always uses the
+   escalated lane regardless of difficulty." overrides are recorded
+   with rationale; they do not become folklore.
+```
+
+The routing decision is recorded with the task. A routing decision that is not recorded cannot be audited and cannot be evaluated.
+
+---
+
+## 3. Spillover policy is part of routing
+
+When the default lane fails, the choice between "escalate to a more expensive lane," "degrade to a cheaper lane," and "stop" is a doctrine decision, not an emergent behavior.
+
+```text
+silent paid spillover is a bug.
+silent retry past budget is a bug.
+silent degradation that produces a confidently wrong output is a bug.
+```
+
+Each spillover path attaches to:
+
+```text
+- the exception class it responds to (recoverable, degraded, unrecoverable)
+- the destination lane and why
+- the budget impact and per-task cost cap
+- the audit record so spend is attributable
+```
+
+---
+
+## 4. Three failure modes
+
+```text
+1. Silent escalation
+   every task goes to the escalated lane because the default lane felt
+   unreliable in one bad demo. cost leaks accumulate without anyone
+   owning the choice.
+
+2. Silent fallback
+   the default lane fails, the harness silently routes to a paid
+   fallback, and no one realizes the burn rate has changed until the
+   bill arrives.
+
+3. Wrong-axis routing
+   lane choice keys off task length, prompt-token count, or whatever
+   was easiest to measure, instead of off the actual axis (difficulty,
+   sensitivity, consequence).
+```
+
+The fix in all three is the same: explicit doctrine, recorded decisions, audited spillover.
+
+---
+
+## 5. Audit and attribution
+
+Every paid call attaches to:
+
+```text
+- the originating task or session id
+- the lane chosen and why
+- the input token count and the output token count
+- the cost (provider-reported and internally tracked)
+- the budget bucket the cost was charged to
+```
+
+Calls without attribution should fail closed at the gateway. "Anonymous" paid calls are the most reliable predictor of next month's bill surprise.
+
+---
+
+## 6. Eval coverage
+
+Routing behavior is evaluable.
+
+```text
+- given a task class, does the harness pick the configured lane?
+- given a budget-exhausted state, does the harness refuse to escalate?
+- given a lane outage, does the harness degrade or stop per doctrine?
+- given a sensitive evidence class, does the harness refuse barred
+  lanes?
+```
+
+A routing rule with no eval is a rule that will quietly drift.
+
+---
+
+## 7. Common smells
+
+```text
+- routing logic spread across N call sites instead of in a registry.
+- retry counters that escalate to a paid lane after some attempts
+  without doctrine.
+- "we'll worry about cost later."
+- per-call provider switches in handler code rather than in routing.
+- hardcoded model strings in agent prompts.
+```
+
+---
+
+## 8. Cross-references
+
+- Architecture: section 5.18 (Cost-aware routing doctrine)
+- Field lesson: section 12.12 (Cost asymmetry is a routing input)
+- Spend authority claim: executive thesis claim 5
+- Exception taxonomy: `docs/exception-taxonomy.md`
+- Adoption state for new lanes: section 5.13 and `docs/cross-agent-operating-model.md`
+``````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/cost-aware-routing.md" -->
+
+---
+
+### File: `docs/learning-loops.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/learning-loops.md" sha256="3cc2113b22c63666e76787eaef9664b962d8b437a761f539208d8c605da44d88" bytes="5311" trailing_newline="true" -->
+`````````` markdown
+# Learning loops and skill evolution
+
+Version: 1.0
+Audience: coding agents, operators, and architects of long-lived agentic systems.
+
+Stable contracts are the substrate; learning loops are how the system gets better at using them. A system without learning loops handles each new task as if it were the first. Patterns that worked are not promoted into skills, patterns that failed are not deprecated, and the agent rediscovers the same answer every week.
+
+---
+
+## 1. Three kinds of learning loop
+
+### 1.1 Within-task: reflection
+
+The per-task self-critique pass. Catches shortcuts, drift, and coupling inside one task. Operates on the change, not on the system. See `docs/reflection-and-planning.md` and section 5.14.
+
+### 1.2 Across-task: skill promotion
+
+A pattern that has worked across N tasks is promoted from ad-hoc agent behavior into a documented skill (section 5.4) with a clear when-to-use rule. The threshold (N, the success criterion, the owner who approves) is part of the harness, not the agent's judgment.
+
+```text
+candidate skill   appears in K tasks; nobody has named it; success
+                  criterion not yet defined.
+
+drafted skill     named, documented, has a when-to-use rule, has at
+                  least one eval. runs in shadow or candidate-write
+                  mode.
+
+canonical skill   eval-backed, owner-approved, used as the default
+                  procedure for its task class.
+
+deprecated skill  superseded or no longer relevant. removed from the
+                  active registry but retained for replay.
+```
+
+Promotion follows the same adoption-state discipline as new tools, sidecars, and lanes (section 5.13).
+
+### 1.3 System-level: external critique
+
+A separate agent or human, on a different cadence than the working agents, reviews aggregate behavior:
+
+```text
+- which patterns are recurring across tasks?
+- which failures are repeating?
+- which contracts need to change?
+- which skills are stale or contradicting newer evidence?
+- which evals are missing for behaviors that have started to matter?
+```
+
+External critique operates on the system, not on any one task. It runs on a slower cadence (weekly, monthly) and produces findings that go to the same destinations as within-task reflection.
+
+---
+
+## 2. Closing the loop
+
+The most common learning-loop failure is the loop that exists but is not closed. Closing the loop means the harness has a path from finding to action.
+
+```text
+finding                       destination
+recurring pattern             candidate skill
+recurring failure class       missing eval, contract change proposal
+contract feels wrong          contract change proposal
+ambiguous data subject        candidate signal for human review
+duplicated effort             refactoring task or skill consolidation
+stale skill                   deprecation candidate
+silent degradation observed   exception-taxonomy contract change
+                               (docs/exception-taxonomy.md)
+```
+
+A finding without a destination is a smell, not a feature. Loops that produce findings nobody acts on are journals, not learning.
+
+---
+
+## 3. Source authority for findings
+
+Findings are claims. They follow the same source-authority and identity rules as any other claim (section 5.11):
+
+```text
+- candidate signal: someone or something noticed a pattern
+- supported claim: the pattern has corroboration across N tasks
+- promoted claim: the pattern has an owner and an action
+- canonical: the pattern has been encoded in a contract or skill
+```
+
+A finding promoted to "canonical" without going through the candidate stage is a vibes-based change. Treat it as a smell.
+
+---
+
+## 4. Adoption state for new skills
+
+A new skill follows the adoption-state ladder:
+
+```text
+reference_only -> shadow_mode -> candidate_write -> write_enabled -> canonical
+```
+
+Skill promotion to canonical requires:
+
+```text
+- evals passing on the skill's task class
+- an owner who has reviewed the skill
+- a rollback plan if the skill turns out to be wrong
+- a deprecation path for the procedure(s) it supersedes
+```
+
+Promotion by acclamation (one good demo) is the same anti-pattern as accidental production promotion (section 9.8).
+
+---
+
+## 5. What learning loops are not
+
+```text
+- not chat summaries: a chat summary that nobody reads is not learning.
+- not journals: a daily diary of agent activity is not learning.
+- not fine-tuning a base model: that is a separate change that requires
+   its own evals and adoption process. learning loops here operate on
+   skills, contracts, and evals.
+- not "we tried it and it worked": vibes are not promotion.
+```
+
+---
+
+## 6. Common smells
+
+```text
+- weekly digest emails that nobody opens
+- a "lessons learned" file that grows but is never referenced
+- skills that have not changed in N months in a system that has
+- evals that have not changed in N months in a system whose behavior has
+- recurring incidents whose post-mortems do not feed any contract change
+```
+
+---
+
+## 7. Cross-references
+
+- Architecture: section 5.19 (Learning loops and skill evolution)
+- Anti-pattern: section 9.13 (No learning loop)
+- Field lesson: section 12.13 (Systems that don't learn get worse)
+- Reflection: `docs/reflection-and-planning.md`
+- Adoption state: section 5.13 and `docs/cross-agent-operating-model.md`
+- Eval design: `docs/evals.md`
+``````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/learning-loops.md" -->
+
+---
+
+### File: `docs/task-prioritization.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/task-prioritization.md" sha256="6b7d5db57a2d032f0cf83e26044493d2b9fcc7651c9bb8ef448c07c217bbf6ec" bytes="5331" trailing_newline="true" -->
+`````````` markdown
+# Task prioritization and queue discipline
+
+Version: 1.0
+Audience: coding agents and operators of agentic systems with many concurrent lanes.
+
+Attention budgets decide when humans should be interrupted. Cost-aware routing decides which lane runs a task. Prioritization decides which task runs next when several are ready and they cannot all run at once.
+
+---
+
+## 1. Why this is not optional
+
+A long-lived agentic system runs many concurrent lanes: scheduled cron tasks, ingest workers, claim compilers, retrieval surfaces, conversation surfaces, review queues, alerts. Without discipline, the order is first-come-first-served by accident, and the failure mode is that an urgent task waits behind a long-running batch because no one declared which mattered more.
+
+The harness owns the rule, not the agent. A coding agent that picks the next task by feel will reliably pick the easiest one; this is a known bias, not a moral failing. A scheduler with no declared rule will silently drift toward whatever the easiest implementation produces.
+
+---
+
+## 2. Required inputs per task
+
+Every task in a queue carries five declared inputs.
+
+```text
+- urgency
+   does the task have a deadline? what is the cost of late completion
+   (none, soft, hard, irreversible)?
+
+- importance
+   does completion change a downstream state that other tasks depend on?
+   does failure block other lanes?
+
+- preemptability
+   can the task be paused and resumed without loss? if yes, it can yield
+   to a higher-priority task; if no, starting it commits the lane.
+
+- cost
+   how expensive is this task in the lane it would run in? a cheap
+   urgent task should not wait behind an expensive non-urgent one.
+
+- staleness
+   does the task lose value if delayed (a daily digest is useless once
+   the day is over) or does it accumulate value (a backlog cleanup gets
+   more valuable the older it is)?
+```
+
+A task without these inputs is a guess. The harness should refuse to enqueue a task that does not declare them; defaults are fine, but they are declared defaults.
+
+---
+
+## 3. The queue rule
+
+The simplest defensible rule:
+
+```text
+1. Run preemption-immune tasks (an irreversible side effect already
+   committed, a durable-state migration in progress) to completion
+   regardless of priority.
+
+2. Among ready tasks, prefer higher importance. Among equally important
+   tasks, prefer higher urgency. Among equally urgent tasks, prefer
+   cheaper.
+
+3. Allow explicit overrides recorded with rationale. An override that is
+   not recorded becomes folklore; record it.
+
+4. If the queue is consistently saturated, the lane is under-resourced
+   or the upstream is producing too fast. Surface that as a signal,
+   not as silent task drops.
+```
+
+More sophisticated rules exist (weighted fair queueing, EDF, deadline-monotonic, priority inheritance for shared-resource cases). The right rule depends on the lane, but the discipline is the same: declared inputs, declared rule, recorded overrides, no silent drops.
+
+---
+
+## 4. Staleness and value decay
+
+Some tasks lose value if delayed. A digest scheduled for 8am loses most of its value if it runs at 3pm. The queue rule has to know this, or the digest will run after every batch ahead of it has finished.
+
+```text
+staleness behavior      example
+hard window             daily 8am digest; expires at 9am.
+soft decay              freshness check on a market signal; value halves
+                         every hour.
+appreciation            backlog cleanup; value grows with age.
+none                    long-running compilation; value flat.
+```
+
+Tasks with hard windows that miss the window should not silently run late. They should be recorded as missed and either rescheduled with new urgency or dropped with a signal.
+
+---
+
+## 5. Backpressure
+
+If a queue is consistently saturated, something is wrong upstream. The harness should:
+
+```text
+- surface the saturation as a signal (not as silent drops)
+- expose queue depth and oldest-task age in observability
+- refuse new enqueues past a configured ceiling, with a structured
+  rejection (degraded class, see docs/exception-taxonomy.md)
+- escalate to a human if saturation persists past a threshold
+```
+
+A queue that grows unboundedly is a bug, not a feature. The right response is operator visibility, not silent task suppression.
+
+---
+
+## 6. Auditing override decisions
+
+Every override (priority bump, queue jump, manual deferral) is recorded with:
+
+```text
+- who or what made the override
+- when
+- which task was affected
+- the rationale
+```
+
+An override without a record becomes folklore the first time anyone questions why a task ran in the order it did.
+
+---
+
+## 7. Common smells
+
+```text
+- new lane added with no declared priority inputs.
+- "this just runs every hour" with no declared staleness.
+- queues that grow without alerting.
+- urgent tasks routinely missing their windows but no signal raised.
+- overrides made by humans that are not recorded.
+- prioritization implemented inside a single agent's prompt instead of
+  in the harness.
+```
+
+---
+
+## 8. Cross-references
+
+- Architecture: section 5.20 (Task prioritization and queue discipline)
+- Anti-pattern: section 9.14 (FCFS task scheduling)
+- Field lesson: section 12.14 (Priority is not optional)
+- Attention budgets: section 5.12
+- Exception taxonomy and backpressure: `docs/exception-taxonomy.md`
+``````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/task-prioritization.md" -->
+
+---
+
+### File: `docs/QUICK_REFERENCE.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/QUICK_REFERENCE.md" sha256="cae3501aa3bcd04020ad3a58f278272d1e016dfb768a465f243a4828bd7a0329" bytes="15038" trailing_newline="true" -->
+`````````` markdown
+# Quick reference for coding agents
+
+Version: 1.0
+Purpose: lossy distillation of the architecture pack. Rules only, no examples, no rationale. Use as cold-start companion to `AGENTS.md` and `CLAUDE.md`. Load the deep doc only for the topic you are actually touching.
+
+If your task touches **schemas, permissions, idempotency, budgets, checkpoints, source authority, identity resolution, tool execution, human approval, traces, or evals** — that is harness work. Use deterministic code.
+
+If your task touches **ambiguous intent, context selection, tool choice, memory retrieval, task decomposition, plan revision, recovery, or synthesis** — that is policy work. Use the model.
+
+---
+
+## Six doctrinal claims (non-negotiable)
+
+1. **Deterministic harness, adaptive policy.** Determinism in the harness; ambiguous decisions in the model-owned policy layer with the right tools, memory, skills, and context.
+2. **Source-of-truth role separation.** Truth, retrieval, recall, synthesis, sidecars, candidate signals, and external reports are different roles. Do not collapse them.
+3. **Incidents become contracts.** Every production failure produces a harness change, an acceptance test, an eval/replay fixture, and an adoption rule.
+4. **Causal depth.** Do not stop at the first true local explanation. Name the missing contract in memory, context, tool semantics, source authority, durable state, ownership, guardrails, or evals.
+5. **Spend authority.** Paid API keys are gateway-owned exception paths, not ambient context. Attribution, budgets, rate limits, and tests that fail when direct key reads come back.
+6. **Coupling cost asymmetry.** Declaring a seam now is linear; untangling later is super-linear in callers and editors. Bias forward: declare the seam now even when the local diff would be smaller without it.
+
+---
+
+## Component classification (declare one before coding)
+
+`deterministic workflow` · `augmented LLM` · `agent loop` · `multi-agent / subagent` · `tool` · `tool registry` · `skill` · `memory subsystem` · `source lane / authority layer` · `identity resolution layer` · `context engine` · `durable execution layer` · `guardrail / human-review layer` · `cross-agent coordination layer` · `attention / notification policy` · `adoption-state change` · `eval / observability layer`
+
+---
+
+## Seam-declaration rule (every non-trivial change)
+
+Before code:
+
+1. **Modules touched** — what does this change read, write, or import?
+2. **Interfaces depended on** — which contracts does this change consume?
+3. **Interfaces defined or changed** — what does this introduce, modify, deprecate, or extend? What is public, what is intentionally private?
+4. **Substitutability** — what changes if the implementation behind each interface is swapped (different store, model, transport, provider)? Many things in many places means the seam is wrong.
+
+Six coupling smells (any of these = creating coupling):
+
+- **God-object state bag** — function takes a `context`/`state`/`request` bag and reads ≥4 fields.
+- **Reaching through internals** — `module.B._private` access from outside B.
+- **Runtime type-switch on opaque payload** — `if event.kind == ...` chain growing branch by branch.
+- **Hidden temporal dependency** — A must be called before B, encoded only in caller order.
+- **"Just one more parameter" creep** — function accumulates 6+ optional parameters added by N agents.
+- **Multi-module test instantiation** — unit test imports 4 modules to construct the system under test.
+
+Detail: `docs/modularity-and-seams.md`. Anti-pattern 9.9. Field lesson 12.10.
+
+---
+
+## Reflection checklist (before declaring done)
+
+1. **Goal drift** — original goal restated; change still serves it; no quiet redefinition to "make the test pass."
+2. **Coupling and seams** — none of the six smells; no boundary crossed; no parameter/branch/field that other modules now depend on by absence.
+3. **Shortcuts** — no skipped step (validation, schema, idempotency, source-authority lookup, memory write, eval coverage, durable-state record).
+4. **Hidden state** — no undocumented dependency on globals, env vars, file layout, time, process startup order.
+5. **Failure modes** — every external dep has stated behavior under slow/unavailable/partial/garbage; nothing silently re-raises.
+6. **Tests and evals** — no new behavior is true that no test exercises; no incident class reachable that no eval catches.
+7. **Causal depth** — for fixes: proximate cause + ultimate contract both named; if only proximate addressed, remaining incident class named as gap.
+
+Hidden gaps are worse than known gaps.
+
+Detail: `docs/reflection-and-planning.md`. Anti-pattern 9.10.
+
+---
+
+## Plan as artifact (before action)
+
+Goal · Acceptance proof · Component classification · Seam declaration · Failure-mode budget · Routing decision · Out of scope.
+
+Goal-drift checks: before each tool call, before declaring done, inside reflection. If goal genuinely changes mid-task, change the plan explicitly.
+
+Detail: `docs/reflection-and-planning.md`.
+
+---
+
+## Three exception classes (every retry/fallback/degradation attaches to one)
+
+- **Recoverable** — retry per policy; surface only on budget exhaustion; do not poison durable state.
+- **Degraded** — produce partial result; mark missing pieces; surface a structured signal (never silent); record what would have been there.
+- **Unrecoverable** — stop; do not retry; do not degrade; write structured failure record; alert per attention policy.
+
+A retry without a class is a guess. Silent degradation is a bug. Silent paid spillover is a bug. Silent retry past budget is a bug.
+
+Detail: `docs/exception-taxonomy.md`. Anti-pattern 9.11. Field lesson 12.11.
+
+---
+
+## A2A message contracts (every agent-to-agent message type)
+
+Schema · Direction (request/reply/broadcast/signal/event) · Idempotency (key, hash, dedup window, or documented at-least-once handler) · Versioning (additive vs migration) · Authority (sender + receiver, registry-enforced) · Failure attribution (per exception class, both sides) · Audit surface.
+
+Payloads typed as `dict`/`any` are folklore. A2A traffic with no audit surface is invisible.
+
+Detail: `docs/a2a-contracts.md`. Anti-pattern 9.12.
+
+---
+
+## Cost-aware routing (every paid call attributable, every spillover doctrinal)
+
+Routing inputs: task difficulty · evidence sensitivity · consequence · budget state · lane health · explicit overrides.
+
+Lanes: default (cheap, broad) · escalated (expensive, capable) · degraded (cheapest or stop).
+
+Spillover policy is part of routing, not emergent. Each spillover path attaches to: exception class · destination lane · budget impact · audit record.
+
+Three failure modes: silent escalation · silent fallback · wrong-axis routing. All recover by recording the doctrine decision and auditing the spend.
+
+Detail: `docs/cost-aware-routing.md`. Field lesson 12.12.
+
+---
+
+## Learning loops (every finding has a destination)
+
+- **Within-task**: reflection (above).
+- **Across-task**: skill promotion. Pattern works across N tasks → drafted skill (eval, when-to-use) → canonical (owner, rollback). Promotion follows adoption state: `reference_only` → `shadow_mode` → `candidate_write` → `write_enabled` → `canonical` → `deprecated`.
+- **System-level**: external critique on slower cadence. Findings → candidate skill / contract change / missing eval / candidate signal / deprecation.
+
+A finding without a destination is a smell. A loop nobody acts on is a journal, not learning.
+
+Detail: `docs/learning-loops.md`. Anti-pattern 9.13. Field lesson 12.13.
+
+---
+
+## Task prioritization (every queued task declares five inputs)
+
+Urgency (none/soft/hard/irreversible) · importance (blocks other lanes?) · preemptability · cost · staleness (hard window / soft decay / appreciation / none).
+
+Queue rule: preemption-immune tasks run to completion · among ready tasks prefer importance, then urgency, then cheaper · overrides recorded with rationale · saturation surfaces as signal, never silent drops.
+
+The harness owns the rule, not the agent.
+
+Detail: `docs/task-prioritization.md`. Anti-pattern 9.14. Field lesson 12.14.
+
+---
+
+## Anti-patterns (never these)
+
+- **9.1 Regex pretending to be intelligence** — ambiguous routing in if/elif/regex.
+- **9.2 Giant prompt as architecture** — every rule, memory, tool, transcript stuffed into the system prompt.
+- **9.3 Memory as append-only notes** — write summaries to a file with no schema or promotion path.
+- **9.4 Tools without semantic affordances** — `run(query: string) → result`.
+- **9.5 Multi-agent theater** — committee of agents per task instead of single-agent-first.
+- **9.6 Source-of-truth collapse** — wiki, vector index, source DB, sidecar, chat all treated as one memory.
+- **9.7 Noisy-lane contamination** — brainstorming or speculation promoted into project truth without review.
+- **9.8 Accidental production promotion** — sidecar passes one demo and becomes canonical.
+- **9.9 Convenient coupling** — reaching across module boundaries because "it is right there."
+- **9.10 Skipping reflection** — declaring done without the §5.14 checklist.
+- **9.11 Unclassified errors** — bare except, silent None, retry without class.
+- **9.12 Implicit A2A folklore** — pair of agents that work via a hardcoded script with no contract.
+- **9.13 No learning loop** — recurring findings with no destination.
+- **9.14 FCFS task scheduling** — first-come-first-served by accident, no declared priority rule.
+
+---
+- **Category index in bootstrap.** Loading a multi-section reference doc (one section per lane/integration/tool) as bootstrap. Bootstrap pays the cost on every turn and the runtime silently truncates. Split into per-member sub-docs; replace the original with a thin index; let the retriever surface the right sub-doc by query. Detail: `docs/context-engineering.md` and `docs/agentic-coding-for-agentic-systems.md` § 5.2.1.
+
+## Field lessons (operational consequences)
+
+- **12.1 Define done as system behavior** — manual one-off proof is debugging evidence, not completion.
+- **12.2 Incidents become contracts, not folklore** — every incident becomes a harness layer, an acceptance test, and an eval.
+- **12.3 Proximate causes are not ultimate causes** — go deep enough to name the missing contract.
+- **12.4 Backpressure and cost are harness responsibilities** — silent paid fallback is unreviewed side effect.
+- **12.5 Claims must reconcile with state** — if claim and state disagree, both are evidence; reconcile, do not arbitrarily prefer.
+- **12.6 Keep thesis, current state, and truth separate** — a roadmap is not truth and a synthesis is not truth.
+- **12.7 Promote through adoption states** — sidecars, models, workflows promoted via shadow → candidate → canonical with evals, health, rollback, owner.
+- **12.8 Human attention is a scarce system resource** — quiet by default; loud only when situation deserves it.
+- **12.9 The coding agent is part of the operating system** — its edits, logs, claims, summaries are operating-system memory.
+- **12.10 Modularity is a runtime property** — parallel collisions are seam problems, not coordination problems.
+- **12.11 Errors are classes, not surprises** — every failure attaches to recoverable / degraded / unrecoverable.
+- **12.12 Cost asymmetry is a routing input, not an afterthought** — cost is rarely a runtime emergency, almost always doctrine drift.
+- **12.13 Systems that don't learn get worse** — stability is the default state of contracts; improvement is not.
+- **12.14 Priority is not optional** — FCFS is the default that emerges when no one declares the rule.
+
+---
+
+## Dependency awareness (every non-trivial change)
+
+Six patterns, ordered cheapest to strongest — pick by failure mode, not aesthetic:
+
+1. **Seam declaration before code** — universal floor. Modules touched · interfaces depended on · interfaces defined or changed · substitutability.
+2. **Source ledger on context assembly** — each context item carries source + reason + freshness.
+3. **Reverse-lookup retriever** — given a path/symbol you're about to change, what already depends on it? Most underused; usually one script.
+4. **Adoption-state tracking** — per-consumer state (legacy / migrating / migrated / deprecated). Forces migrations out of one agent's head into the schema.
+5. **Static analysis in CI** — broken-link / stale-reference checks for shared paths, links, names.
+6. **Replay tests** — record a real session, re-run after refactor; only for high-blast-radius components.
+
+Anti-pattern: **blind local edit** — agent edits a file as if it were standalone, ships, discovers downstream breakage later. Fix with the cheapest pattern that would have caught the specific failure shape.
+
+Detail: `docs/agentic-coding-for-agentic-systems.md` § 5.21. Adjacent: `docs/modularity-and-seams.md` (seams), `docs/context-engineering.md` (source ledger), `docs/cross-agent-operating-model.md` (adoption state).
+
+---
+
+## Pointers to deep docs
+
+For the topic you are actually touching:
+
+| Topic | Doc |
+|---|---|
+| Tools | `docs/tool-design.md` |
+| Memory | `docs/memory-architecture.md` |
+| Context engineering | `docs/context-engineering.md` |
+| Skills | `docs/skills.md` |
+| Subagents | `docs/subagents.md` |
+| Durable execution | `docs/durable-execution.md` |
+| Evals | `docs/evals.md` |
+| Source authority and truth lanes | `docs/source-authority-and-truth-lanes.md` |
+| Cross-agent coordination | `docs/cross-agent-operating-model.md` |
+| Modularity and seams | `docs/modularity-and-seams.md` |
+| Reflection and planning | `docs/reflection-and-planning.md` |
+| Exception taxonomy | `docs/exception-taxonomy.md` |
+| A2A contracts | `docs/a2a-contracts.md` |
+| Cost-aware routing | `docs/cost-aware-routing.md` |
+| Learning loops | `docs/learning-loops.md` |
+| Task prioritization | `docs/task-prioritization.md` |
+
+For the full architecture, the executive thesis, all anti-patterns with worked examples, all field lessons with rationale, the canonical coding-agent prompt, the first-engineering-tasks ordering, and the multifile rebuild scaffolding: `docs/agentic-coding-for-agentic-systems.md` and `docs/agentic-systems-engineering.md`.
+
+For the full single-file source: `AGENTIC_ARCHITECTURE.md` (top-level).
+
+---
+
+## Final summary requirements
+
+A non-trivial change ends with the agent stating: component classification · model-owned vs harness responsibilities · tools / skills / memory / source authority / identity / context behavior · guardrails and approvals · cross-agent ownership · attention behavior · backpressure/budget/fallback · adoption state and rollback · causal ladder for fixes · acceptance proof and gaps · plan and goal · seam declaration · exception classes · A2A contract changes · routing and cost · prioritization inputs · learning destination · reflection checklist results.
+
+Hidden gaps are worse than known gaps. State the gaps explicitly.
+``````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/QUICK_REFERENCE.md" -->
