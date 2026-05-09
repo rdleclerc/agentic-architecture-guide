@@ -2,14 +2,19 @@
 
 This repository builds agentic operating systems. Read this whole file (it is short). For deeper detail, load only the doc(s) relevant to the task you are about to do — do not load everything by default.
 
+For any non-trivial guide/code/prompt/tool/workflow change, load `docs/00-agentic-change-protocol.md` first. It is the compact working protocol; the larger docs are references, not default context dumps.
+
 ## Topic → file routing (lazy load)
 
 Read the matching doc only when the listed task applies:
 
 | If you are working on… | Load |
 |---|---|
-| Coding agents that build agent systems | `docs/agentic-coding-for-agentic-systems.md` |
-| End-to-end systems engineering for agents | `docs/agentic-systems-engineering.md` |
+| Any non-trivial agentic-system change | `docs/00-agentic-change-protocol.md` |
+| Agent errors, repeated mistakes, symptom patches, poor context/tools/feedback | `docs/agent-failure-rca.md` |
+| Coding agents that build agent systems, when the compact protocol is insufficient | `docs/agentic-coding-for-agentic-systems.md` |
+| End-to-end systems engineering for agents, when the compact protocol is insufficient | `docs/agentic-systems-engineering.md` |
+| Choosing agentic patterns, agent-native CLIs, small-file repo shape, feedback loops | `docs/agentic-pattern-catalog.md` |
 | Source lanes, truth vs. retrieval/sidecars, candidate signals | `docs/source-authority-and-truth-lanes.md` |
 | Multi-agent coordination, owner/integrator pattern, shared edits | `docs/cross-agent-operating-model.md` |
 | Tools, tool registries, tool design, typed enforcement | `docs/tool-design.md` |
@@ -24,13 +29,15 @@ Do **not** load `agentic_architecture_singlefile.md` — it is a compiled human 
 
 Core rule: deterministic harness, adaptive policy.
 
+Complexity rule: prefer the smallest deterministic guardrail that prevents a known or plausible failure class. Do not add agents, schemas, eval harnesses, routing layers, or governance machinery unless the benefit clearly beats the coordination and maintenance cost.
+
 Use deterministic code for schemas, permissions, idempotency, budgets, checkpoints, memory APIs, source authority, identity resolution, context assembly, tool execution, human approval, traces, and evals.
 
 Use model-owned adaptive behavior for ambiguous intent, context gathering, tool choice, memory retrieval, task decomposition, plan revision, recovery, and synthesis.
 
 Second rule: truth, retrieval, recall, synthesis, sidecars, candidate signals, and external reports are different architectural roles. Do not let a convenient artifact become a source of truth by accident.
 
-Do not replace open-ended agent behavior with brittle keyword routing, regex parsing, lookup tables, or fixed orchestration unless the task is genuinely deterministic and tested as such.
+Do not replace open-ended agent behavior with brittle keyword routing, regex parsing, lookup tables, or fixed orchestration unless the task is genuinely deterministic and tested as such. Typed routing and fallback are valid harness patterns only when they are explicit, budgeted, traceable, eval-covered, and approved for their cost/risk class.
 
 Before coding, classify the component as one of:
 
@@ -50,10 +57,15 @@ Before coding, classify the component as one of:
 14. attention or notification policy
 15. adoption-state change
 16. eval/observability layer
+17. agent-native CLI or tool surface
+18. repository structure / parallel-agent seam
+19. learning-loop or feedback pipeline
 
 For source lanes, define raw capture, identity linking, claim extraction, freshness, authority, contradiction handling, health checks, and promotion rules before wiring the lane into agent answers.
 
 For multi-agent work, ensure one explicit owner or integrator controls shared-file edits and final verification. Contributors should return evidence-backed proposals unless given a disjoint write set.
+
+For agent failures or suspected symptom patches, run an Agent Failure RCA before implementing. Ask what the agent actually saw, what tools/memory/source lanes/feedback it had, whether a capable human would likely fail with the same information state, and what lowest-layer invariant or affordance would prevent recurrence.
 
 Define done in system terms, not personal activity terms. For autonomous behavior, state the acceptance test before implementation, distinguish manual proof from system/autonomous proof, and list untested layers as explicit gaps.
 
@@ -74,5 +86,7 @@ In the final summary, state:
 - cross-agent ownership or adoption-state changes
 - attention/notification behavior
 - backpressure, budget, and fallback behavior
+- cost/complexity tradeoff and simpler alternatives considered
+- Agent Failure RCA / human-counterfactual result when relevant
 - adoption state and rollback plan
 - acceptance proof, manual-proof gaps, and tests/evals added

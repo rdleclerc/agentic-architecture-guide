@@ -209,6 +209,9 @@ Use one primary category and any secondary categories that apply.
 15. Adoption-state change
 16. Evals and observability
 17. Product/user interface around an agent
+18. Agent-native CLI or tool surface
+19. Repository structure / parallel-agent seam
+20. Learning-loop or feedback pipeline
 
 Then state:
 
@@ -797,6 +800,46 @@ Better search result:
 ```
 
 Keep evidence addressable. Do not force the model to parse giant blobs.
+
+### 8.7 Agent-native CLI contracts
+
+A CLI exposed to a coding agent is a tool surface. It should be designed like a typed API, not like a human-only terminal conversation.
+
+Agent-native CLI requirements:
+
+- **Non-interactive by default:** `--no-input`, `--yes`/`--force`, honest non-TTY behavior, no hidden prompts.
+- **Structured output:** uniform `--json`, stable schemas, diagnostics on stderr, documented exit-code taxonomy.
+- **Actionable errors:** validate before side effects, enumerate valid values, include a corrected invocation or next step when possible.
+- **Safe mutation:** `--dry-run`, explicit destructive flags, idempotency keys or natural keys, mutation responses include durable ids.
+- **Bounded output:** default limits, filters, pagination/cursors, truncation metadata, concise-vs-detail modes.
+- **Vocabulary consistency:** mechanically enforce common verbs/flags such as `get`, `list`, `create`, `update`, `delete`, `--json`, `--force`, and `--limit`.
+- **Introspection:** human `--help`, versioned machine-readable `agent-context`, and long-form skill/task manifests kept in sync with implementation.
+- **Async support:** `--wait`, backoff/jitter, durable job ledger, `jobs list/get/prune`, resumable submit-poll-collect flows.
+- **Profiles and identity:** named profiles, clear precedence (`flag > env > profile > default`), discoverable profile metadata.
+- **Two-way I/O:** artifact delivery targets (`stdout`, atomic file, webhook where appropriate) and a feedback command/log for agent friction.
+- **Local/prod clarity:** every command that can hit local or remote state must state the target clearly in output and traces.
+
+For large CLIs, enforce these properties from a schema or code generation layer. The same source should validate or generate CLI commands, SDK/API surfaces, MCP/tool schemas, docs, and skills where possible.
+
+### 8.8 Routing and fallback as explicit harness policy
+
+Routing is not inherently brittle. Brittle routing is using keywords or lookup tables to impersonate semantic judgment. Good routing is a typed, tested harness pattern.
+
+A route decision should record:
+
+```yaml
+route_input_summary: string
+candidate_routes: [string]
+selected_route: string
+reason: string
+confidence: number
+budget_class: low | medium | high
+risk_class: low | medium | high | critical
+safe_default: string
+trace_id: string
+```
+
+Fallback is also a harness policy, not an exception-handling afterthought. It is allowed only when explicit, budgeted, approved for its risk class, idempotent or replay-safe, and traceable. Silent fallback, silent provider spillover, and un-attributed paid escalation are anti-patterns.
 
 ---
 
@@ -1490,7 +1533,7 @@ Better:
 - require approval for sends/creates
 - evaluate tool choice on realistic examples
 
-A keyword router is acceptable only when the domain is closed and the classification is explicitly tested.
+A keyword router is acceptable only when the domain is closed and the classification is explicitly tested. Semantic routing is acceptable when it is typed, confidence-scored, traceable, eval-covered, and has a safe default.
 
 ### 16.2 Regex as semantic understanding
 
@@ -1542,6 +1585,7 @@ Better:
 - expose failure to model
 - ask human or choose alternate tool
 - trace the failure
+- use fallback only when explicit, budgeted, approved, and idempotent/replay-safe
 
 ### 16.5 Fake memory
 

@@ -614,6 +614,7 @@ CLAUDE.md
 docs/
   agentic-coding-for-agentic-systems.md
   agentic-systems-engineering.md
+  agentic-pattern-catalog.md
   source-authority-and-truth-lanes.md
   cross-agent-operating-model.md
   context-engineering.md
@@ -649,9 +650,43 @@ tests/
     recovery_cases.yaml
 ```
 
-`AGENTS.md` and `CLAUDE.md` should be short. They should point to the deeper documents rather than trying to include everything.
+`AGENTS.md` and `CLAUDE.md` should be short. They should point to the deeper documents rather than trying to include everything. Treat root instructions as an index and operating contract, not as the repository's only memory. Durable design knowledge belongs in topic docs, ADRs, prompt libraries, eval fixtures, or a checkable markdown knowledge graph.
 
-### 6.1 Minimal AGENTS.md
+### 6.1 Context packets, prompt libraries, and repo shape for coding agents
+
+For nontrivial agentic changes, create or assemble a small task context packet before editing:
+
+```text
+task-context/
+  00_goal.md              # observable outcome and user intent
+  01_constraints.md       # permissions, budgets, source authority, adoption state
+  02_relevant_files.md    # files/symbols with why they matter
+  03_commands.md          # tests, evals, local run commands, known flakes
+  04_acceptance.md        # system acceptance test and proof layers
+  05_risks.md             # side effects, privacy/security, fallback/rollback
+```
+
+The packet is not a second giant prompt. It is a scoped working set that can be handed to the main agent, a subagent, or an integrator without forcing them to rediscover the whole codebase. Keep it addressable and update it when the plan changes.
+
+Agentic repos should also carry prompt and procedure assets as code:
+
+```text
+prompts/ or .agentic/prompts/
+  <agent_or_skill>/<purpose>.md
+  rubrics/<eval_name>.md
+  examples/<case_name>.md
+```
+
+A prompt library should have owners, versions, intended models, eval links, and known failure modes. Do not bury long-lived prompt behavior in an always-loaded root file or inline string unless the prompt is genuinely trivial.
+
+Finally, shape code for parallel coding agents. Prefer small, contract-shaped slices where deterministic harness, model policy, prompts, tool schemas, eval fixtures, tests, and side-effect adapters are separable. Split at stable contracts rather than arbitrary line counts. For active hand-edited code, 150-250 lines should trigger a split review; 300+ lines is a strong smell; 500+ lines requires an explicit exception such as generated code, declarative data/config, a cohesive algorithm with tight invariants, a stable adapter/vendor boundary, or an intentional fixture/golden file. Parallel work needs disjoint write sets, per-slice tests, and a named integrator for shared contracts.
+
+For agent-native modules, separate the jobs that old service files often combine: implementation, conceptual map, dependency surface, and behavioral truth/tests. Put local rules in module-level `AGENTS.md` or README files, export only through `public_api.py` / `public-api.ts` / package index surfaces, co-locate tests and eval fixtures, and generate or check dependency maps. Prefer one-agent-task-per-file when a behavior can be changed, tested, and reasoned about independently. This is not one-helper-per-file; it is one independently changeable unit per edit surface.
+
+`AGENTS.md` can point to a `lat.md/`-style markdown knowledge graph or ordinary topic docs. The important property is that architecture decisions, business rules, test specs, and code references are discoverable, linked, and checkable instead of buried in one flat file. Prose is not enough: reinforce the shape with lint rules, generators, dependency checks, review agents, and CI so agents do not drift back to human-centered mega-files.
+
+
+### 6.2 Minimal AGENTS.md
 
 ```md
 # AGENTS.md
@@ -660,13 +695,14 @@ This repository builds agentic systems. Before editing agent logic, read:
 
 - docs/agentic-coding-for-agentic-systems.md
 - docs/agentic-systems-engineering.md
+- docs/agentic-pattern-catalog.md
 - docs/tool-design.md
 - docs/memory-architecture.md
 - docs/context-engineering.md
 
 Core rule: deterministic harness, adaptive policy.
 
-Do not replace open-ended agent behavior with brittle keyword routing, regex parsing, lookup tables, or fixed orchestration unless the task is genuinely deterministic and tested as such.
+Do not replace open-ended agent behavior with brittle keyword routing, regex parsing, lookup tables, or fixed orchestration unless the task is genuinely deterministic and tested as such. Typed routing/fallback are allowed only when explicit, budgeted, traceable, eval-covered, and approved for their cost/risk class.
 
 Before coding, classify the component as one of:
 
@@ -700,7 +736,7 @@ In the final summary, state:
 - acceptance proof, known gaps, and tests/evals added
 ```
 
-### 6.2 Minimal CLAUDE.md
+### 6.3 Minimal CLAUDE.md
 
 ```md
 # CLAUDE.md
@@ -718,7 +754,7 @@ For any agentic change, inspect the relevant tools, skills, memory, source autho
 Define done as observable system behavior, not a manual one-off proof.
 ```
 
-### 6.3 Pull request template
+### 6.4 Pull request template
 
 ```md
 ## Agentic architecture review
@@ -1467,7 +1503,34 @@ Choose one brittle orchestration path. Refactor it into the correct layer: deter
 | Noisy channel has useful ideas | Ingest every message as truth | Separate idea lane with promotion rules |
 | Sidecar looks promising | Treat it as canonical | Adoption state, shadow evals, and reviewed promotion |
 | Agent over-notifies humans | More prompt warnings | Attention budget and notification gate |
-| Main agent context bloats | Add more prompt | Subagent or skill boundary |
+| Main agent context bloats | Add more prompt | Subagent, skill, context packet, or topic-doc boundary |
+| CLI is used by agents | Human-only prompts/tables | Non-interactive, JSON, dry-run/idempotency, bounded output, introspection |
+| Codebase grows | More root instructions | Topic docs or knowledge graph plus small contract-shaped files |
+| Agent behavior should improve | Read traces manually | Trace + feedback + eval fixture + guarded rollout |
+
+---
+
+## 8A. Agentic coding work loop
+
+For substantial agentic-system changes, use a bounded loop instead of a single draft:
+
+```text
+goal -> context packet -> architecture brief -> implementation slice -> critique -> verification -> integrate or stop
+```
+
+The architecture brief should identify the selected pattern(s), why a simpler deterministic workflow is insufficient, which decisions remain model-owned, which boundaries are deterministic harness responsibilities, and which files/slices can be edited independently.
+
+Critique against the harness, not against vibes:
+
+1. Did the change preserve deterministic harness / adaptive policy boundaries?
+2. Did it add a keyword router, regex semantic guess, giant prompt, or hidden fallback?
+3. Are tool, CLI, and file interfaces typed and machine-readable?
+4. Can another agent safely work on an adjacent slice without touching the same surface?
+5. Are source/truth/memory/write paths classified?
+6. Are tests/evals tied to a real incident, trace, or realistic fixture?
+7. What proof layer is still missing?
+
+Stop when acceptance evidence passes, budget is exhausted, required information is missing, approval is required, or repeated failures show the plan needs human/integrator review.
 
 ---
 
@@ -1599,6 +1662,48 @@ Better:
 Track adoption state. Promote only after contracts, shadow runs, evals, health checks, rollback, and owner review.
 ```
 
+### 9.9 Mega-file bottleneck
+
+Bad:
+
+```text
+Keep unrelated harness, prompt, tool, adapter, and eval logic in one large file because it is convenient for one human to browse.
+```
+
+Better:
+
+```text
+Split at stable contracts: deterministic harness, model policy wrapper, tool schema, prompt/rubric, side-effect adapter, eval fixture, and tests. Give parallel agents disjoint write sets and a named integrator for shared contracts.
+```
+
+### 9.10 Interactive-only CLI
+
+Bad:
+
+```text
+A coding agent calls a CLI that waits for a TTY prompt, emits only colored tables, returns vague errors, or duplicates side effects on retry.
+```
+
+Better:
+
+```text
+Agent-native CLI: non-interactive flags, uniform JSON, bounded output, typed exit codes, dry-run/idempotency, async wait/job ledger, machine-readable introspection, and explicit local/prod target reporting.
+```
+
+### 9.11 Self-judgment as verification
+
+Bad:
+
+```text
+The same agent that wrote the change says it looks correct and treats that as proof.
+```
+
+Better:
+
+```text
+Use tests, evals, traces, fixtures, diff inspection, or a separate critique artifact. Self-reflection can find issues, but external evidence decides readiness.
+```
+
 ---
 
 ## 10. Canonical coding-agent prompt for agentic changes
@@ -1610,6 +1715,7 @@ You are editing an agentic system. First read AGENTS.md, CLAUDE.md if present, a
 
 - docs/agentic-coding-for-agentic-systems.md
 - docs/agentic-systems-engineering.md
+- docs/agentic-pattern-catalog.md
 - docs/tool-design.md
 - docs/memory-architecture.md
 - docs/context-engineering.md
@@ -1617,7 +1723,7 @@ You are editing an agentic system. First read AGENTS.md, CLAUDE.md if present, a
 
 Before coding, produce a short architecture brief:
 
-1. Component classification.
+1. Component classification and selected agentic pattern(s), including why a simpler deterministic workflow is insufficient.
 2. Which decisions should be model-owned.
 3. Which responsibilities belong to the deterministic harness.
 4. Which tools the agent has and which tools it ought to have.
@@ -1628,6 +1734,8 @@ Before coding, produce a short architecture brief:
 9. Which tests/evals will prove this is not brittle deterministic orchestration.
 10. What observable system acceptance test defines done, and which manual-proof gaps remain.
 11. What backpressure, budget, fallback, adoption-state, and rollback rules apply.
+12. Which files/slices you own, which shared contracts need an integrator, and how the repo shape supports parallel agents.
+13. Whether any CLI/tool surfaces must become agent-native: non-interactive, JSON, bounded, dry-run/idempotent, introspectable, and recoverable.
 
 Do not implement ambiguous agent behavior with keyword routing, regex intent detection, lookup tables, fixed branches, or giant always-loaded prompts unless you explicitly justify why the task is deterministic.
 

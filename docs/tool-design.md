@@ -45,3 +45,21 @@ Use `.agentic/tool_catalog.yaml` as the source of truth.
 Tools that read evidence should declare source role and freshness. Tools that write or publish should declare authority, approval, idempotency, undo strategy, and whether the output is truth, synthesis, candidate signal, or outbound artifact.
 
 A model-friendly tool description should say when not to use the tool. For example, a search index can retrieve evidence, but it should not be described as deciding which source wins. A report renderer can create synthesis, but it should not silently promote the report back into durable truth.
+
+## Agent-Native CLI Surfaces
+
+A CLI that agents call is a tool API. It should not depend on human patience, terminal prompts, colored tables, or undocumented conventions.
+
+Required CLI affordances:
+
+- Non-interactive mode for every command that can prompt: `--no-input`, `--yes`/`--force`, and correct non-TTY behavior.
+- Uniform structured output: `--json` for data, diagnostics on stderr, stable schemas, and documented exit codes.
+- Actionable validation errors: reject before side effects, enumerate valid enum/resource values, and provide a next invocation when possible.
+- Safe writes: `--dry-run`, explicit destructive flags, idempotency keys or natural keys, and durable resource ids in mutation responses.
+- Bounded reads: `--limit`, filters, cursors, truncation metadata, and concise-vs-detail modes.
+- Introspection: `--help` for humans, versioned machine-readable `agent-context` for agents, and skill/task manifests for workflows.
+- Async recovery: `--wait`, durable job ledger, and `jobs list/get/prune` for in-flight work.
+- Target clarity: local vs. remote/prod target shown in output and traces.
+- Feedback channel: a local and optionally upstream `feedback` path for agent friction reports.
+
+For broad CLIs, enforce naming and behavior from a schema/codegen layer so CLI, SDK, MCP/tool definitions, docs, and skills do not drift.

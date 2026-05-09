@@ -10,8 +10,9 @@ Use deterministic code for schemas, permissions, budgets, idempotency, checkpoin
 
 ## What is in this repo
 
-- `agentic_architecture_singlefile.md` — canonical single-file source and handoff document.
-- `rebuild_agentic_architecture.py` — rebuilds the multi-file pack from the single-file source.
+- `AGENTS.md`, `docs/`, and `.agentic/` — canonical agent-facing source.
+- `agentic_architecture_singlefile.md` — generated/legacy human handoff reference. Do not treat it as the agent editing source.
+- `rebuild_agentic_architecture.py` — legacy recovery helper for rebuilding a split pack from a historical single-file bundle; it is not the normal authoring path.
 - `AGENTS.md` / `CLAUDE.md` — short always-loaded instructions for coding agents.
 - `docs/` — detailed architecture docs for tools, memory, context, evals, source authority, subagents, durable execution, and cross-agent operating model.
 - `.agentic/` — starter YAML policies/catalogs/schemas.
@@ -24,15 +25,15 @@ git clone git@github.com:rdleclerc/agentic-architecture-guide.git
 cd agentic-architecture-guide
 ```
 
-Then point local agent instructions at `AGENTS.md` and `docs/agentic-coding-for-agentic-systems.md`, or copy the relevant files into another repo.
+Then point local agent instructions at `AGENTS.md`. For non-trivial changes, load `docs/00-agentic-change-protocol.md` first and only then load the specific topic doc you need.
 
-## Rebuild from the single-file source
+## Legacy single-file recovery
 
 ```bash
 python3 rebuild_agentic_architecture.py agentic_architecture_singlefile.md ./agentic_architecture_pack
 ```
 
-Use `--overwrite` to replace existing generated files.
+Use `--overwrite` to replace existing generated files. Do not use this as the normal edit flow unless you are intentionally recovering from the legacy single-file bundle.
 
 ## Field lessons added in v1.3
 
