@@ -2,8 +2,8 @@
 
 ## Why coding agents default to von Neumann architecture, and how to give them the harness, memory, tools, and skills needed to build adaptive systems
 
-Version: 1.2  
-Audience: human technical leads, coding agents, staff engineers, agent-platform teams  
+Version: 1.2
+Audience: human technical leads, coding agents, staff engineers, agent-platform teams
 Recommended repo path: `docs/agentic-coding-for-agentic-systems.md`
 
 ---
@@ -37,6 +37,25 @@ A serious agentic system needs more than model calls. It needs a harness: contex
 For systems that serve a real organization, project, or long-lived workflow, the harness also needs an operating model. The agent must know which sources are raw evidence, which stores are authoritative, which pages are synthesis, which indexes are retrieval-only, which helpers are sidecars, which workflows are experimental, and when human attention is too valuable to spend.
 
 The strongest field lesson is that agentic failures rarely stay inside one layer. A stalled publish, runaway retry storm, false memory, or bad handoff usually crosses context, tools, state, model policy, budget, and human attention. Treat each incident as a request to improve the architecture: name the contract that was missing, preserve a replay or eval, and promote the fix only after evidence.
+
+### 0.1 Simplicity and deletion are safety properties
+
+Simplicity is not taste. In agentic systems it is a reliability, cost, and parallelism requirement.
+
+Every new agent, guardrail, policy file, schema, queue, router, eval harness, dependency, prompt clause, and handoff creates hidden cost: more context to load, more state to keep consistent, more traces to inspect, more stale assumptions, more merge surfaces for parallel agents, more ways for the model to see the wrong abstraction, and more future tests to maintain. Humans and coding agents usually see the local benefit immediately and see the complexity cost only weeks later.
+
+Use a deletion-first order before architecture work:
+
+1. Make the requirement less wrong or less broad.
+2. Delete unnecessary steps, parts, processes, states, and handoffs.
+3. Prefer better context, tools, source authority, and feedback over behavior-policing machinery.
+4. Simplify the remaining path.
+5. Optimize or accelerate only after the simpler path is correct.
+6. Automate last.
+
+The threshold for complexity is therefore asymmetric: the benefit must be much greater than the cost you can see, because the hidden downstream cost is usually undercounted. A plan that spends one hour adding mechanisms should be willing to spend several hours asking what can be deleted, collapsed, or solved by giving the agent the right context and tools.
+
+This matters for RCA. Coding agents often look dumb when the harness deprived them of decisive context, good tools, source authority, or feedback. In those cases, adding more guardrails to force behavior is a symptom patch. The simpler fix is to engineer the information state so a capable agent would naturally do the right thing.
 
 ---
 
@@ -1042,11 +1061,13 @@ Deliverables:
 
 ```text
 .agentic/skill_registry.yaml
-.claude/skills/design-agent-tool/SKILL.md
-.claude/skills/design-agent-memory/SKILL.md
-.claude/skills/design-context-engine/SKILL.md
-.claude/skills/build-agent-eval/SKILL.md
-.claude/skills/review-agentic-architecture/SKILL.md
+skills/design-agent-tool/SKILL.md
+skills/design-agent-memory/SKILL.md
+skills/design-source-lane/SKILL.md
+skills/design-context-engine/SKILL.md
+skills/build-agent-eval/SKILL.md
+skills/review-agentic-architecture/SKILL.md
+.claude/skills/*/SKILL.md and .codex/skills/*/SKILL.md adapter links or generated copies
 docs/skills.md
 ```
 

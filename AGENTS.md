@@ -4,6 +4,8 @@ This repository builds agentic operating systems. Read this whole file (it is sh
 
 For any non-trivial guide/code/prompt/tool/workflow change, load `docs/00-agentic-change-protocol.md` first. It is the compact working protocol; the larger docs are references, not default context dumps.
 
+Source authority rule: the live multifile repo is canonical. `agentic_architecture_singlefile.md` is a generated distribution/recovery artifact and must not contain unique live doctrine. If bundle content is useful, materialize it as a live file or mark it archival/non-authoritative.
+
 ## Topic → file routing (lazy load)
 
 Read the matching doc only when the listed task applies:
@@ -11,10 +13,19 @@ Read the matching doc only when the listed task applies:
 | If you are working on… | Load |
 |---|---|
 | Any non-trivial agentic-system change | `docs/00-agentic-change-protocol.md` |
+| Starting under tight context or needing a rule-only refresher | `docs/QUICK_REFERENCE.md` |
+| Current guide version, canonicality, adapter status, or rollout state | `docs/version-and-adoption.md` |
 | Agent errors, repeated mistakes, symptom patches, poor context/tools/feedback | `docs/agent-failure-rca.md` |
 | Coding agents that build agent systems, when the compact protocol is insufficient | `docs/agentic-coding-for-agentic-systems.md` |
 | End-to-end systems engineering for agents, when the compact protocol is insufficient | `docs/agentic-systems-engineering.md` |
 | Choosing agentic patterns, agent-native CLIs, small-file repo shape, feedback loops | `docs/agentic-pattern-catalog.md` |
+| Modularity, seams, file splitting, or parallel coding structure | `docs/modularity-and-seams.md` |
+| Reflection, planning loops, or post-change critique | `docs/reflection-and-planning.md` |
+| Retry/fallback/degraded-mode classification | `docs/exception-taxonomy.md` |
+| Agent-to-agent message contracts | `docs/a2a-contracts.md` |
+| Provider/model routing, spend, or fallback | `docs/cost-aware-routing.md` |
+| Learning loops, feedback, skill evolution, or lesson promotion | `docs/learning-loops.md` |
+| Queues, priority, preemption, or staleness | `docs/task-prioritization.md` |
 | Source lanes, truth vs. retrieval/sidecars, candidate signals | `docs/source-authority-and-truth-lanes.md` |
 | Multi-agent coordination, owner/integrator pattern, shared edits | `docs/cross-agent-operating-model.md` |
 | Tools, tool registries, tool design, typed enforcement | `docs/tool-design.md` |
@@ -22,20 +33,30 @@ Read the matching doc only when the listed task applies:
 | Context engines, context assembly, context budgets | `docs/context-engineering.md` |
 | Durable execution, checkpoints, resumability | `docs/durable-execution.md` |
 | Evals, observability, regression coverage | `docs/evals.md` |
-| Skills (design, registration, invocation) | `docs/skills.md` |
+| Skills, neutral packaging, or runtime adapters | `docs/skills.md` |
 | Subagents and delegation | `docs/subagents.md` |
 
 Do **not** load `agentic_architecture_singlefile.md` — it is a compiled human reference and will eat the context window.
 
 Core rule: deterministic harness, adaptive policy.
 
-Complexity rule: prefer the smallest deterministic guardrail that prevents a known or plausible failure class. Do not add agents, schemas, eval harnesses, routing layers, or governance machinery unless the benefit clearly beats the coordination and maintenance cost.
+Second rule: simplicity/deletion before machinery. Complexity has hidden downstream cost. Before adding an agent, schema, router, policy layer, eval harness, guardrail, workflow, dependency, or automation, run the deletion-first order:
+
+1. Make the requirement less wrong or less broad.
+2. Delete unnecessary steps, parts, policies, queues, and handoffs.
+3. Prefer better context, tools, source authority, and feedback over behavioral control machinery.
+4. Simplify the remaining path.
+5. Optimize, accelerate, or automate only after the simpler system is correct.
+
+Because agents and humans systematically underprice coordination, maintenance, context bloat, stale state, eval surface area, and future merge conflicts, the expected benefit of new complexity must be much greater than its visible cost, not merely slightly higher.
+
+Complexity rule: prefer the smallest deterministic guardrail that prevents a named failure class. Do not add machinery because a plan feels complete; add it only when a simpler context/tool/source fix would not prevent the failure.
 
 Use deterministic code for schemas, permissions, idempotency, budgets, checkpoints, memory APIs, source authority, identity resolution, context assembly, tool execution, human approval, traces, and evals.
 
 Use model-owned adaptive behavior for ambiguous intent, context gathering, tool choice, memory retrieval, task decomposition, plan revision, recovery, and synthesis.
 
-Second rule: truth, retrieval, recall, synthesis, sidecars, candidate signals, and external reports are different architectural roles. Do not let a convenient artifact become a source of truth by accident.
+Third rule: truth, retrieval, recall, synthesis, sidecars, candidate signals, and external reports are different architectural roles. Do not let a convenient artifact become a source of truth by accident.
 
 Do not replace open-ended agent behavior with brittle keyword routing, regex parsing, lookup tables, or fixed orchestration unless the task is genuinely deterministic and tested as such. Typed routing and fallback are valid harness patterns only when they are explicit, budgeted, traceable, eval-covered, and approved for their cost/risk class.
 
@@ -86,7 +107,8 @@ In the final summary, state:
 - cross-agent ownership or adoption-state changes
 - attention/notification behavior
 - backpressure, budget, and fallback behavior
-- cost/complexity tradeoff and simpler alternatives considered
+- deletion/simplification pass result, including parts or requirements removed
+- cost/complexity tradeoff and why any remaining complexity is worth its hidden cost
 - Agent Failure RCA / human-counterfactual result when relevant
 - adoption state and rollback plan
 - acceptance proof, manual-proof gaps, and tests/evals added

@@ -8,20 +8,36 @@ Name the primary component you are changing: workflow, agent loop, multi-agent s
 
 If more than one applies, pick one primary component and list the secondary ones. Do not expand scope just because many categories are adjacent.
 
-## 2. Choose the smallest useful guardrail
+## 2. Run the deletion-first simplicity pass
 
-Prefer the smallest deterministic guardrail that prevents a known or plausible failure class.
+Simplicity is a safety property for agentic systems. Every new part creates coordination cost, context cost, stale-state risk, eval surface area, ownership ambiguity, and future merge conflict risk. These costs are usually hidden until a later agent touches the system.
+
+Before adding a new agent, schema, router, policy layer, eval harness, guardrail, workflow, dependency, or automation, answer in this order:
+
+1. **Make the requirement less wrong.** Is the requirement stale, over-broad, based on a one-off incident, or asking for the wrong layer to own the behavior?
+2. **Delete.** What step, part, handoff, queue, policy, file, prompt clause, or process can be removed instead of improved?
+3. **Prefer affordance over coercion.** Could the agent behave correctly if it had better context, a clearer tool, source authority, feedback, or an inspectable state transition?
+4. **Simplify.** Can the remaining design be expressed as a smaller contract, fewer states, fewer files, fewer roles, or a narrower public seam?
+5. **Optimize or accelerate.** Only speed up the path after the simpler path is correct.
+6. **Automate last.** Do not automate a workflow, policy, or workaround that should have been deleted.
+
+A complexity addition is justified only when its expected benefit is much greater than its visible cost. “Slightly better than the cost we can see” is not enough because the hidden cost is usually the larger part.
+
+## 3. If a guardrail remains, choose the smallest useful one
+
+Prefer the smallest deterministic guardrail that prevents a named failure class.
 
 Before adding a new agent, schema, router, eval harness, policy layer, or CI gate, answer:
 
 - What failure does this prevent?
-- Has that failure happened, or is it high-risk enough to justify the cost?
+- Has that failure happened, or is it high-risk enough to justify the hidden cost?
+- Why would better context, tools, source authority, feedback, or a smaller contract not prevent it?
 - Is there a smaller check, template, test, or acceptance line that would prevent it?
-- What maintenance burden does the new machinery create?
+- What maintenance burden and future coordination burden does the new machinery create?
 
-If the benefit is not clear, write the simpler rule and defer the machinery until a real failure demands it.
+If the benefit is not clearly larger than the hidden cost, write the simpler rule and defer the machinery until a real failure demands it.
 
-## 3. Separate harness from policy
+## 4. Separate harness from policy
 
 Deterministic harness owns schemas, permissions, idempotency, budgets, checkpoints, memory APIs, source authority, identity resolution, context assembly, tool execution, approval gates, traces, and evals.
 
@@ -29,13 +45,13 @@ Model policy owns ambiguity, context gathering, tool choice, memory retrieval, t
 
 Do not bury harness responsibilities inside prompts. Do not replace adaptive behavior with brittle keywords unless the behavior is genuinely deterministic and tested.
 
-## 4. Run Agent Failure RCA when relevant
+## 5. Run Agent Failure RCA when relevant
 
 If the change fixes an agent mistake, repeated agent error, multi-agent confusion, context/tool/memory issue, or symptom patch risk, load `docs/agent-failure-rca.md` and answer the human counterfactual before coding.
 
-The default stance is: agents often fail because the system withheld context, tools, feedback, source clarity, or authority that a capable human would have had.
+The default stance is: agents often fail because the system withheld context, tools, feedback, source clarity, or authority that a capable human would have had. Fix the missing affordance before adding behavior-policing machinery.
 
-## 5. Define done as evidence
+## 6. Define done as evidence
 
 Before implementation, write a small acceptance rubric:
 
@@ -43,17 +59,19 @@ Before implementation, write a small acceptance rubric:
 - files/components in scope and out of scope
 - user approval or side-effect boundaries
 - commands/tests/evals/reviews to run
+- deletion/simplification pass result
 - manual proof vs autonomous/system proof gap
 - rollback/adoption state when relevant
 
 For small changes, a few bullets are enough. For larger changes, use a dedicated plan only when it reduces risk more than it adds process.
 
-## 6. Final acceptance
+## 7. Final acceptance
 
 Before calling work done, try to disprove readiness:
 
 - Did the implementation drift from the plan?
 - Did it add complexity without preventing a named failure?
+- Did it skip a simpler context/tool/source-authority fix?
 - Are source/truth/memory/context/tool boundaries still clear?
 - Are untested layers named honestly?
 - If this fixes agent behavior, does the RCA identify the missing invariant or affordance?

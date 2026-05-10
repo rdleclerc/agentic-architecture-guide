@@ -58,6 +58,20 @@ Use model-driven or agent-driven behavior for the policy:
 
 A good agentic system is not “less deterministic.” It is deterministic in the places that must be reliable and adaptive in the places where the environment, task, or information path cannot be known ahead of time.
 
+### 1.1 Simplicity before machinery
+
+Simplicity is a non-negotiable architectural constraint. Agentic codebases can blow up faster than ordinary codebases because every added layer becomes context for future agents, a merge surface for parallel sessions, and another state or policy boundary that can go stale.
+
+Run this order before implementing architecture:
+
+1. Question the requirement: is it stale, over-broad, or assigned to the wrong layer?
+2. Delete unnecessary parts, states, handoffs, prompts, queues, policies, and processes.
+3. Ask whether better context, clearer tools, source authority, or feedback would let the agent do the right thing without new control machinery.
+4. Simplify the remaining design.
+5. Optimize, accelerate, and automate only after the simpler design is correct.
+
+Do not accept complexity just because the visible benefit appears slightly larger than the visible cost. Hidden costs dominate: maintenance, coordination, context bloat, eval growth, false confidence, race surfaces, and downstream refactors. The benefit of complexity must be much greater than the cost you can currently measure.
+
 ---
 
 ## 2. The failure mode this document prevents
@@ -228,6 +242,7 @@ Backpressure/budget/fallback requirements:
 Adoption state and rollback:
 System acceptance test:
 Tests/evals to add or update:
+Deletion/simplification pass:
 Known proof gaps:
 ```
 

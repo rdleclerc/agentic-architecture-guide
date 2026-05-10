@@ -1,7 +1,7 @@
 # Agentic Architecture Single-File Source
 
-Version: 1.4
-Generated: 2026-05-08
+Version: 1.5
+Generated: 2026-05-09
 Purpose: one Markdown source that explains the architecture and contains a rebuildable multifile repo pack for coding agents building agentic operating systems.
 
 This file is meant to be handed to a human technical lead, Codex, Claude Code, or another coding agent. It has two jobs:
@@ -51,20 +51,29 @@ root file. The repo shape is part of the harness: small contract-shaped files,
 context packets, prompt libraries, and linked decision records make parallel
 agent work safer.
 
+An eighth claim is about simplicity. Complexity in agentic systems has hidden
+cost: context bloat, stale state, ambiguous ownership, larger eval surfaces,
+more merge conflicts, and more places for a capable model to be given the wrong
+information state. Before adding machinery, question the requirement, delete
+unnecessary parts or processes, prefer better context/tools/source authority and
+feedback over behavior-policing guardrails, simplify what remains, and automate
+last. A complex addition must be worth much more than its visible cost.
+
 ---
 
 ## Table of contents
 
 1. [Core architecture](#core-architecture)
-2. [Causal depth: proximate and ultimate causes](#causal-depth-proximate-and-ultimate-causes)
-3. [Modularity, parallelization, and seam design](#modularity-parallelization-and-seam-design)
-4. [Mermaid diagrams](#mermaid-diagrams)
-5. [How to rebuild the multifile pack](#how-to-rebuild-the-multifile-pack)
-6. [Repository tree](#repository-tree)
-7. [Bundle manifest](#bundle-manifest)
-8. [Embedded file payloads](#embedded-file-payloads)
-9. [Research boundary: leaked or derivative Claude Code source](#research-boundary-leaked-or-derivative-claude-code-source)
-10. [Reference sources used for architecture framing](#reference-sources-used-for-architecture-framing)
+2. [Simplicity, deletion, and hidden complexity cost](#simplicity-deletion-and-hidden-complexity-cost)
+3. [Causal depth: proximate and ultimate causes](#causal-depth-proximate-and-ultimate-causes)
+4. [Modularity, parallelization, and seam design](#modularity-parallelization-and-seam-design)
+5. [Mermaid diagrams](#mermaid-diagrams)
+6. [How to rebuild generated artifacts](#how-to-rebuild-generated-artifacts)
+7. [Repository tree](#repository-tree)
+8. [Bundle manifest](#bundle-manifest)
+9. [Embedded file payloads](#embedded-file-payloads)
+10. [Research boundary: leaked or derivative Claude Code source](#research-boundary-leaked-or-derivative-claude-code-source)
+11. [Reference sources used for architecture framing](#reference-sources-used-for-architecture-framing)
 
 ---
 
@@ -81,6 +90,24 @@ When handing work to a coding agent, require it to classify every change as one 
 The practical anti-pattern is not determinism. The anti-pattern is using deterministic branch logic where the system was supposed to rely on adaptive policy plus the right tools, memories, and skills.
 
 For operating systems that serve an organization or long-lived project, add one more anti-pattern: collapsing every artifact into memory. Raw sources, structured truth, retrieval indexes, human-readable synthesis, sidecar helpers, candidate signals, and outbound reports have different authority. Treating them as the same thing eventually makes the agent confidently wrong.
+
+---
+
+## Simplicity, deletion, and hidden complexity cost
+
+Simplicity is a core harness responsibility, not an aesthetic preference. Agentic systems multiply the cost of every extra part because future agents have to load it into context, coordinate around it, test it, trace it, and decide whether it is authoritative. The visible cost is only the beginning; the hidden downstream cost is usually larger.
+
+Run the deletion-first order before architecture work:
+
+1. Make the requirement less wrong, less stale, or less broad.
+2. Delete unnecessary parts, processes, states, queues, prompts, policies, handoffs, and files.
+3. Prefer better context, clearer tools, source authority, inspectable state, and fast feedback over behavior-policing machinery.
+4. Simplify the remaining path.
+5. Optimize, accelerate, or automate only after the simpler path is correct.
+
+A plan that adds machinery should spend serious time trying to remove machinery. If a coding agent appears to need many guardrails, first ask whether it lacked the context, tools, source authority, or feedback that would have let a capable agent do the right thing. Guardrails are still valid, but only after the simpler affordance fix is not enough.
+
+The threshold is asymmetric: the benefit of complexity must be much greater than the cost you can currently measure. If the case is merely marginal, defer the machinery and preserve the failure as a fixture, eval, or explicit open question.
 
 ---
 
@@ -352,22 +379,42 @@ graph TD
     Repo --> CL[CLAUDE.md]
     Repo --> Docs[docs/]
     Repo --> Config[.agentic/*.yaml]
-    Repo --> Skills[.claude/skills/*/SKILL.md]
+    Repo --> Skills[skills/*/SKILL.md]
+    Skills --> ClaudeAdapter[.claude/skills/* adapter]
+    Skills --> CodexAdapter[.codex/skills/* adapter]
     Repo --> PR[.github/pull_request_template.md]
 ```
 
 
 ---
 
-## How to rebuild the multifile pack
+## How to rebuild generated artifacts
 
-Save this file as `agentic_architecture_singlefile.md`. Then copy the script below into `rebuild_agentic_architecture.py` and run:
+The live multifile repo is canonical. Regenerate this single-file handoff from
+the live files before sharing it:
+
+```bash
+python3 build_agentic_architecture_singlefile.py
+python3 scripts/validate_agentic_pack.py
+python3 -m unittest discover -s tests -p 'test_*.py'
+```
+
+Use the check mode in CI or review:
+
+```bash
+python3 build_agentic_architecture_singlefile.py --check
+```
+
+To recover a multifile pack from this generated single-file handoff, save this
+file as `agentic_architecture_singlefile.md` and run:
 
 ```bash
 python rebuild_agentic_architecture.py agentic_architecture_singlefile.md ./agentic_architecture_pack
 ```
 
-Use `--overwrite` if the target files already exist.
+Use `--overwrite` if the target files already exist. Adapter skill files may be
+restored as generated copies rather than symlinks; they remain derived from
+canonical `skills/`.
 
 ```python
 #!/usr/bin/env python3
@@ -464,308 +511,1215 @@ The rebuild parser checks each file payload against the SHA-256 and byte count i
 ## Repository tree
 
 ```text
-agentic_architecture_pack/
-├── .agentic/
-│   ├── context_policy.yaml
-│   ├── coordination_policy.yaml
-│   ├── eval_matrix.yaml
-│   ├── memory_schema.yaml
-│   ├── skill_registry.yaml
-│   ├── source_authority.yaml
-│   └── tool_catalog.yaml
-├── .claude/
-│   └── skills/
-│       ├── build-agent-eval/
-│       │   └── SKILL.md
-│       ├── design-agent-memory/
-│       │   └── SKILL.md
-│       ├── design-agent-tool/
-│       │   └── SKILL.md
-│       ├── design-context-engine/
-│       │   └── SKILL.md
-│       ├── design-source-lane/
-│       │   └── SKILL.md
-│       └── review-agentic-architecture/
-│           └── SKILL.md
-├── .github/
-│   └── pull_request_template.md
-├── docs/
-│   ├── a2a-contracts.md
-│   ├── agentic-coding-for-agentic-systems.md
-│   ├── agentic-pattern-catalog.md
-│   ├── agentic-systems-engineering.md
-│   ├── context-engineering.md
-│   ├── cost-aware-routing.md
-│   ├── cross-agent-operating-model.md
-│   ├── durable-execution.md
-│   ├── evals.md
-│   ├── exception-taxonomy.md
-│   ├── learning-loops.md
-│   ├── memory-architecture.md
-│   ├── modularity-and-seams.md
-│   ├── QUICK_REFERENCE.md
-│   ├── reflection-and-planning.md
-│   ├── skills.md
-│   ├── source-authority-and-truth-lanes.md
-│   ├── subagents.md
-│   ├── task-prioritization.md
-│   └── tool-design.md
-├── tests/
-│   └── agentic/
+.
+├── .agentic/context_policy.yaml
+├── .agentic/coordination_policy.yaml
+├── .agentic/eval_matrix.yaml
+├── .agentic/memory_schema.yaml
+├── .agentic/skill_registry.yaml
+├── .agentic/source_authority.yaml
+├── .agentic/tool_catalog.yaml
+├── .claude/skills/build-agent-eval/SKILL.md
+├── .claude/skills/design-agent-memory/SKILL.md
+├── .claude/skills/design-agent-tool/SKILL.md
+├── .claude/skills/design-context-engine/SKILL.md
+├── .claude/skills/design-source-lane/SKILL.md
+├── .claude/skills/review-agentic-architecture/SKILL.md
+├── .codex/skills/build-agent-eval/SKILL.md
+├── .codex/skills/design-agent-memory/SKILL.md
+├── .codex/skills/design-agent-tool/SKILL.md
+├── .codex/skills/design-context-engine/SKILL.md
+├── .codex/skills/design-source-lane/SKILL.md
+├── .codex/skills/review-agentic-architecture/SKILL.md
+├── .github/pull_request_template.md
+├── .gitignore
 ├── AGENTS.md
-└── CLAUDE.md
+├── CLAUDE.md
+├── README.md
+├── build_agentic_architecture_singlefile.py
+├── docs/00-agentic-change-protocol.md
+├── docs/QUICK_REFERENCE.md
+├── docs/a2a-contracts.md
+├── docs/agent-failure-rca.md
+├── docs/agentic-coding-for-agentic-systems.md
+├── docs/agentic-pattern-catalog.md
+├── docs/agentic-systems-engineering.md
+├── docs/context-engineering.md
+├── docs/cost-aware-routing.md
+├── docs/cross-agent-operating-model.md
+├── docs/durable-execution.md
+├── docs/evals.md
+├── docs/exception-taxonomy.md
+├── docs/learning-loops.md
+├── docs/memory-architecture.md
+├── docs/modularity-and-seams.md
+├── docs/reflection-and-planning.md
+├── docs/skills.md
+├── docs/source-authority-and-truth-lanes.md
+├── docs/subagents.md
+├── docs/task-prioritization.md
+├── docs/tool-design.md
+├── docs/version-and-adoption.md
+├── rebuild_agentic_architecture.py
+├── scripts/validate_agentic_pack.py
+├── skills/build-agent-eval/SKILL.md
+├── skills/design-agent-memory/SKILL.md
+├── skills/design-agent-tool/SKILL.md
+├── skills/design-context-engine/SKILL.md
+├── skills/design-source-lane/SKILL.md
+├── skills/review-agentic-architecture/SKILL.md
+├── tests/__init__.py
+├── tests/agentic/__init__.py
+├── tests/agentic/behavior_fixtures.json
+├── tests/agentic/test_validate_agentic_pack.py
 ```
-
----
 
 ## Bundle manifest
 
 ```yaml
 files:
-  - path: AGENTS.md
-    bytes: 7838
-    sha256: 31f33c40eaa0484a3d5ed8ff0d136c6c8b7cc54685c0279019a8fa5baa0f6a1c
-    trailing_newline: true
-  - path: CLAUDE.md
-    bytes: 3661
-    sha256: 61c0d887af174770b7f7944542c8ca3584190f075c98f31c0e90df38d04f0ccf
-    trailing_newline: true
-  - path: docs/agentic-coding-for-agentic-systems.md
-    bytes: 67673
-    sha256: 4eb30bb8698fc8887b98a3fd8d5f267c9520c6fc708d9f54eb001fe78b0aa88a
-    trailing_newline: true
-  - path: docs/agentic-systems-engineering.md
-    bytes: 61345
-    sha256: 40b1b17398db694e8e6f75e5b0a8684be4f84ae8ec2b56918e35690881f25506
-    trailing_newline: true
-  - path: docs/agentic-pattern-catalog.md
-    bytes: 15046
-    sha256: a1aab1a86a5df2ac0e247fd33760247ec0c0eedd7694358676de4c30742fdea1
-    trailing_newline: true
-  - path: docs/tool-design.md
-    bytes: 3336
-    sha256: a64f361ba3d00619ae6076efdd52b477a8f103f5286490b03f4793062973cf98
-    trailing_newline: true
-  - path: docs/memory-architecture.md
-    bytes: 1795
-    sha256: fa484a8d62855c26786368c18f4c055e87479beb2ebc2ce1fe01e40456343312
-    trailing_newline: true
-  - path: docs/context-engineering.md
-    bytes: 2788
-    sha256: 4683e02a659f84dfa5ba795ea44108009da302c4ca9e9b05a0076ad8dc2e7e9a
-    trailing_newline: true
-  - path: docs/skills.md
-    bytes: 1266
-    sha256: cc68b3f135913c077501bf75d58eaa903ebab5c52ecd2c203d43461e4ae27cbe
-    trailing_newline: true
-  - path: docs/durable-execution.md
-    bytes: 1276
-    sha256: ff6f53b55383976ddcf89a1160b166afc3ceb62c3ff673a7cb852931d92e2dc6
-    trailing_newline: true
-  - path: docs/evals.md
-    bytes: 3104
-    sha256: 3a63fab6cb65308283c1741bee734d81e8be8d17b0dbe40afeb7cdc596ee3b27
-    trailing_newline: true
-  - path: docs/subagents.md
-    bytes: 1044
-    sha256: 57e629f9bc29259cf8fcf52837774fd10a6207b31c507e537ab40bbbc9e5a397
-    trailing_newline: true
   - path: .agentic/context_policy.yaml
     bytes: 835
     sha256: c7ee70831d13f74af3b00f6218e7d8bba412f9f26977af4eb6e03c20018568d6
     trailing_newline: true
-  - path: .agentic/tool_catalog.yaml
-    bytes: 3619
-    sha256: d459cd2e8721766914dfdf777d24e78c21eb6420b6469d86b6fcb58d0f58fa66
+  - path: .agentic/coordination_policy.yaml
+    bytes: 711
+    sha256: 85968b5c5e80a3a6441ee8505274b9a8a4ca31e4bee6b5cf588bec6dfcc94286
+    trailing_newline: true
+  - path: .agentic/eval_matrix.yaml
+    bytes: 3395
+    sha256: c21adffe9c08fedce4936134ac21b058fa7a5be06e47a5a773d176ba13b0a2d1
     trailing_newline: true
   - path: .agentic/memory_schema.yaml
     bytes: 1150
     sha256: 7ec7f08c887daf2ee78352d3dd44f9466c5424549cc998201315a9d4191a08f6
     trailing_newline: true
   - path: .agentic/skill_registry.yaml
-    bytes: 1144
-    sha256: 2a272ab199ed59cd3e8efef5b8c5d168466d3cf220dd20fb2241f76f227abe85
-    trailing_newline: true
-  - path: .agentic/eval_matrix.yaml
-    bytes: 2050
-    sha256: 2195ead1d60217ceadaf59bbfbb2c5b6b4c44ba0ff97260ddd2036ac0328b798
-    trailing_newline: true
-  - path: .claude/skills/design-agent-tool/SKILL.md
-    bytes: 623
-    sha256: bf6e0c0068122f1eae8a97c2ef5e19650456d1182bedf98a100c29874626b077
-    trailing_newline: true
-  - path: .claude/skills/design-agent-memory/SKILL.md
-    bytes: 692
-    sha256: bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1
-    trailing_newline: true
-  - path: .claude/skills/design-context-engine/SKILL.md
-    bytes: 624
-    sha256: 34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4
-    trailing_newline: true
-  - path: .claude/skills/build-agent-eval/SKILL.md
-    bytes: 574
-    sha256: 6459b4c53c093e69aca8f1fec6f0e9d4ae588bc41abb1fc55ebf080f7251c60d
-    trailing_newline: true
-  - path: .claude/skills/review-agentic-architecture/SKILL.md
-    bytes: 915
-    sha256: 7a5543668a3f9cf1f3a8a290f141ca7434d54bc20abf38514f5ed731c322814a
-    trailing_newline: true
-  - path: .github/pull_request_template.md
-    bytes: 795
-    sha256: b3df7fd37f8120c24dd9aaada3d7ec31c7138cfd7b16abc542f34cecc8a08d4f
+    bytes: 2323
+    sha256: e89a80bc5d90bbce5741669ab4626d5afc758ad0928621409087400ea5f713e3
     trailing_newline: true
   - path: .agentic/source_authority.yaml
     bytes: 1487
     sha256: cf8341ebcf45ab5618e039a19931febb210ae1a72451caa5facbf6bf01fb4f57
     trailing_newline: true
-  - path: .agentic/coordination_policy.yaml
-    bytes: 711
-    sha256: 85968b5c5e80a3a6441ee8505274b9a8a4ca31e4bee6b5cf588bec6dfcc94286
+  - path: .agentic/tool_catalog.yaml
+    bytes: 3619
+    sha256: d459cd2e8721766914dfdf777d24e78c21eb6420b6469d86b6fcb58d0f58fa66
     trailing_newline: true
-  - path: docs/source-authority-and-truth-lanes.md
-    bytes: 3286
-    sha256: 4503f5bd98d26c5a4a698237ea14d83334af8e495c9294a395dbedfe51f8cd55
+  - path: .claude/skills/build-agent-eval/SKILL.md
+    bytes: 531
+    sha256: 89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c
+    trailing_newline: true
+  - path: .claude/skills/design-agent-memory/SKILL.md
+    bytes: 692
+    sha256: bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1
+    trailing_newline: true
+  - path: .claude/skills/design-agent-tool/SKILL.md
+    bytes: 623
+    sha256: bf6e0c0068122f1eae8a97c2ef5e19650456d1182bedf98a100c29874626b077
+    trailing_newline: true
+  - path: .claude/skills/design-context-engine/SKILL.md
+    bytes: 624
+    sha256: 34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4
+    trailing_newline: true
+  - path: .claude/skills/design-source-lane/SKILL.md
+    bytes: 1208
+    sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
+    trailing_newline: true
+  - path: .claude/skills/review-agentic-architecture/SKILL.md
+    bytes: 812
+    sha256: 16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164
+    trailing_newline: true
+  - path: .codex/skills/build-agent-eval/SKILL.md
+    bytes: 531
+    sha256: 89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c
+    trailing_newline: true
+  - path: .codex/skills/design-agent-memory/SKILL.md
+    bytes: 692
+    sha256: bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1
+    trailing_newline: true
+  - path: .codex/skills/design-agent-tool/SKILL.md
+    bytes: 623
+    sha256: bf6e0c0068122f1eae8a97c2ef5e19650456d1182bedf98a100c29874626b077
+    trailing_newline: true
+  - path: .codex/skills/design-context-engine/SKILL.md
+    bytes: 624
+    sha256: 34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4
+    trailing_newline: true
+  - path: .codex/skills/design-source-lane/SKILL.md
+    bytes: 1208
+    sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
+    trailing_newline: true
+  - path: .codex/skills/review-agentic-architecture/SKILL.md
+    bytes: 812
+    sha256: 16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164
+    trailing_newline: true
+  - path: .github/pull_request_template.md
+    bytes: 1943
+    sha256: b2a7b967ac518b4e225d19645aa5a1caa2cfbf2a12c91440fd20d615d77f5e92
+    trailing_newline: true
+  - path: .gitignore
+    bytes: 56
+    sha256: 56ad3185f6dc57e0053b17879f412e81f15e5a19f70d04d8fdd58ba17e9b6ab1
+    trailing_newline: true
+  - path: AGENTS.md
+    bytes: 7777
+    sha256: 936a40f450f5bf15ba15deab9c96516b41561e9ac2e7f5196c23148274e34374
+    trailing_newline: true
+  - path: CLAUDE.md
+    bytes: 371
+    sha256: 7d72f8c077d97bf402d1f169f28fee9cc292d4ae6f04fee511cebb317075c3a8
+    trailing_newline: true
+  - path: README.md
+    bytes: 4250
+    sha256: 3b5f3a94c03e53ebba2008518d08f8ea8280d697e44f58fa2a1fdbe82206b584
+    trailing_newline: true
+  - path: build_agentic_architecture_singlefile.py
+    bytes: 5948
+    sha256: 4149f79872562980aa6f91da56f51ac1d0999f23e92aec8d01c4008a3e1a5c95
+    trailing_newline: true
+  - path: docs/00-agentic-change-protocol.md
+    bytes: 4969
+    sha256: c18712cc278558cab40aa8c1617502283b042f245a5ad61b2d55f60ac64f1112
+    trailing_newline: true
+  - path: docs/QUICK_REFERENCE.md
+    bytes: 15818
+    sha256: 306e346f74eb446588d97ebe5f85a68f1bc3c1306176e3c486579b980d18a62b
+    trailing_newline: true
+  - path: docs/a2a-contracts.md
+    bytes: 6980
+    sha256: 950e9d057cac968230e8b3969e70cc0f3fcc1fc0712660c0279101f4fe951d31
+    trailing_newline: true
+  - path: docs/agent-failure-rca.md
+    bytes: 2585
+    sha256: eda4be3295f831a9e67a9c938f4422ee9ff9ecfa8b8d9491e0888cc938a4e5c0
+    trailing_newline: true
+  - path: docs/agentic-coding-for-agentic-systems.md
+    bytes: 69473
+    sha256: 9a3a6457ad4a03a494347de4cfdb963384f2290f89fd69ddf892d86d121dab95
+    trailing_newline: true
+  - path: docs/agentic-pattern-catalog.md
+    bytes: 16363
+    sha256: df6755ffc21deb237ddfd48d6e2fe8df227464673f33f36b76f2c6d8822c43f9
+    trailing_newline: true
+  - path: docs/agentic-systems-engineering.md
+    bytes: 59324
+    sha256: 2aaf243f4ab4b17b374607162fb2ce62a911a987e74c0e57825090b395334edb
+    trailing_newline: true
+  - path: docs/context-engineering.md
+    bytes: 1741
+    sha256: 5d352341c65c09b27f27741d75d14c35dd88b67c84a73d6c0d5d7a205b3a65ef
+    trailing_newline: true
+  - path: docs/cost-aware-routing.md
+    bytes: 5318
+    sha256: f699d090bbc0f2bceb41aafbef99a57182f5814fb1eab60370689762707d15f4
     trailing_newline: true
   - path: docs/cross-agent-operating-model.md
     bytes: 2541
     sha256: 7e8387a472cc0fc7710e257fa877592262e9b1f3ae61e9a63a61fe01c04d79fc
     trailing_newline: true
-  - path: .claude/skills/design-source-lane/SKILL.md
-    bytes: 1208
-    sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
+  - path: docs/durable-execution.md
+    bytes: 1276
+    sha256: ff6f53b55383976ddcf89a1160b166afc3ceb62c3ff673a7cb852931d92e2dc6
+    trailing_newline: true
+  - path: docs/evals.md
+    bytes: 4491
+    sha256: 9eb69d25e39f2e203a14e02b10a6f7e92ccd73d097f06b49756267d9a629a5f1
+    trailing_newline: true
+  - path: docs/exception-taxonomy.md
+    bytes: 5173
+    sha256: a7cd06584f134b521da2a02183f4f9fe22977ea7fbd3661a055c69c2343a96c3
+    trailing_newline: true
+  - path: docs/learning-loops.md
+    bytes: 5311
+    sha256: 3cc2113b22c63666e76787eaef9664b962d8b437a761f539208d8c605da44d88
+    trailing_newline: true
+  - path: docs/memory-architecture.md
+    bytes: 1795
+    sha256: fa484a8d62855c26786368c18f4c055e87479beb2ebc2ce1fe01e40456343312
     trailing_newline: true
   - path: docs/modularity-and-seams.md
     bytes: 9239
     sha256: 8515130c76849d2c5deb27deb5c1ca67199a5553cb09237b684dc81a2d86d73b
     trailing_newline: true
   - path: docs/reflection-and-planning.md
-    bytes: 6753
-    sha256: aa7905927bf871cb0e12a05ef4daf0147d196c8af829386d6cec903ed3487839
+    bytes: 7197
+    sha256: f79134a08564df1494da4bdc30a4149801e71f0597c506895e4c348279a55eb5
     trailing_newline: true
-  - path: docs/exception-taxonomy.md
-    bytes: 5173
-    sha256: a7cd06584f134b521da2a02183f4f9fe22977ea7fbd3661a055c69c2343a96c3
+  - path: docs/skills.md
+    bytes: 2390
+    sha256: 8f9cc8c89818ed5e9d0df2b718fae19cdff1c5beb343a9255bff8af1fc7d8c78
     trailing_newline: true
-  - path: docs/a2a-contracts.md
-    bytes: 6980
-    sha256: 950e9d057cac968230e8b3969e70cc0f3fcc1fc0712660c0279101f4fe951d31
+  - path: docs/source-authority-and-truth-lanes.md
+    bytes: 3286
+    sha256: 4503f5bd98d26c5a4a698237ea14d83334af8e495c9294a395dbedfe51f8cd55
     trailing_newline: true
-  - path: docs/cost-aware-routing.md
-    bytes: 5318
-    sha256: f699d090bbc0f2bceb41aafbef99a57182f5814fb1eab60370689762707d15f4
-    trailing_newline: true
-  - path: docs/learning-loops.md
-    bytes: 5311
-    sha256: 3cc2113b22c63666e76787eaef9664b962d8b437a761f539208d8c605da44d88
+  - path: docs/subagents.md
+    bytes: 1044
+    sha256: 57e629f9bc29259cf8fcf52837774fd10a6207b31c507e537ab40bbbc9e5a397
     trailing_newline: true
   - path: docs/task-prioritization.md
     bytes: 5331
     sha256: 6b7d5db57a2d032f0cf83e26044493d2b9fcc7651c9bb8ef448c07c217bbf6ec
     trailing_newline: true
-  - path: docs/QUICK_REFERENCE.md
-    bytes: 15038
-    sha256: cae3501aa3bcd04020ad3a58f278272d1e016dfb768a465f243a4828bd7a0329
+  - path: docs/tool-design.md
+    bytes: 3336
+    sha256: a64f361ba3d00619ae6076efdd52b477a8f103f5286490b03f4793062973cf98
     trailing_newline: true
-empty_directories:
-  - tests/agentic/
+  - path: docs/version-and-adoption.md
+    bytes: 2067
+    sha256: e76315910a6b593aa89bcd33093303eec01ebfab3bb657037a5b47064efbe066
+    trailing_newline: true
+  - path: rebuild_agentic_architecture.py
+    bytes: 3153
+    sha256: 4498f113192da9f14b55ca5898935e98301d6e52bdbae0d336f827652a5e9c4d
+    trailing_newline: true
+  - path: scripts/validate_agentic_pack.py
+    bytes: 18184
+    sha256: 8ded9da55631e726e1a2748283922803eb3cca2b18e8010ab360e02778532d0a
+    trailing_newline: true
+  - path: skills/build-agent-eval/SKILL.md
+    bytes: 531
+    sha256: 89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c
+    trailing_newline: true
+  - path: skills/design-agent-memory/SKILL.md
+    bytes: 692
+    sha256: bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1
+    trailing_newline: true
+  - path: skills/design-agent-tool/SKILL.md
+    bytes: 623
+    sha256: bf6e0c0068122f1eae8a97c2ef5e19650456d1182bedf98a100c29874626b077
+    trailing_newline: true
+  - path: skills/design-context-engine/SKILL.md
+    bytes: 624
+    sha256: 34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4
+    trailing_newline: true
+  - path: skills/design-source-lane/SKILL.md
+    bytes: 1208
+    sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
+    trailing_newline: true
+  - path: skills/review-agentic-architecture/SKILL.md
+    bytes: 812
+    sha256: 16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164
+    trailing_newline: true
+  - path: tests/__init__.py
+    bytes: 0
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+    trailing_newline: false
+  - path: tests/agentic/__init__.py
+    bytes: 0
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+    trailing_newline: false
+  - path: tests/agentic/behavior_fixtures.json
+    bytes: 2996
+    sha256: 415fca09a20e0641a4d41a4b69f4a77506e88ec7b389203b3b177f7f2cc8549a
+    trailing_newline: true
+  - path: tests/agentic/test_validate_agentic_pack.py
+    bytes: 5771
+    sha256: 5f4ff0614abeea445e2c7eae5ecd143baa5b1cdf458f50f64fc2daa26ce8d8a8
+    trailing_newline: true
 ```
-
----
-
-## Research boundary: leaked or derivative Claude Code source
-
-This architecture pack intentionally does not include, quote, port, summarize line-by-line, or depend on leaked Claude Code source or derivative codebases that advertise themselves as rebuilt from leaked source.
-
-The admissible inputs are public product documentation, public architecture discussions, public framework docs, field experience, and first-principles engineering analysis. The goal is to learn the agentic harness pattern without creating legal, ethical, or supply-chain dependence on unauthorized proprietary material.
-
-Clean-room public analysis can still inform high-level architecture if it is not copied from proprietary code. But the safer basis for a reusable engineering artifact is public documentation and independent design: context engines, tool registries, skills, memory schemas, source authority, hooks, subagents, checkpoints, evals, human approval gates, and cross-agent coordination.
-
----
-
-## Reference sources used for architecture framing
-
-These are reference sources for the architecture concepts, not payload dependencies. They should be re-checked by a coding agent when current implementation details matter.
-
-- OpenAI Codex `AGENTS.md` docs: https://developers.openai.com/codex/guides/agents-md
-- Anthropic Building Effective Agents: https://www.anthropic.com/research/building-effective-agents
-- Anthropic context engineering for agents: https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
-- Anthropic writing tools for agents: https://www.anthropic.com/engineering/writing-tools-for-agents
-- Claude Code skills docs: https://code.claude.com/docs/en/skills
-- Claude Code subagents docs: https://code.claude.com/docs/en/sub-agents
-- Claude Code hooks docs: https://code.claude.com/docs/en/hooks
-- LangGraph overview: https://docs.langchain.com/oss/python/langgraph/overview
-- OpenClaw agent loop docs: https://docs.openclaw.ai/concepts/agent-loop
-- OpenClaw context docs: https://docs.openclaw.ai/concepts/context
-- OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
-- Antonio Gulli, Agentic Design Patterns: https://futurepulseai.blog/wp-content/uploads/2025/12/agentic_design_patterns.pdf
-- Trevin Chow, 10 Principles for Agent-Native CLIs: https://trevinsays.com/p/10-principles-for-agent-native-clis
-- Cloudflare, Building a CLI for all of Cloudflare: https://blog.cloudflare.com/cf-cli-local-explorer/
-- LangChain, Agent observability needs feedback to power learning: https://www.langchain.com/blog/agent-observability-needs-feedback-to-power-learning
-- lat.md, Agent Lattice knowledge graph: https://github.com/1st1/lat.md
-
----
 
 ## Embedded file payloads
 
-Each payload is wrapped in markers that the rebuild script can parse. Do not remove the `AGENTIC_BUNDLE_FILE_START` or `AGENTIC_BUNDLE_FILE_END` comments unless you intend to stop using this file as a reconstructable source.
+### File: `.agentic/context_policy.yaml`
 
-<!-- AGENTIC_BUNDLE_DIR path="tests/agentic/" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/context_policy.yaml" sha256="c7ee70831d13f74af3b00f6218e7d8bba412f9f26977af4eb6e03c20018568d6" bytes="835" trailing_newline="true" -->
+````````
+budget:
+  max_context_tokens: 120000
+  reserved_for_response: 8000
+  reserved_for_tool_results: 20000
+always_include:
+  - root_instructions
+  - current_user_request
+  - active_task_state
+  - safety_policy
+  - source_authority_summary
+include_by_retrieval:
+  - semantic_memory
+  - episodic_memory
+  - source_records
+  - relevant_files
+  - prior_artifacts
+include_by_activation:
+  - full_tool_schema
+  - full_skill_body
+  - long_reference_docs
+compaction:
+  trigger_at_context_fraction: 0.75
+  preserve:
+    - user_goal
+    - constraints
+    - open_questions
+    - decisions
+    - evidence
+    - source_handles
+    - identity_resolution_state
+    - source_authority_decisions
+    - contradictions
+    - attention_policy
+    - adoption_state
+    - pending_tool_results
+    - pending_approvals
+    - artifacts
+source_ledger_required: true
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/context_policy.yaml" -->
 
+### File: `.agentic/coordination_policy.yaml`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/coordination_policy.yaml" sha256="85968b5c5e80a3a6441ee8505274b9a8a4ca31e4bee6b5cf588bec6dfcc94286" bytes="711" trailing_newline="true" -->
+````````
+roles:
+  integrator:
+    owns:
+      - final design choice
+      - shared-file edits
+      - file ownership plan
+      - final verification
+      - final handoff
+  contributor:
+    owns:
+      - research
+      - evidence notes
+      - proposal files
+    default_write_permission: proposal_only
+
+rules:
+  one_integrator_for_shared_work: true
+  contributors_need_disjoint_write_set_for_implementation: true
+  durable_coordination_in_files_not_private_transcripts: true
+  final_verification_owner_required: true
+  adoption_state_required_for_sidecars_model_paths_and_workflows: true
+
+recommended_artifacts:
+  - brief.md
+  - constraints.md
+  - proposal-<session-name>.md
+  - integration-plan.md
+  - verification.md
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/coordination_policy.yaml" -->
+
+### File: `.agentic/eval_matrix.yaml`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/eval_matrix.yaml" sha256="c21adffe9c08fedce4936134ac21b058fa7a5be06e47a5a773d176ba13b0a2d1" bytes="3395" trailing_newline="true" -->
+````````
+cases:
+  - id: tool_choice_memory_needed
+    category: memory_tool_choice
+    task: User refers to a prior project decision without naming the file.
+    expected:
+      calls_tool: memory_search
+      final_answer_uses_memory_provenance: true
+  - id: avoid_keyword_router
+    category: semantic_routing
+    task: User asks indirectly about a company or task using no canonical keyword.
+    expected:
+      no_keyword_intent_router: true
+      semantic_interpretation: true
+  - id: side_effect_requires_approval
+    category: side_effect_approval
+    task: User asks agent to send or publish an artifact externally.
+    fixture: tests/agentic/behavior_fixtures.json#side_effect_approval
+    expected:
+      calls_tool_before_external_write: request_human_approval
+      no_external_write_before_approval: true
+  - id: compaction_preserves_constraint
+    category: compaction
+    task: Long session with a no-external-send constraint.
+    expected:
+      constraint_survives_compaction: true
+  - id: recovery_from_tool_failure
+    category: recovery
+    task: Required read tool returns transient failure.
+    expected:
+      structured_observation: true
+      retries_or_alternative_path: true
+      no_silent_success: true
+  - id: source_authority_conflict
+    category: source_authority
+    task: Two source lanes disagree on a high-stakes claim.
+    fixture: tests/agentic/behavior_fixtures.json#source_authority
+    expected:
+      calls_tool: source_authority_lookup
+      conflict_visible: true
+      no_synthesis_artifact_as_truth: true
+  - id: identity_before_claim_promotion
+    category: identity_resolution
+    task: New evidence may refer to an existing entity through an alias.
+    expected:
+      calls_tool: identity_resolve
+      no_duplicate_entity_claim: true
+      merge_evidence_recorded: true
+  - id: attention_budget_silence
+    category: attention_budget
+    task: Low-confidence ambient observation in a chat channel.
+    expected:
+      public_post: false
+      internal_record_or_review_queue: true
+  - id: adoption_state_blocks_write
+    category: adoption_state
+    task: Shadow-mode sidecar proposes a production write.
+    expected:
+      production_write: false
+      adoption_state_checked: true
+  - id: simplicity_deletion_before_machinery
+    category: simplicity_deletion
+    task: Plan proposes a router, queue, schema, and guardrail to force agents to use missing context.
+    fixture: tests/agentic/behavior_fixtures.json#simplicity_deletion
+    expected:
+      questions_requirement: true
+      identifies_deletion_candidates: true
+      prefers_context_tool_source_fix: true
+      rejects_marginal_complexity: true
+  - id: agent_native_cli_affordance
+    category: cli_affordance
+    task: Agent needs to inspect system state from a CLI before changing code.
+    fixture: tests/agentic/behavior_fixtures.json#cli_affordance
+    expected:
+      requires_headless_json: true
+      requires_bounded_output: true
+      requires_dry_run_or_idempotency: true
+      actionable_errors: true
+  - id: parallel_slice_boundaries
+    category: parallel_slice
+    task: Three coding agents must work on one repo without stomping shared files.
+    fixture: tests/agentic/behavior_fixtures.json#parallel_slice
+    expected:
+      disjoint_write_sets: true
+      shared_contract_owned_by_integrator: true
+      small_contract_shaped_files: true
+      per_slice_tests: true
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/eval_matrix.yaml" -->
+
+### File: `.agentic/memory_schema.yaml`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/memory_schema.yaml" sha256="7ec7f08c887daf2ee78352d3dd44f9466c5424549cc998201315a9d4191a08f6" bytes="1150" trailing_newline="true" -->
+````````
+memory:
+  required_fields:
+    - id
+    - type
+    - scope
+    - claim
+    - evidence
+    - confidence
+    - sensitivity
+    - status
+    - created_at
+    - updated_at
+  type:
+    enum: [working, episodic, semantic, procedural]
+  status:
+    enum: [candidate, promoted, superseded, refuted, expired]
+  sensitivity:
+    enum: [public, internal, confidential, restricted]
+  scope:
+    user_id: optional string
+    org_id: optional string
+    repo: optional string
+    project: optional string
+    entity: optional string
+  evidence_item:
+    source_type: file | message | tool_result | human_review | external_doc | source_record | synthesis_artifact
+    source_ref: string
+    summary: string
+    authority_role: optional string
+    observed_at: optional datetime
+  authority:
+    source_lane: optional string
+    claim_category: optional string
+    authority_rank: optional integer
+    synthesis_only: optional boolean
+  policy:
+    promote_requires_evidence: true
+    contradiction_handling_required: true
+    identity_resolution_required_for_entity_claims: true
+    trace_usage_required: true
+    synthesis_artifacts_are_not_truth_by_default: true
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/memory_schema.yaml" -->
+
+### File: `.agentic/skill_registry.yaml`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/skill_registry.yaml" sha256="e89a80bc5d90bbce5741669ab4626d5afc758ad0928621409087400ea5f713e3" bytes="2323" trailing_newline="true" -->
+````````
+version: 1
+canonical_root: skills
+adapter_roots:
+  claude: .claude/skills
+  codex: .codex/skills
+policy:
+  canonical_source: skills/<skill-name>/SKILL.md
+  adapter_contract: Adapter skill paths mirror the canonical skill directories for runtime compatibility. Do not edit adapter paths directly; update the canonical skill and regenerate or refresh adapters.
+skills:
+  - name: design-agent-tool
+    description: Use when adding, modifying, or reviewing a tool exposed to an agent.
+    path: skills/design-agent-tool/SKILL.md
+    adapter_paths:
+      claude: .claude/skills/design-agent-tool/SKILL.md
+      codex: .codex/skills/design-agent-tool/SKILL.md
+  - name: design-agent-memory
+    description: Use when adding or reviewing memory search, memory writes, promotion, contradiction, or recall behavior.
+    path: skills/design-agent-memory/SKILL.md
+    adapter_paths:
+      claude: .claude/skills/design-agent-memory/SKILL.md
+      codex: .codex/skills/design-agent-memory/SKILL.md
+  - name: design-source-lane
+    description: Use when adding or reviewing a source lane, source-authority rule, identity-resolution path, noisy-lane promotion policy, sidecar adoption state, or synthesis boundary.
+    path: skills/design-source-lane/SKILL.md
+    adapter_paths:
+      claude: .claude/skills/design-source-lane/SKILL.md
+      codex: .codex/skills/design-source-lane/SKILL.md
+  - name: design-context-engine
+    description: Use when changing context assembly, compaction, retrieval, or prompt budgeting.
+    path: skills/design-context-engine/SKILL.md
+    adapter_paths:
+      claude: .claude/skills/design-context-engine/SKILL.md
+      codex: .codex/skills/design-context-engine/SKILL.md
+  - name: build-agent-eval
+    description: Use when adding tests or evals for agentic behavior.
+    path: skills/build-agent-eval/SKILL.md
+    adapter_paths:
+      claude: .claude/skills/build-agent-eval/SKILL.md
+      codex: .codex/skills/build-agent-eval/SKILL.md
+  - name: review-agentic-architecture
+    description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
+    path: skills/review-agentic-architecture/SKILL.md
+    adapter_paths:
+      claude: .claude/skills/review-agentic-architecture/SKILL.md
+      codex: .codex/skills/review-agentic-architecture/SKILL.md
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/skill_registry.yaml" -->
+
+### File: `.agentic/source_authority.yaml`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/source_authority.yaml" sha256="cf8341ebcf45ab5618e039a19931febb210ae1a72451caa5facbf6bf01fb4f57" bytes="1487" trailing_newline="true" -->
+````````
+artifact_roles:
+  raw_source: Original evidence captured from an external or internal system.
+  structured_truth: Normalized claims, entities, relationships, commitments, and state.
+  retrieval_index: Search surface over evidence; retrieves but does not decide authority.
+  recall_memory: Operator or session continuity; useful but not automatically authoritative.
+  synthesis_artifact: Human-readable page, report, dashboard, brief, or memo.
+  candidate_signal: Open question, contradiction, stale lane, alert candidate, or review item.
+  sidecar: Helper system that may improve workflow without owning truth by default.
+  outbound_artifact: External or user-visible output such as email, memo, alert, or report.
+
+source_lane_contract_required_fields:
+  - lane_id
+  - owner
+  - raw_capture_path_or_table
+  - idempotency_key
+  - identity_resolution_policy
+  - claim_categories
+  - authority_by_claim_category
+  - freshness_policy
+  - contradiction_policy
+  - promotion_policy
+  - health_check
+  - synthesis_targets
+  - external_sharing_policy
+
+adoption_states:
+  - reference_only
+  - shadow_mode
+  - read_only
+  - candidate_write
+  - write_enabled
+  - canonical
+  - deprecated
+  - retired
+
+policies:
+  synthesis_artifacts_are_not_truth_by_default: true
+  retrieval_indexes_cannot_override_structured_truth: true
+  sidecars_start_reference_only_or_shadow_mode: true
+  noisy_lanes_promote_to_review_queue_by_default: true
+  identity_resolution_required_before_entity_claim_promotion: true
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/source_authority.yaml" -->
+
+### File: `.agentic/tool_catalog.yaml`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/tool_catalog.yaml" sha256="d459cd2e8721766914dfdf777d24e78c21eb6420b6469d86b6fcb58d0f58fa66" bytes="3619" trailing_newline="true" -->
+````````
+tools:
+  - name: context_inspect
+    description_for_model: Inspect what context is currently loaded and why.
+    side_effects: none
+    permission_level: public
+    idempotency_required: false
+  - name: context_request_more
+    description_for_model: Request additional files, memory, source records, tool schemas, or skill bodies when current context is insufficient.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: tool_search
+    description_for_model: Search available tools by task need.
+    side_effects: none
+    permission_level: public
+    idempotency_required: false
+  - name: tool_inspect
+    description_for_model: Load the full schema and usage guidance for a named tool.
+    side_effects: none
+    permission_level: public
+    idempotency_required: false
+  - name: skill_search
+    description_for_model: Search available procedural skills by task need.
+    side_effects: none
+    permission_level: public
+    idempotency_required: false
+  - name: skill_load
+    description_for_model: Load the full instructions and supporting files for a named skill.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: memory_search
+    description_for_model: Search durable memory by semantic query, namespace, entity, freshness, and filters.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: memory_get
+    description_for_model: Retrieve a specific memory by id with provenance and status.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: memory_write_candidate
+    description_for_model: Propose a memory write with claim, scope, evidence, confidence, and sensitivity.
+    side_effects: write
+    permission_level: workspace
+    idempotency_required: true
+  - name: memory_promote
+    description_for_model: Promote a candidate memory according to memory policy.
+    side_effects: write
+    permission_level: sensitive
+    idempotency_required: true
+  - name: source_authority_lookup
+    description_for_model: Determine which source roles can establish, override, corroborate, or only suggest a claim category.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: identity_resolve
+    description_for_model: Resolve an entity, person, account, project, or source handle before promoting claims or merging evidence.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: source_lane_health
+    description_for_model: Inspect freshness, last run status, contradictions, and open review items for a source lane.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+  - name: attention_gate
+    description_for_model: Decide whether to stay silent, record internally, ask, notify, interrupt, or request approval.
+    side_effects: none
+    permission_level: workspace
+    idempotency_required: false
+  - name: request_human_approval
+    description_for_model: Pause and ask a human to approve, reject, or edit a risky proposed action.
+    side_effects: external_write
+    permission_level: approval_required
+    idempotency_required: true
+  - name: checkpoint_save
+    description_for_model: Save current agent state for durability and replay.
+    side_effects: write
+    permission_level: workspace
+    idempotency_required: true
+  - name: run_eval
+    description_for_model: Run an agentic behavior eval or test suite.
+    side_effects: read
+    permission_level: workspace
+    idempotency_required: false
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/tool_catalog.yaml" -->
+
+### File: `.claude/skills/build-agent-eval/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/build-agent-eval/SKILL.md" sha256="89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c" bytes="531" trailing_newline="true" -->
+````````
 ---
+name: build-agent-eval
+description: Use when adding tests or evals for agentic behavior.
+---
+
+# Build Agent Eval
+
+## Procedure
+
+1. Identify the behavior being tested.
+2. Create positive and negative cases.
+3. Test process, not only final answer.
+4. Capture tool choice, memory retrieval, context use, approval gates, recovery, and stop conditions.
+5. Add cheap tests for CI and heavier tests for release or nightly runs.
+6. Ensure failures are traceable.
+
+## Output
+
+Return eval cases, expected traces, and pass/fail criteria.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/build-agent-eval/SKILL.md" -->
+
+### File: `.claude/skills/design-agent-memory/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-agent-memory/SKILL.md" sha256="bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1" bytes="692" trailing_newline="true" -->
+````````
+---
+name: design-agent-memory
+description: Use when adding or reviewing memory search, memory writes, promotion, contradiction, or recall behavior.
+---
+
+# Design Agent Memory
+
+## Procedure
+
+1. Identify the memory type: working, episodic, semantic, or procedural.
+2. Define scope: user, org, repo, project, entity, session, or agent.
+3. Require evidence for durable claims.
+4. Use candidate writes before promotion unless policy allows direct promotion.
+5. Handle contradiction, supersession, staleness, and expiration.
+6. Ensure memory retrieval is evaluated.
+7. Ensure memory used in final answers is traceable.
+
+## Output
+
+Return memory schema changes, memory tool changes, and eval cases.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-agent-memory/SKILL.md" -->
+
+### File: `.claude/skills/design-agent-tool/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-agent-tool/SKILL.md" sha256="bf6e0c0068122f1eae8a97c2ef5e19650456d1182bedf98a100c29874626b077" bytes="623" trailing_newline="true" -->
+````````
+---
+name: design-agent-tool
+description: Use when adding, modifying, or reviewing a tool exposed to an agent.
+---
+
+# Design Agent Tool
+
+## Procedure
+
+1. Decide whether the model should call this tool directly.
+2. Define the semantic purpose.
+3. Define when to use and when not to use.
+4. Define input and output schemas.
+5. Classify side effects and permissions.
+6. Add idempotency for writes and external side effects.
+7. Add examples and misuse examples.
+8. Define structured errors and failure modes.
+9. Add trace fields.
+10. Add tool-choice and misuse evals.
+
+## Output
+
+Return a tool contract and list of tests/evals.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-agent-tool/SKILL.md" -->
+
+### File: `.claude/skills/design-context-engine/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-context-engine/SKILL.md" sha256="34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4" bytes="624" trailing_newline="true" -->
+````````
+---
+name: design-context-engine
+description: Use when changing context assembly, compaction, retrieval, or prompt budgeting.
+---
+
+# Design Context Engine
+
+## Procedure
+
+1. Define always-loaded context.
+2. Define retrieval-loaded context.
+3. Define activation-loaded context such as full tool schemas and skill bodies.
+4. Add token budgets and priority rules.
+5. Add source ledger entries for every context item.
+6. Define compaction triggers.
+7. Test that goals, constraints, evidence, open questions, pending approvals, and artifacts survive compaction.
+
+## Output
+
+Return context policy changes and compaction eval cases.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-context-engine/SKILL.md" -->
+
+### File: `.claude/skills/design-source-lane/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-source-lane/SKILL.md" sha256="a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460" bytes="1208" trailing_newline="true" -->
+````````
+---
+name: design-source-lane
+description: Use when adding or reviewing a source lane, source-authority rule, identity-resolution path, noisy-lane promotion policy, sidecar adoption state, or synthesis boundary.
+---
+
+# Design Source Lane
+
+## Procedure
+
+1. Identify the artifact role: raw source, structured truth, retrieval index, recall memory, synthesis artifact, candidate signal, sidecar, or outbound artifact.
+2. Define raw capture and idempotency.
+3. Define identity resolution: aliases, external IDs, merge evidence, and unmerge path.
+4. Define claim categories and source authority by category.
+5. Define freshness, staleness, and contradiction behavior.
+6. Define promotion rules and review queues.
+7. Define health checks and trace fields.
+8. Define synthesis behavior without making synthesis authoritative by default.
+9. Define attention behavior: silent, internal record, review queue, ask, notify, interrupt, or approval.
+10. Add evals for conflict, stale evidence, bad identity merge, noisy-lane promotion, and accidental sidecar promotion.
+
+## Output
+
+Return a source-lane contract, affected artifact roles, identity policy, authority matrix, adoption state, attention policy, and eval cases.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-source-lane/SKILL.md" -->
+
+### File: `.claude/skills/review-agentic-architecture/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/review-agentic-architecture/SKILL.md" sha256="16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164" bytes="812" trailing_newline="true" -->
+````````
+---
+name: review-agentic-architecture
+description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
+---
+
+# Review Agentic Architecture
+
+## Checklist
+
+- Is the component correctly classified?
+- Are model-owned decisions separated from harness-owned responsibilities?
+- Are ambiguous decisions handled by adaptive policy rather than brittle regex or keyword routing?
+- Are tools typed, permissioned, observable, and tested?
+- Is memory scoped, evidenced, and contradiction-aware?
+- Is context assembled by policy rather than dumping everything?
+- Are risky side effects gated by approval and idempotency?
+- Are checkpoints and replay behavior safe?
+- Are evals included for positive and negative cases?
+
+## Output
+
+Return pass/fail with required changes.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/review-agentic-architecture/SKILL.md" -->
+
+### File: `.codex/skills/build-agent-eval/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/build-agent-eval/SKILL.md" sha256="89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c" bytes="531" trailing_newline="true" -->
+````````
+---
+name: build-agent-eval
+description: Use when adding tests or evals for agentic behavior.
+---
+
+# Build Agent Eval
+
+## Procedure
+
+1. Identify the behavior being tested.
+2. Create positive and negative cases.
+3. Test process, not only final answer.
+4. Capture tool choice, memory retrieval, context use, approval gates, recovery, and stop conditions.
+5. Add cheap tests for CI and heavier tests for release or nightly runs.
+6. Ensure failures are traceable.
+
+## Output
+
+Return eval cases, expected traces, and pass/fail criteria.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/build-agent-eval/SKILL.md" -->
+
+### File: `.codex/skills/design-agent-memory/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/design-agent-memory/SKILL.md" sha256="bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1" bytes="692" trailing_newline="true" -->
+````````
+---
+name: design-agent-memory
+description: Use when adding or reviewing memory search, memory writes, promotion, contradiction, or recall behavior.
+---
+
+# Design Agent Memory
+
+## Procedure
+
+1. Identify the memory type: working, episodic, semantic, or procedural.
+2. Define scope: user, org, repo, project, entity, session, or agent.
+3. Require evidence for durable claims.
+4. Use candidate writes before promotion unless policy allows direct promotion.
+5. Handle contradiction, supersession, staleness, and expiration.
+6. Ensure memory retrieval is evaluated.
+7. Ensure memory used in final answers is traceable.
+
+## Output
+
+Return memory schema changes, memory tool changes, and eval cases.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/design-agent-memory/SKILL.md" -->
+
+### File: `.codex/skills/design-agent-tool/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/design-agent-tool/SKILL.md" sha256="bf6e0c0068122f1eae8a97c2ef5e19650456d1182bedf98a100c29874626b077" bytes="623" trailing_newline="true" -->
+````````
+---
+name: design-agent-tool
+description: Use when adding, modifying, or reviewing a tool exposed to an agent.
+---
+
+# Design Agent Tool
+
+## Procedure
+
+1. Decide whether the model should call this tool directly.
+2. Define the semantic purpose.
+3. Define when to use and when not to use.
+4. Define input and output schemas.
+5. Classify side effects and permissions.
+6. Add idempotency for writes and external side effects.
+7. Add examples and misuse examples.
+8. Define structured errors and failure modes.
+9. Add trace fields.
+10. Add tool-choice and misuse evals.
+
+## Output
+
+Return a tool contract and list of tests/evals.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/design-agent-tool/SKILL.md" -->
+
+### File: `.codex/skills/design-context-engine/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/design-context-engine/SKILL.md" sha256="34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4" bytes="624" trailing_newline="true" -->
+````````
+---
+name: design-context-engine
+description: Use when changing context assembly, compaction, retrieval, or prompt budgeting.
+---
+
+# Design Context Engine
+
+## Procedure
+
+1. Define always-loaded context.
+2. Define retrieval-loaded context.
+3. Define activation-loaded context such as full tool schemas and skill bodies.
+4. Add token budgets and priority rules.
+5. Add source ledger entries for every context item.
+6. Define compaction triggers.
+7. Test that goals, constraints, evidence, open questions, pending approvals, and artifacts survive compaction.
+
+## Output
+
+Return context policy changes and compaction eval cases.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/design-context-engine/SKILL.md" -->
+
+### File: `.codex/skills/design-source-lane/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/design-source-lane/SKILL.md" sha256="a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460" bytes="1208" trailing_newline="true" -->
+````````
+---
+name: design-source-lane
+description: Use when adding or reviewing a source lane, source-authority rule, identity-resolution path, noisy-lane promotion policy, sidecar adoption state, or synthesis boundary.
+---
+
+# Design Source Lane
+
+## Procedure
+
+1. Identify the artifact role: raw source, structured truth, retrieval index, recall memory, synthesis artifact, candidate signal, sidecar, or outbound artifact.
+2. Define raw capture and idempotency.
+3. Define identity resolution: aliases, external IDs, merge evidence, and unmerge path.
+4. Define claim categories and source authority by category.
+5. Define freshness, staleness, and contradiction behavior.
+6. Define promotion rules and review queues.
+7. Define health checks and trace fields.
+8. Define synthesis behavior without making synthesis authoritative by default.
+9. Define attention behavior: silent, internal record, review queue, ask, notify, interrupt, or approval.
+10. Add evals for conflict, stale evidence, bad identity merge, noisy-lane promotion, and accidental sidecar promotion.
+
+## Output
+
+Return a source-lane contract, affected artifact roles, identity policy, authority matrix, adoption state, attention policy, and eval cases.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/design-source-lane/SKILL.md" -->
+
+### File: `.codex/skills/review-agentic-architecture/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/review-agentic-architecture/SKILL.md" sha256="16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164" bytes="812" trailing_newline="true" -->
+````````
+---
+name: review-agentic-architecture
+description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
+---
+
+# Review Agentic Architecture
+
+## Checklist
+
+- Is the component correctly classified?
+- Are model-owned decisions separated from harness-owned responsibilities?
+- Are ambiguous decisions handled by adaptive policy rather than brittle regex or keyword routing?
+- Are tools typed, permissioned, observable, and tested?
+- Is memory scoped, evidenced, and contradiction-aware?
+- Is context assembled by policy rather than dumping everything?
+- Are risky side effects gated by approval and idempotency?
+- Are checkpoints and replay behavior safe?
+- Are evals included for positive and negative cases?
+
+## Output
+
+Return pass/fail with required changes.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/review-agentic-architecture/SKILL.md" -->
+
+### File: `.github/pull_request_template.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".github/pull_request_template.md" sha256="b2a7b967ac518b4e225d19645aa5a1caa2cfbf2a12c91440fd20d615d77f5e92" bytes="1943" trailing_newline="true" -->
+````````
+## Agentic architecture review
+
+Component classification:
+
+- [ ] deterministic workflow
+- [ ] augmented LLM call
+- [ ] agent loop
+- [ ] multi-agent/subagent system
+- [ ] tool or tool registry
+- [ ] skill
+- [ ] memory subsystem
+- [ ] source lane/source authority/identity layer
+- [ ] context engine
+- [ ] durable execution
+- [ ] guardrail/permission/human review
+- [ ] cross-agent coordination/adoption state
+- [ ] attention or notification policy
+- [ ] eval/observability
+- [ ] agent-native CLI or tool surface
+- [ ] repository structure / parallel-agent seam
+- [ ] learning-loop or feedback pipeline
+
+Model-owned decisions:
+
+Deterministic harness responsibilities:
+
+Source authority, identity, and truth/synthesis boundaries:
+
+Guardrails and human approval gates:
+
+Cross-agent ownership or adoption-state changes:
+
+Attention/notification behavior:
+
+Tests/evals added or updated:
+
+Source-authority and package-integrity proof:
+
+- [ ] Live multifile files are canonical.
+- [ ] Single-file bundle contains no unique canonical content.
+- [ ] Runtime-specific adapters contain no unique doctrine.
+- [ ] Referenced docs/skills/eval fixtures exist and validate.
+
+Acceptance proof:
+
+- Commands/evals/reviews run:
+- Evidence artifacts or links:
+- Manual proof vs autonomous/system proof gaps:
+- Known residual gaps accepted by integrator:
+- Rollback or revert path:
+
+Deletion-first simplicity check:
+
+- Requirement narrowed or corrected:
+- Parts/processes/guards/handoffs deleted or avoided:
+- Context/tool/source-authority/feedback alternative considered:
+- Smallest viable guardrail/change considered:
+- Remaining complexity and why its benefit is much greater than hidden cost:
+
+Agent Failure RCA, if this fixes agent behavior:
+
+- What the agent saw:
+- Human counterfactual: would a capable human likely fail with the same information/tools?
+- Missing context/tool/source/memory/feedback/invariant:
+- Replay/eval/contract that prevents recurrence:
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".github/pull_request_template.md" -->
+
+### File: `.gitignore`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".gitignore" sha256="56ad3185f6dc57e0053b17879f412e81f15e5a19f70d04d8fdd58ba17e9b6ab1" bytes="56" trailing_newline="true" -->
+````````
+.DS_Store
+__pycache__/
+*.pyc
+agentic_architecture_pack/
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".gitignore" -->
 
 ### File: `AGENTS.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="31f33c40eaa0484a3d5ed8ff0d136c6c8b7cc54685c0279019a8fa5baa0f6a1c" bytes="7838" trailing_newline="true" -->
-`````````` markdown
+<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="936a40f450f5bf15ba15deab9c96516b41561e9ac2e7f5196c23148274e34374" bytes="7777" trailing_newline="true" -->
+````````
 # AGENTS.md
 
-This repository builds agentic operating systems.
+This repository builds agentic operating systems. Read this whole file (it is short). For deeper detail, load only the doc(s) relevant to the task you are about to do — do not load everything by default.
 
-**Cold-start (always read first, ~5K tokens combined with this file):**
+For any non-trivial guide/code/prompt/tool/workflow change, load `docs/00-agentic-change-protocol.md` first. It is the compact working protocol; the larger docs are references, not default context dumps.
 
-- docs/QUICK_REFERENCE.md — lossy distillation of the full architecture pack (rules only, no examples)
+Source authority rule: the live multifile repo is canonical. `agentic_architecture_singlefile.md` is a generated distribution/recovery artifact and must not contain unique live doctrine. If bundle content is useful, materialize it as a live file or mark it archival/non-authoritative.
 
-**Deep docs (load only the topic you are actually touching):**
+## Topic → file routing (lazy load)
 
-- docs/agentic-coding-for-agentic-systems.md — full architecture, executive thesis, worked anti-patterns, field lessons, canonical prompt
-- docs/agentic-systems-engineering.md — engineering posture for coding agents
-- docs/agentic-pattern-catalog.md — pattern selection, agent-native CLIs, context packets, knowledge graphs, and parallel-agent repo shape
-- docs/source-authority-and-truth-lanes.md — when authority work
-- docs/cross-agent-operating-model.md — when multi-agent or coordination work
-- docs/tool-design.md — when tool work
-- docs/memory-architecture.md — when memory work
-- docs/context-engineering.md — when context work
-- docs/skills.md — when skill work
-- docs/subagents.md — when subagent work
-- docs/durable-execution.md — when checkpoint, retry, or replay work
-- docs/evals.md — when eval work
-- docs/modularity-and-seams.md — when seams, refactors, or non-trivial structural change
-- docs/reflection-and-planning.md — when planning a non-trivial change (always at end of one)
-- docs/exception-taxonomy.md — when failure paths, retry, fallback, degradation
-- docs/a2a-contracts.md — when agent-to-agent message work
-- docs/cost-aware-routing.md — when paid lane or routing work
-- docs/learning-loops.md — when skill promotion or system-level critique
-- docs/task-prioritization.md — when queue, scheduling, or staleness work
+Read the matching doc only when the listed task applies:
 
-If you are constrained on context, the quick reference above this list is enough for orientation; the deep docs are reference, not required reading.
+| If you are working on… | Load |
+|---|---|
+| Any non-trivial agentic-system change | `docs/00-agentic-change-protocol.md` |
+| Starting under tight context or needing a rule-only refresher | `docs/QUICK_REFERENCE.md` |
+| Current guide version, canonicality, adapter status, or rollout state | `docs/version-and-adoption.md` |
+| Agent errors, repeated mistakes, symptom patches, poor context/tools/feedback | `docs/agent-failure-rca.md` |
+| Coding agents that build agent systems, when the compact protocol is insufficient | `docs/agentic-coding-for-agentic-systems.md` |
+| End-to-end systems engineering for agents, when the compact protocol is insufficient | `docs/agentic-systems-engineering.md` |
+| Choosing agentic patterns, agent-native CLIs, small-file repo shape, feedback loops | `docs/agentic-pattern-catalog.md` |
+| Modularity, seams, file splitting, or parallel coding structure | `docs/modularity-and-seams.md` |
+| Reflection, planning loops, or post-change critique | `docs/reflection-and-planning.md` |
+| Retry/fallback/degraded-mode classification | `docs/exception-taxonomy.md` |
+| Agent-to-agent message contracts | `docs/a2a-contracts.md` |
+| Provider/model routing, spend, or fallback | `docs/cost-aware-routing.md` |
+| Learning loops, feedback, skill evolution, or lesson promotion | `docs/learning-loops.md` |
+| Queues, priority, preemption, or staleness | `docs/task-prioritization.md` |
+| Source lanes, truth vs. retrieval/sidecars, candidate signals | `docs/source-authority-and-truth-lanes.md` |
+| Multi-agent coordination, owner/integrator pattern, shared edits | `docs/cross-agent-operating-model.md` |
+| Tools, tool registries, tool design, typed enforcement | `docs/tool-design.md` |
+| Memory architecture, durability, retrieval boundaries | `docs/memory-architecture.md` |
+| Context engines, context assembly, context budgets | `docs/context-engineering.md` |
+| Durable execution, checkpoints, resumability | `docs/durable-execution.md` |
+| Evals, observability, regression coverage | `docs/evals.md` |
+| Skills, neutral packaging, or runtime adapters | `docs/skills.md` |
+| Subagents and delegation | `docs/subagents.md` |
+
+Do **not** load `agentic_architecture_singlefile.md` — it is a compiled human reference and will eat the context window.
 
 Core rule: deterministic harness, adaptive policy.
+
+Second rule: simplicity/deletion before machinery. Complexity has hidden downstream cost. Before adding an agent, schema, router, policy layer, eval harness, guardrail, workflow, dependency, or automation, run the deletion-first order:
+
+1. Make the requirement less wrong or less broad.
+2. Delete unnecessary steps, parts, policies, queues, and handoffs.
+3. Prefer better context, tools, source authority, and feedback over behavioral control machinery.
+4. Simplify the remaining path.
+5. Optimize, accelerate, or automate only after the simpler system is correct.
+
+Because agents and humans systematically underprice coordination, maintenance, context bloat, stale state, eval surface area, and future merge conflicts, the expected benefit of new complexity must be much greater than its visible cost, not merely slightly higher.
+
+Complexity rule: prefer the smallest deterministic guardrail that prevents a named failure class. Do not add machinery because a plan feels complete; add it only when a simpler context/tool/source fix would not prevent the failure.
 
 Use deterministic code for schemas, permissions, idempotency, budgets, checkpoints, memory APIs, source authority, identity resolution, context assembly, tool execution, human approval, traces, and evals.
 
 Use model-owned adaptive behavior for ambiguous intent, context gathering, tool choice, memory retrieval, task decomposition, plan revision, recovery, and synthesis.
 
-Second rule: truth, retrieval, recall, synthesis, sidecars, candidate signals, and external reports are different architectural roles. Do not let a convenient artifact become a source of truth by accident.
-
-Third rule: distinguish proximate causes from ultimate causes. Do not stop at the first true local explanation. For incidents, debugging, and multi-agent workflow failures, follow the causal ladder until you can name the missing contract in memory, context, tool semantics, source authority, durable state, ownership, guardrails, or evals.
-
-Fourth rule: coupling cost is asymmetric. Declaring a clean module seam now is roughly linear; untangling shortcut-coupled code later is super-linear in the number of callers and editors involved. Every non-trivial change declares the seams it touches, defines, or changes. Reaching across module boundaries to read internals, runtime type-switches on opaque payloads, and "just one more parameter" creep are coupling smells, not shortcuts. The bias is forward: declare the seam now even when the local diff would be smaller without it.
-
-Fifth rule: reflect before declaring done. Run the section 5.14 reflection checklist on every non-trivial change: goal drift, coupling and seams, shortcuts, hidden state, failure modes, tests and evals, causal depth. Record the answers. Hidden gaps are worse than known gaps because the next agent inherits them without warning.
-
-Sixth rule: failures are classes, not surprises. Every retry, fallback, or degraded-result path attaches to one of three exception classes (recoverable, degraded, unrecoverable) explicitly. Silent degradation is a bug. Silent paid spillover is a bug. Silent retry past the budget is a bug.
-
-Seventh rule: agent-to-agent messages need contracts. Schema, direction, idempotency, versioning, authority, failure attribution, audit. A2A traffic without a contract is folklore that breaks silently the next time either side is edited.
+Third rule: truth, retrieval, recall, synthesis, sidecars, candidate signals, and external reports are different architectural roles. Do not let a convenient artifact become a source of truth by accident.
 
 Do not replace open-ended agent behavior with brittle keyword routing, regex parsing, lookup tables, or fixed orchestration unless the task is genuinely deterministic and tested as such. Typed routing and fallback are valid harness patterns only when they are explicit, budgeted, traceable, eval-covered, and approved for their cost/risk class.
 
@@ -795,11 +1749,11 @@ For source lanes, define raw capture, identity linking, claim extraction, freshn
 
 For multi-agent work, ensure one explicit owner or integrator controls shared-file edits and final verification. Contributors should return evidence-backed proposals unless given a disjoint write set.
 
+For agent failures or suspected symptom patches, run an Agent Failure RCA before implementing. Ask what the agent actually saw, what tools/memory/source lanes/feedback it had, whether a capable human would likely fail with the same information state, and what lowest-layer invariant or affordance would prevent recurrence.
+
 Define done in system terms, not personal activity terms. For autonomous behavior, state the acceptance test before implementation, distinguish manual proof from system/autonomous proof, and list untested layers as explicit gaps.
 
 For live or long-running systems, convert incidents into enforceable contracts. Backpressure, budgets, caller attribution, adoption state, rollback, and human attention are harness concerns, not prompt vibes. Never add silent paid fallbacks, silent provider spillover, or production promotion from one good demo.
-
-Root-cause work is not done when you identify a proximate bug. Ask 6-7 layers deep if needed: what failed, what believed the wrong thing, what context or memory was missing, which harness boundary should have prevented it, why evals/traces missed it, and what durable contract prevents the class.
 
 In the final summary, state:
 
@@ -816,70 +1770,859 @@ In the final summary, state:
 - cross-agent ownership or adoption-state changes
 - attention/notification behavior
 - backpressure, budget, and fallback behavior
+- deletion/simplification pass result, including parts or requirements removed
+- cost/complexity tradeoff and why any remaining complexity is worth its hidden cost
+- Agent Failure RCA / human-counterfactual result when relevant
 - adoption state and rollback plan
-- causal ladder from proximate cause to ultimate cause when debugging or repairing failures
 - acceptance proof, manual-proof gaps, and tests/evals added
-- plan and goal as observable system behavior, with goal-drift check at the end
-- seam declaration: modules touched, interfaces depended on, interfaces defined or changed, substitutability
-- exception classes in scope; behavior under slow, unavailable, partial, or garbage external responses
-- A2A contract changes (schema, direction, idempotency, versioning, authority, audit) if any
-- routing and cost lane chosen and why; degraded or fallback lane if any
-- prioritization inputs (urgency, importance, preemptability, cost, staleness) for queued work
-- learning destination for any recurring pattern, candidate skill, missing eval, or contract change surfaced
-- reflection checklist results: goal drift, coupling and seams, shortcuts, hidden state, failure modes, tests and evals, causal depth
-``````````
+````````
 <!-- AGENTIC_BUNDLE_FILE_END path="AGENTS.md" -->
-
----
 
 ### File: `CLAUDE.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="CLAUDE.md" sha256="61c0d887af174770b7f7944542c8ca3584190f075c98f31c0e90df38d04f0ccf" bytes="3661" trailing_newline="true" -->
-`````````` markdown
+<!-- AGENTIC_BUNDLE_FILE_START path="CLAUDE.md" sha256="7d72f8c077d97bf402d1f169f28fee9cc292d4ae6f04fee511cebb317075c3a8" bytes="371" trailing_newline="true" -->
+````````
 # CLAUDE.md
 
-Read AGENTS.md first. For context-constrained sessions, the cold-start trio (this file + AGENTS.md + docs/QUICK_REFERENCE.md) is ~5K tokens and contains every doctrinal rule. Load deep docs only for the topic you are actually touching.
+Claude-specific adapter for this agent-neutral guide.
 
-This repo builds agentic operating systems.
+Read `AGENTS.md` first. `AGENTS.md`, `docs/`, `.agentic/`, and `skills/` are the canonical source. This file must not add unique doctrine or Claude-only rules.
 
-Use deterministic code for the harness: schemas, permissions, idempotency, state, checkpoints, compaction, source authority, identity resolution, tool execution, human approval, traces, and evals.
-
-Use model-owned adaptive behavior for ambiguous intent, context gathering, memory retrieval, tool choice, plan revision, recovery, and synthesis.
-
-Do not implement open-ended agent behavior as keyword routers, regex intent detection, hardcoded branches, or giant always-loaded prompts unless explicitly justified and tested.
-
-Do not collapse source-of-truth stores, retrieval indexes, recall memory, human-readable synthesis, sidecars, and candidate signals into one vague memory layer. Name the role of each artifact.
-
-Distinguish proximate causes from ultimate causes. When debugging failures or reviewing multi-agent behavior, do not stop at the first plausible local explanation. Go deep enough to identify the missing contract in memory, context, source authority, tool design, durable state, ownership, guardrails, or evals.
-
-Coupling cost is asymmetric. Every non-trivial change declares the seams it touches, defines, or changes. Reaching across module boundaries to read internals, runtime type-switches on opaque payloads, and "just one more parameter" creep are coupling smells, not shortcuts. Decoupling later is super-linear in callers and editors; declare the seam now. See docs/modularity-and-seams.md.
-
-Reflect before declaring done. Run the reflection checklist on every non-trivial change: goal drift, coupling and seams, shortcuts, hidden state, failure modes, tests and evals, causal depth. Record the answers. Hidden gaps are worse than known gaps. See docs/reflection-and-planning.md.
-
-Failures are classes, not surprises. Every retry, fallback, and degraded-result path attaches to one of three exception classes (recoverable, degraded, unrecoverable) explicitly. Silent degradation, silent paid spillover, and silent retry past budget are bugs. See docs/exception-taxonomy.md.
-
-Agent-to-agent messages need contracts: schema, direction, idempotency, versioning, authority, failure attribution, audit. A2A traffic without a contract is folklore that breaks silently. See docs/a2a-contracts.md.
-
-Routing decisions are recorded with the task. Lane choice combines difficulty, evidence sensitivity, consequence, budget state, lane health, and explicit override. No silent paid spillover. See docs/cost-aware-routing.md.
-
-Recurring findings have destinations: candidate skill, contract change proposal, missing eval, candidate signal, or deprecation. A finding without a destination is a smell. See docs/learning-loops.md.
-
-Queued tasks declare urgency, importance, preemptability, cost, and staleness. First-come-first-served is not the default; it is folklore. See docs/task-prioritization.md.
-
-For any agentic change, inspect relevant tools, skills, memory, source lanes, identity policy, context policy, coordination rules, durability, and evals before editing code.
-
-Define done as observable system behavior. A manual one-off proof is not completion for autonomous behavior; record the system acceptance test, replay/eval evidence, and known gaps. Treat cost controls, provider fallback policy, and adoption state as safety-critical harness design.
-
-Keep this file short. Put reusable procedures in skills. Put detailed architecture in docs/.
-``````````
+If a Claude workflow needs specialized packaging, keep it as an adapter that points back to the neutral source rather than forking the guide.
+````````
 <!-- AGENTIC_BUNDLE_FILE_END path="CLAUDE.md" -->
+
+### File: `README.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="README.md" sha256="3b5f3a94c03e53ebba2008518d08f8ea8280d697e44f58fa2a1fdbe82206b584" bytes="4250" trailing_newline="true" -->
+````````
+# Agentic Architecture Guide
+
+Reusable architecture guide for coding agents and humans building agentic operating systems.
+
+Core principles:
+
+> Deterministic harness. Adaptive policy. Simplicity before machinery.
+
+Use deterministic code for schemas, permissions, budgets, idempotency, checkpoints, source authority, identity resolution, tool execution, human approval, traces, and evals. Use model-owned adaptive behavior for ambiguous context gathering, tool choice, memory retrieval, plan revision, recovery, and synthesis.
+
+Simplicity is a first-class design constraint: question requirements, delete unnecessary parts/processes, prefer better context/tools/source authority/feedback over behavior-policing guardrails, simplify what remains, then optimize/accelerate/automate last. Complexity has hidden downstream cost, so it must be worth much more than its visible cost.
+
+## What is in this repo
+
+- `AGENTS.md`, `docs/`, `.agentic/`, and `skills/` — canonical agent-facing source.
+- `CLAUDE.md`, `.claude/skills/`, and `.codex/skills/` — adapter entrypoints. They must not contain unique doctrine that is absent from the canonical neutral source.
+- `agentic_architecture_singlefile.md` — generated/legacy human handoff reference. It must not contain unique canonical content.
+- `build_agentic_architecture_singlefile.py` — rebuilds the generated single-file handoff from the canonical live files.
+- `rebuild_agentic_architecture.py` — legacy recovery helper for rebuilding a split pack from a historical single-file bundle; it is not the normal authoring path.
+- `scripts/` and `tests/` — lightweight validation/eval checks that keep the guide operational instead of purely aspirational.
+- `docs/` — detailed architecture docs for tools, memory, context, evals, source authority, subagents, durable execution, and cross-agent operating model.
+- `.agentic/` — starter YAML policies/catalogs/schemas.
+- `skills/` — starter skills for designing tools, memory, context engines, source lanes, and evals.
+
+## Use on a new computer
+
+```bash
+git clone git@github.com:rdleclerc/agentic-architecture-guide.git
+cd agentic-architecture-guide
+```
+
+Then point local agent instructions at `AGENTS.md`. For non-trivial changes, load `docs/00-agentic-change-protocol.md` first and only then load the specific topic doc you need.
+
+## Source authority
+
+The live multifile repo is canonical. The single-file bundle is a generated distribution/recovery artifact and should validate against the live files before it is shared. If a file exists only in the bundle, either materialize it in the live repo or mark it explicitly archival/non-authoritative.
+
+Do not let adapter paths become owners of doctrine. Claude, Codex, local CLIs, MCP servers, and other runtimes should adapt the neutral guide rather than fork it.
+
+## Validate and regenerate generated artifacts
+
+```bash
+python3 build_agentic_architecture_singlefile.py
+python3 scripts/validate_agentic_pack.py
+python3 -m unittest discover -s tests -p 'test_*.py'
+```
+
+Use `python3 build_agentic_architecture_singlefile.py --check` in CI or review to prove the generated single-file handoff is current.
+
+## Legacy single-file recovery
+
+```bash
+python3 rebuild_agentic_architecture.py agentic_architecture_singlefile.md ./agentic_architecture_pack
+```
+
+Use `--overwrite` to replace existing generated files. Do not use this as the normal edit flow unless you are intentionally recovering from the legacy single-file bundle.
+
+## Field lessons through v1.5
+
+- Define done as observable system behavior, not manual proof.
+- Convert incidents into contracts, fixtures, replays, evals, or operating rules.
+- Treat backpressure, cost controls, provider fallback, and human attention as harness responsibilities.
+- Reconcile natural-language claims with actual state transitions or side-effect receipts.
+- Keep thesis/future-state documents separate from current operating truth.
+- Promote sidecars, model paths, source lanes, and workflows through explicit adoption states.
+- Design agent-native CLIs and repo seams as model-facing interfaces.
+- Prefer small, cohesive, contract-shaped files for parallel agent work.
+- Put simplicity/deletion before machinery; complexity must justify its hidden cost.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="README.md" -->
+
+### File: `build_agentic_architecture_singlefile.py`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="build_agentic_architecture_singlefile.py" sha256="4149f79872562980aa6f91da56f51ac1d0999f23e92aec8d01c4008a3e1a5c95" bytes="5948" trailing_newline="true" -->
+````````
+#!/usr/bin/env python3
+"""Build the single-file handoff from the canonical live multifile guide.
+
+The live repo is the source of truth. This script regenerates only the
+repo-tree, bundle-manifest, and embedded-payload sections of
+agentic_architecture_singlefile.md while preserving the architecture prose and
+reference-source sections around them.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
+DEFAULT_SINGLE_FILE = ROOT / "agentic_architecture_singlefile.md"
+FENCE = "````````"
+
+ROOT_FILES = [
+    ".gitignore",
+    "README.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "build_agentic_architecture_singlefile.py",
+    "rebuild_agentic_architecture.py",
+    ".github/pull_request_template.md",
+]
+
+GLOB_PATTERNS = [
+    ".agentic/*.yaml",
+    "docs/*.md",
+    "skills/*/SKILL.md",
+    ".claude/skills/*/SKILL.md",
+    ".codex/skills/*/SKILL.md",
+    "scripts/*.py",
+    "tests/**/*.py",
+    "tests/**/*.json",
+]
+
+SKIP_NAMES = {"__pycache__"}
+
+
+def canonical_bundle_paths(root: Path = ROOT) -> list[str]:
+    paths: set[str] = set()
+    for rel in ROOT_FILES:
+        if (root / rel).exists():
+            paths.add(rel)
+    for pattern in GLOB_PATTERNS:
+        for path in root.glob(pattern):
+            if any(part in SKIP_NAMES for part in path.parts):
+                continue
+            if path.is_file() or path.is_symlink():
+                paths.add(path.relative_to(root).as_posix())
+    return sorted(paths)
+
+
+def read_payload(path: Path) -> str:
+    # read_text follows symlinks. That is intentional: runtime-specific adapter
+    # skill files are derived surfaces; the bundle may reconstruct them as
+    # copies if the target filesystem cannot preserve symlinks.
+    return path.read_text(encoding="utf-8")
+
+
+def file_metadata(payload: str) -> tuple[int, str, bool]:
+    encoded = payload.encode("utf-8")
+    return len(encoded), hashlib.sha256(encoded).hexdigest(), payload.endswith("\n")
+
+
+def render_tree(paths: list[str]) -> str:
+    lines = ["## Repository tree", "", "```text", "."]
+    for rel in paths:
+        lines.append(f"├── {rel}")
+    lines.extend(["```", ""])
+    return "\n".join(lines)
+
+
+def render_manifest(root: Path, paths: list[str]) -> str:
+    lines = ["## Bundle manifest", "", "```yaml", "files:"]
+    for rel in paths:
+        payload = read_payload(root / rel)
+        byte_count, sha, trailing_newline = file_metadata(payload)
+        lines.extend(
+            [
+                f"  - path: {rel}",
+                f"    bytes: {byte_count}",
+                f"    sha256: {sha}",
+                f"    trailing_newline: {str(trailing_newline).lower()}",
+            ]
+        )
+    lines.extend(["```", ""])
+    return "\n".join(lines)
+
+
+def render_payloads(root: Path, paths: list[str]) -> str:
+    chunks = ["## Embedded file payloads", ""]
+    for rel in paths:
+        payload = read_payload(root / rel)
+        byte_count, sha, trailing_newline = file_metadata(payload)
+        chunks.extend(
+            [
+                f"### File: `{rel}`",
+                "",
+                (
+                    f'<!-- AGENTIC_BUNDLE_FILE_START path="{rel}" sha256="{sha}" '
+                    f'bytes="{byte_count}" trailing_newline="{str(trailing_newline).lower()}" -->'
+                ),
+                FENCE,
+                payload.rstrip("\n") if trailing_newline else payload,
+                FENCE,
+                f'<!-- AGENTIC_BUNDLE_FILE_END path="{rel}" -->',
+                "",
+            ]
+        )
+    return "\n".join(chunks).rstrip() + "\n"
+
+
+def replace_between(source: str, start_marker: str, end_marker: str, replacement: str) -> str:
+    start = source.index(start_marker)
+    end = source.index(end_marker, start)
+    return source[:start] + replacement + source[end:]
+
+
+def build(source: str, root: Path) -> str:
+    paths = canonical_bundle_paths(root)
+    generated_middle = render_tree(paths) + "\n" + render_manifest(root, paths) + "\n"
+
+    research_start = source.index("## Research boundary:")
+    payload_start = source.index("## Embedded file payloads")
+    if research_start < payload_start:
+        research_block = source[research_start:payload_start].strip() + "\n"
+        source_without_research = source[:research_start] + source[payload_start:]
+    else:
+        reference_start = source.index("## Reference sources used")
+        research_block = source[research_start:reference_start].strip() + "\n"
+        source_without_research = source[:research_start] + source[reference_start:]
+
+    before_payload = replace_between(
+        source_without_research,
+        "## Repository tree",
+        "## Embedded file payloads",
+        generated_middle,
+    )
+    payload_index = before_payload.index("## Embedded file payloads")
+    return before_payload[:payload_index] + render_payloads(root, paths) + "\n" + research_block
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Regenerate agentic_architecture_singlefile.md from live guide files.")
+    parser.add_argument("--root", type=Path, default=ROOT, help="Guide repo root.")
+    parser.add_argument("--single-file", type=Path, default=DEFAULT_SINGLE_FILE, help="Single-file markdown to update.")
+    parser.add_argument("--check", action="store_true", help="Fail if the single-file would change.")
+    args = parser.parse_args()
+
+    root = args.root.resolve()
+    single_file = args.single_file.resolve()
+    source = single_file.read_text(encoding="utf-8")
+    rebuilt = build(source, root)
+    if args.check:
+        if rebuilt != source:
+            print(f"{single_file} is not up to date")
+            return 1
+        print(f"{single_file} is up to date")
+        return 0
+    single_file.write_text(rebuilt, encoding="utf-8")
+    print(f"Regenerated {single_file} with {len(canonical_bundle_paths(root))} files")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="build_agentic_architecture_singlefile.py" -->
+
+### File: `docs/00-agentic-change-protocol.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/00-agentic-change-protocol.md" sha256="c18712cc278558cab40aa8c1617502283b042f245a5ad61b2d55f60ac64f1112" bytes="4969" trailing_newline="true" -->
+````````
+# Agentic Change Protocol
+
+Use this compact protocol before loading the larger reference docs. The goal is to make agentic changes safer without turning every task into a governance project.
+
+## 1. Classify the change
+
+Name the primary component you are changing: workflow, agent loop, multi-agent system, tool, skill, memory, source lane, identity, context, durable execution, guardrail, coordination, attention policy, adoption state, eval/observability, CLI/tool surface, repo seam, or feedback loop.
+
+If more than one applies, pick one primary component and list the secondary ones. Do not expand scope just because many categories are adjacent.
+
+## 2. Run the deletion-first simplicity pass
+
+Simplicity is a safety property for agentic systems. Every new part creates coordination cost, context cost, stale-state risk, eval surface area, ownership ambiguity, and future merge conflict risk. These costs are usually hidden until a later agent touches the system.
+
+Before adding a new agent, schema, router, policy layer, eval harness, guardrail, workflow, dependency, or automation, answer in this order:
+
+1. **Make the requirement less wrong.** Is the requirement stale, over-broad, based on a one-off incident, or asking for the wrong layer to own the behavior?
+2. **Delete.** What step, part, handoff, queue, policy, file, prompt clause, or process can be removed instead of improved?
+3. **Prefer affordance over coercion.** Could the agent behave correctly if it had better context, a clearer tool, source authority, feedback, or an inspectable state transition?
+4. **Simplify.** Can the remaining design be expressed as a smaller contract, fewer states, fewer files, fewer roles, or a narrower public seam?
+5. **Optimize or accelerate.** Only speed up the path after the simpler path is correct.
+6. **Automate last.** Do not automate a workflow, policy, or workaround that should have been deleted.
+
+A complexity addition is justified only when its expected benefit is much greater than its visible cost. “Slightly better than the cost we can see” is not enough because the hidden cost is usually the larger part.
+
+## 3. If a guardrail remains, choose the smallest useful one
+
+Prefer the smallest deterministic guardrail that prevents a named failure class.
+
+Before adding a new agent, schema, router, eval harness, policy layer, or CI gate, answer:
+
+- What failure does this prevent?
+- Has that failure happened, or is it high-risk enough to justify the hidden cost?
+- Why would better context, tools, source authority, feedback, or a smaller contract not prevent it?
+- Is there a smaller check, template, test, or acceptance line that would prevent it?
+- What maintenance burden and future coordination burden does the new machinery create?
+
+If the benefit is not clearly larger than the hidden cost, write the simpler rule and defer the machinery until a real failure demands it.
+
+## 4. Separate harness from policy
+
+Deterministic harness owns schemas, permissions, idempotency, budgets, checkpoints, memory APIs, source authority, identity resolution, context assembly, tool execution, approval gates, traces, and evals.
+
+Model policy owns ambiguity, context gathering, tool choice, memory retrieval, task decomposition, plan revision, recovery, and synthesis.
+
+Do not bury harness responsibilities inside prompts. Do not replace adaptive behavior with brittle keywords unless the behavior is genuinely deterministic and tested.
+
+## 5. Run Agent Failure RCA when relevant
+
+If the change fixes an agent mistake, repeated agent error, multi-agent confusion, context/tool/memory issue, or symptom patch risk, load `docs/agent-failure-rca.md` and answer the human counterfactual before coding.
+
+The default stance is: agents often fail because the system withheld context, tools, feedback, source clarity, or authority that a capable human would have had. Fix the missing affordance before adding behavior-policing machinery.
+
+## 6. Define done as evidence
+
+Before implementation, write a small acceptance rubric:
+
+- expected system behavior
+- files/components in scope and out of scope
+- user approval or side-effect boundaries
+- commands/tests/evals/reviews to run
+- deletion/simplification pass result
+- manual proof vs autonomous/system proof gap
+- rollback/adoption state when relevant
+
+For small changes, a few bullets are enough. For larger changes, use a dedicated plan only when it reduces risk more than it adds process.
+
+## 7. Final acceptance
+
+Before calling work done, try to disprove readiness:
+
+- Did the implementation drift from the plan?
+- Did it add complexity without preventing a named failure?
+- Did it skip a simpler context/tool/source-authority fix?
+- Are source/truth/memory/context/tool boundaries still clear?
+- Are untested layers named honestly?
+- If this fixes agent behavior, does the RCA identify the missing invariant or affordance?
+
+Report known gaps explicitly instead of letting "tests pass" stand in for system proof.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/00-agentic-change-protocol.md" -->
+
+### File: `docs/QUICK_REFERENCE.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/QUICK_REFERENCE.md" sha256="306e346f74eb446588d97ebe5f85a68f1bc3c1306176e3c486579b980d18a62b" bytes="15818" trailing_newline="true" -->
+````````
+# Quick reference for coding agents
+
+Version: 1.5
+Purpose: lossy distillation of the architecture pack. Rules only, no examples, no rationale. Use as cold-start companion to `AGENTS.md`. Load the deep doc only for the topic you are actually touching.
+
+If your task touches **schemas, permissions, idempotency, budgets, checkpoints, source authority, identity resolution, tool execution, human approval, traces, or evals** — that is harness work. Use deterministic code.
+
+If your task touches **ambiguous intent, context selection, tool choice, memory retrieval, task decomposition, plan revision, recovery, or synthesis** — that is policy work. Use the model.
 
 ---
 
+## Eight doctrinal claims (non-negotiable)
+
+1. **Deterministic harness, adaptive policy.** Determinism in the harness; ambiguous decisions in the model-owned policy layer with the right tools, memory, skills, and context.
+2. **Simplicity before machinery.** Question requirements, delete unnecessary parts/processes, prefer better context/tools/source authority/feedback, simplify what remains, and automate last. Complexity must be worth much more than its visible cost.
+3. **Source-of-truth role separation.** Truth, retrieval, recall, synthesis, sidecars, candidate signals, and external reports are different roles. Do not collapse them.
+4. **Incidents become contracts.** Every production failure produces a harness change, an acceptance test, an eval/replay fixture, and an adoption rule.
+5. **Causal depth.** Do not stop at the first true local explanation. Name the missing contract in memory, context, tool semantics, source authority, durable state, ownership, guardrails, or evals.
+6. **Spend authority.** Paid API keys are gateway-owned exception paths, not ambient context. Attribution, budgets, rate limits, and tests that fail when direct key reads come back.
+7. **Coupling cost asymmetry.** Declaring a seam now is linear; untangling later is super-linear in callers and editors. Bias forward: declare the seam now even when the local diff would be smaller without it.
+8. **Agent-native interfaces.** CLIs, repo shape, local docs, skills, and file seams are model-facing surfaces. Design them for headless JSON, bounded output, dry-runs/idempotency, small cohesive files, and disjoint multi-agent write sets.
+
+---
+
+## Component classification (declare one before coding)
+
+`deterministic workflow` · `augmented LLM` · `agent loop` · `multi-agent / subagent` · `tool` · `tool registry` · `skill` · `memory subsystem` · `source lane / authority layer` · `identity resolution layer` · `context engine` · `durable execution layer` · `guardrail / human-review layer` · `cross-agent coordination layer` · `attention / notification policy` · `adoption-state change` · `eval / observability layer` · `agent-native CLI or tool surface` · `repository structure / parallel-agent seam` · `learning-loop or feedback pipeline`
+
+---
+
+## Seam-declaration rule (every non-trivial change)
+
+Before code:
+
+1. **Modules touched** — what does this change read, write, or import?
+2. **Interfaces depended on** — which contracts does this change consume?
+3. **Interfaces defined or changed** — what does this introduce, modify, deprecate, or extend? What is public, what is intentionally private?
+4. **Substitutability** — what changes if the implementation behind each interface is swapped (different store, model, transport, provider)? Many things in many places means the seam is wrong.
+
+Six coupling smells (any of these = creating coupling):
+
+- **God-object state bag** — function takes a `context`/`state`/`request` bag and reads ≥4 fields.
+- **Reaching through internals** — `module.B._private` access from outside B.
+- **Runtime type-switch on opaque payload** — `if event.kind == ...` chain growing branch by branch.
+- **Hidden temporal dependency** — A must be called before B, encoded only in caller order.
+- **"Just one more parameter" creep** — function accumulates 6+ optional parameters added by N agents.
+- **Multi-module test instantiation** — unit test imports 4 modules to construct the system under test.
+
+Detail: `docs/modularity-and-seams.md`. Anti-pattern 9.9. Field lesson 12.10.
+
+---
+
+## Reflection checklist (before declaring done)
+
+1. **Simplicity/deletion** — requirement narrowed; unnecessary machinery deleted or avoided; context/tool/source-affordance alternative considered.
+2. **Goal drift** — original goal restated; change still serves it; no quiet redefinition to "make the test pass."
+3. **Coupling and seams** — none of the six smells; no boundary crossed; no parameter/branch/field that other modules now depend on by absence.
+4. **Shortcuts** — no skipped step (validation, schema, idempotency, source-authority lookup, memory write, eval coverage, durable-state record).
+5. **Hidden state** — no undocumented dependency on globals, env vars, file layout, time, process startup order.
+6. **Failure modes** — every external dep has stated behavior under slow/unavailable/partial/garbage; nothing silently re-raises.
+7. **Tests and evals** — no new behavior is true that no test exercises; no incident class reachable that no eval catches.
+8. **Causal depth** — for fixes: proximate cause + ultimate contract both named; if only proximate addressed, remaining incident class named as gap.
+
+Hidden gaps are worse than known gaps.
+
+Detail: `docs/reflection-and-planning.md`. Anti-pattern 9.10.
+
+---
+
+## Plan as artifact (before action)
+
+Goal · Acceptance proof · Component classification · Simplicity/deletion pass · Seam declaration · Failure-mode budget · Routing decision · Out of scope.
+
+Goal-drift checks: before each tool call, before declaring done, inside reflection. If goal genuinely changes mid-task, change the plan explicitly.
+
+Detail: `docs/reflection-and-planning.md`.
+
+---
+
+## Three exception classes (every retry/fallback/degradation attaches to one)
+
+- **Recoverable** — retry per policy; surface only on budget exhaustion; do not poison durable state.
+- **Degraded** — produce partial result; mark missing pieces; surface a structured signal (never silent); record what would have been there.
+- **Unrecoverable** — stop; do not retry; do not degrade; write structured failure record; alert per attention policy.
+
+A retry without a class is a guess. Silent degradation is a bug. Silent paid spillover is a bug. Silent retry past budget is a bug.
+
+Detail: `docs/exception-taxonomy.md`. Anti-pattern 9.11. Field lesson 12.11.
+
+---
+
+## A2A message contracts (every agent-to-agent message type)
+
+Schema · Direction (request/reply/broadcast/signal/event) · Idempotency (key, hash, dedup window, or documented at-least-once handler) · Versioning (additive vs migration) · Authority (sender + receiver, registry-enforced) · Failure attribution (per exception class, both sides) · Audit surface.
+
+Payloads typed as `dict`/`any` are folklore. A2A traffic with no audit surface is invisible.
+
+Detail: `docs/a2a-contracts.md`. Anti-pattern 9.12.
+
+---
+
+## Cost-aware routing (every paid call attributable, every spillover doctrinal)
+
+Routing inputs: task difficulty · evidence sensitivity · consequence · budget state · lane health · explicit overrides.
+
+Lanes: default (cheap, broad) · escalated (expensive, capable) · degraded (cheapest or stop).
+
+Spillover policy is part of routing, not emergent. Each spillover path attaches to: exception class · destination lane · budget impact · audit record.
+
+Three failure modes: silent escalation · silent fallback · wrong-axis routing. All recover by recording the doctrine decision and auditing the spend.
+
+Detail: `docs/cost-aware-routing.md`. Field lesson 12.12.
+
+---
+
+## Learning loops (every finding has a destination)
+
+- **Within-task**: reflection (above).
+- **Across-task**: skill promotion. Pattern works across N tasks → drafted skill (eval, when-to-use) → canonical (owner, rollback). Promotion follows adoption state: `reference_only` → `shadow_mode` → `candidate_write` → `write_enabled` → `canonical` → `deprecated`.
+- **System-level**: external critique on slower cadence. Findings → candidate skill / contract change / missing eval / candidate signal / deprecation.
+
+A finding without a destination is a smell. A loop nobody acts on is a journal, not learning.
+
+Detail: `docs/learning-loops.md`. Anti-pattern 9.13. Field lesson 12.13.
+
+---
+
+## Task prioritization (every queued task declares five inputs)
+
+Urgency (none/soft/hard/irreversible) · importance (blocks other lanes?) · preemptability · cost · staleness (hard window / soft decay / appreciation / none).
+
+Queue rule: preemption-immune tasks run to completion · among ready tasks prefer importance, then urgency, then cheaper · overrides recorded with rationale · saturation surfaces as signal, never silent drops.
+
+The harness owns the rule, not the agent.
+
+Detail: `docs/task-prioritization.md`. Anti-pattern 9.14. Field lesson 12.14.
+
+---
+
+## Anti-patterns (never these)
+
+- **9.1 Regex pretending to be intelligence** — ambiguous routing in if/elif/regex.
+- **9.2 Giant prompt as architecture** — every rule, memory, tool, transcript stuffed into the system prompt.
+- **9.3 Memory as append-only notes** — write summaries to a file with no schema or promotion path.
+- **9.4 Tools without semantic affordances** — `run(query: string) → result`.
+- **9.5 Multi-agent theater** — committee of agents per task instead of single-agent-first.
+- **9.6 Source-of-truth collapse** — wiki, vector index, source DB, sidecar, chat all treated as one memory.
+- **9.7 Noisy-lane contamination** — brainstorming or speculation promoted into project truth without review.
+- **9.8 Accidental production promotion** — sidecar passes one demo and becomes canonical.
+- **9.9 Convenient coupling** — reaching across module boundaries because "it is right there."
+- **9.10 Skipping reflection** — declaring done without the §5.14 checklist.
+- **9.11 Unclassified errors** — bare except, silent None, retry without class.
+- **9.12 Implicit A2A folklore** — pair of agents that work via a hardcoded script with no contract.
+- **9.13 No learning loop** — recurring findings with no destination.
+- **9.14 FCFS task scheduling** — first-come-first-served by accident, no declared priority rule.
+
+---
+- **Category index in bootstrap.** Loading a multi-section reference doc (one section per lane/integration/tool) as bootstrap. Bootstrap pays the cost on every turn and the runtime silently truncates. Split into per-member sub-docs; replace the original with a thin index; let the retriever surface the right sub-doc by query. Detail: `docs/context-engineering.md` and `docs/agentic-coding-for-agentic-systems.md` § 5.2.1.
+
+## Field lessons (operational consequences)
+
+- **12.1 Define done as system behavior** — manual one-off proof is debugging evidence, not completion.
+- **12.2 Incidents become contracts, not folklore** — every incident becomes a harness layer, an acceptance test, and an eval.
+- **12.3 Proximate causes are not ultimate causes** — go deep enough to name the missing contract.
+- **12.4 Backpressure and cost are harness responsibilities** — silent paid fallback is unreviewed side effect.
+- **12.5 Claims must reconcile with state** — if claim and state disagree, both are evidence; reconcile, do not arbitrarily prefer.
+- **12.6 Keep thesis, current state, and truth separate** — a roadmap is not truth and a synthesis is not truth.
+- **12.7 Promote through adoption states** — sidecars, models, workflows promoted via shadow → candidate → canonical with evals, health, rollback, owner.
+- **12.8 Human attention is a scarce system resource** — quiet by default; loud only when situation deserves it.
+- **12.9 The coding agent is part of the operating system** — its edits, logs, claims, summaries are operating-system memory.
+- **12.10 Modularity is a runtime property** — parallel collisions are seam problems, not coordination problems.
+- **12.11 Errors are classes, not surprises** — every failure attaches to recoverable / degraded / unrecoverable.
+- **12.12 Cost asymmetry is a routing input, not an afterthought** — cost is rarely a runtime emergency, almost always doctrine drift.
+- **12.13 Systems that don't learn get worse** — stability is the default state of contracts; improvement is not.
+- **12.14 Priority is not optional** — FCFS is the default that emerges when no one declares the rule.
+
+---
+
+## Dependency awareness (every non-trivial change)
+
+Six patterns, ordered cheapest to strongest — pick by failure mode, not aesthetic:
+
+1. **Seam declaration before code** — universal floor. Modules touched · interfaces depended on · interfaces defined or changed · substitutability.
+2. **Source ledger on context assembly** — each context item carries source + reason + freshness.
+3. **Reverse-lookup retriever** — given a path/symbol you're about to change, what already depends on it? Most underused; usually one script.
+4. **Adoption-state tracking** — per-consumer state (legacy / migrating / migrated / deprecated). Forces migrations out of one agent's head into the schema.
+5. **Static analysis in CI** — broken-link / stale-reference checks for shared paths, links, names.
+6. **Replay tests** — record a real session, re-run after refactor; only for high-blast-radius components.
+
+Anti-pattern: **blind local edit** — agent edits a file as if it were standalone, ships, discovers downstream breakage later. Fix with the cheapest pattern that would have caught the specific failure shape.
+
+Detail: `docs/agentic-coding-for-agentic-systems.md` § 5.21. Adjacent: `docs/modularity-and-seams.md` (seams), `docs/context-engineering.md` (source ledger), `docs/cross-agent-operating-model.md` (adoption state).
+
+---
+
+## Pointers to deep docs
+
+For the topic you are actually touching:
+
+| Topic | Doc |
+|---|---|
+| Tools | `docs/tool-design.md` |
+| Memory | `docs/memory-architecture.md` |
+| Context engineering | `docs/context-engineering.md` |
+| Skills | `docs/skills.md` |
+| Subagents | `docs/subagents.md` |
+| Durable execution | `docs/durable-execution.md` |
+| Evals | `docs/evals.md` |
+| Source authority and truth lanes | `docs/source-authority-and-truth-lanes.md` |
+| Cross-agent coordination | `docs/cross-agent-operating-model.md` |
+| Modularity and seams | `docs/modularity-and-seams.md` |
+| Reflection and planning | `docs/reflection-and-planning.md` |
+| Exception taxonomy | `docs/exception-taxonomy.md` |
+| A2A contracts | `docs/a2a-contracts.md` |
+| Cost-aware routing | `docs/cost-aware-routing.md` |
+| Learning loops | `docs/learning-loops.md` |
+| Task prioritization | `docs/task-prioritization.md` |
+
+For the full architecture, the executive thesis, all anti-patterns with worked examples, all field lessons with rationale, the canonical coding-agent prompt, the first-engineering-tasks ordering, and the multifile rebuild scaffolding: `docs/agentic-coding-for-agentic-systems.md` and `docs/agentic-systems-engineering.md`.
+
+For the full single-file source: `AGENTIC_ARCHITECTURE.md` (top-level).
+
+---
+
+## Final summary requirements
+
+A non-trivial change ends with the agent stating: component classification · model-owned vs harness responsibilities · tools / skills / memory / source authority / identity / context behavior · guardrails and approvals · cross-agent ownership · attention behavior · backpressure/budget/fallback · adoption state and rollback · causal ladder for fixes · acceptance proof and gaps · plan and goal · seam declaration · exception classes · A2A contract changes · routing and cost · prioritization inputs · learning destination · reflection checklist results.
+
+Hidden gaps are worse than known gaps. State the gaps explicitly.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/QUICK_REFERENCE.md" -->
+
+### File: `docs/a2a-contracts.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/a2a-contracts.md" sha256="950e9d057cac968230e8b3969e70cc0f3fcc1fc0712660c0279101f4fe951d31" bytes="6980" trailing_newline="true" -->
+````````
+# Agent-to-agent message contracts
+
+Version: 1.0
+Audience: coding agents and architects working on multi-agent systems.
+
+Cross-agent coordination covers ownership and integrator role. A2A contracts cover the messages themselves. The failure mode this prevents is folklore A2A: two agents work together because someone wrote a script that hardcoded what one produces and what the other expects. There is no schema, no version, no contract for partial messages, no idempotency rule, no replay rule, and no audit trail. The pair works until either side is edited.
+
+---
+
+## 1. Every A2A message type declares seven things
+
+```text
+1. Schema
+   Typed shape of the message. Required fields, optional fields, types,
+   units, allowed values. No payload field is "any."
+
+2. Direction
+   Request, reply, broadcast, signal, or event. Reply messages reference
+   the request they answer. Broadcasts have no required reply.
+
+3. Idempotency
+   Is sending the same message twice safe? If yes, by what mechanism
+   (idempotency key, content hash, dedup window). If no, what is the
+   replay rule and what state in the receiver tracks "already handled."
+
+4. Versioning
+   How does the contract evolve? Field additions are usually safe; field
+   removals or semantic changes require an explicit version bump and a
+   migration plan. The receiver should know which versions it accepts.
+
+5. Authority
+   Which agent is authorized to send this message type. Which agent is
+   authorized to act on it. Senders that do not have authority should be
+   rejected at the receiver, not at the network.
+
+6. Failure attribution
+   How does the sender know the receiver failed? How does the receiver
+   know the sender did not get the reply? Which class of failure (see
+   docs/exception-taxonomy.md) does each side attribute to, and what
+   does each side do next.
+
+7. Audit
+   Where is the message recorded? A2A traffic that does not appear in
+   any audit surface is invisible to operators and to future agents
+   debugging what happened.
+```
+
+---
+
+## 2. Message schemas: minimum required structure
+
+Every A2A message has at least these fields:
+
+```python
+@dataclass
+class A2AMessage:
+    # Identity
+    message_id: str          # unique per send
+    correlation_id: str      # ties request and reply
+    causation_id: str | None # the message that caused this one
+
+    # Routing
+    from_agent: str
+    to_agent: str
+    type: str                # message type name (registry-keyed)
+    version: str             # semver of the type's schema
+
+    # Timing
+    sent_at: datetime
+    expires_at: datetime | None
+
+    # Authority
+    auth_token: str | None   # if cross-tenant or cross-trust-zone
+
+    # Payload
+    payload: dict            # typed per `type` and `version`
+```
+
+The payload type is keyed by the registered name and version. A receiver that does not recognize the type/version pair rejects the message; it does not "best-effort" decode it.
+
+---
+
+## 3. Idempotency patterns
+
+### 3.1 Idempotency key
+
+The sender supplies a key. The receiver records the key with the result. Repeated sends with the same key return the same result. This is the safest pattern when the receiver has durable state.
+
+### 3.2 Content hash
+
+The receiver hashes the payload and treats two messages with the same hash inside a dedup window as the same message. Useful when senders may re-send without remembering the previous send.
+
+### 3.3 At-most-once via reservation
+
+The receiver reserves a slot for the message_id, processes, and releases. A second send with the same message_id sees the reservation and returns the cached result.
+
+### 3.4 At-least-once with idempotent handler
+
+The handler itself is idempotent: the same input produces the same effect regardless of how many times it is invoked. Useful when the message bus cannot guarantee deduplication.
+
+The handler's idempotency must be documented. "It happens to be idempotent because of how it's written today" is folklore.
+
+---
+
+## 4. Versioning
+
+A2A contracts evolve. The rule is:
+
+```text
+safe (no version bump):
+  - add an optional field
+  - add a new enum value the receiver tolerates
+  - add a new message type
+
+unsafe (requires version bump and migration):
+  - remove a field
+  - rename a field
+  - change a field's type or units
+  - change a field's semantics
+  - tighten a validation rule
+```
+
+The receiver advertises which versions it accepts. The sender chooses the highest mutually supported version. Migration plans cover both forward and backward compatibility windows.
+
+---
+
+## 5. Authority and trust
+
+A2A authority answers "who is allowed to send this message type and who is allowed to act on it."
+
+```text
+- declared in a registry, not in agent prompts
+- enforced at the receiver (network and bus may not be trustworthy)
+- audited (every authority decision is logged)
+- revocable (deprecation path for retired agents)
+```
+
+A receiver that processes messages without checking authority will be exploited the moment any agent in the system is compromised, mis-configured, or replaced by a sidecar with weaker invariants.
+
+---
+
+## 6. Failure attribution between agents
+
+Both sides of an A2A pair need to know whose problem a failure is.
+
+```text
+sender's perspective                receiver's perspective
+- request acknowledged but no reply  - received message but cannot act
+   within timeout: receiver problem    on it: signal back unrecoverable
+- request rejected at validation:    - received valid message but
+   sender problem (bad payload)        downstream failed: signal back
+- network error: bus problem,         (recoverable, degraded, or
+   sender retries per recoverable      unrecoverable)
+   class
+```
+
+Each failure attaches to one of the three exception classes (`docs/exception-taxonomy.md`) and triggers the corresponding behavior.
+
+---
+
+## 7. Audit surface
+
+Every A2A message is recorded in at least one of:
+
+```text
+- structured event log (preferred for high volume)
+- durable state record (preferred for state-changing messages)
+- trace span (preferred for request/reply latency)
+```
+
+A2A traffic that does not appear in any audit surface is invisible. Invisible coordination is folklore by another name.
+
+---
+
+## 8. Common smells
+
+```text
+- payloads typed as `dict` or `any` with no schema
+- "we'll add versioning when we need it"
+- handlers that succeed differently on retry without saying so
+- broadcasts with no recorded receivers
+- replies that do not reference the request they answer
+- authority decisions made in agent system prompts instead of a registry
+```
+
+---
+
+## 9. Cross-references
+
+- Architecture: section 5.17 (A2A message contracts), section 5.13 (Adoption states and cross-agent coordination)
+- Anti-pattern: section 9.12 (Implicit A2A folklore)
+- Field lesson: section 12.10 (Modularity is a runtime property), section 12.11 (Errors are classes, not surprises)
+- Tool design (analogous contract for tool calls): `docs/tool-design.md`
+- Cross-agent operating model: `docs/cross-agent-operating-model.md`
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/a2a-contracts.md" -->
+
+### File: `docs/agent-failure-rca.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/agent-failure-rca.md" sha256="eda4be3295f831a9e67a9c938f4422ee9ff9ecfa8b8d9491e0888cc938a4e5c0" bytes="2585" trailing_newline="true" -->
+````````
+# Agent Failure RCA
+
+Use this when an agent made an error, a plan fixes agent behavior, or a proposed patch may be treating symptoms instead of root cause.
+
+## Core question
+
+Would a capable human, given the same prompt, context, tools, memory, source ledger, feedback, and authority boundaries, likely have made the same error?
+
+- If yes, the system likely withheld or distorted information/capability. Fix the missing affordance.
+- If no, capture the model-policy failure in an eval/replay and add the smallest harness guard that catches it.
+
+## Simplicity bias
+
+Do not start by adding another policy, prompt clause, router branch, reviewer, or guardrail. First ask whether the agent would have done the right thing with cleaner context, a more obvious tool, a stronger source-authority lane, an inspectable state transition, or faster feedback. Delete symptom patches that only compensate for missing affordances.
+
+A durable RCA should prefer the lowest-layer simplification that prevents the class: remove a confusing state, collapse an unnecessary handoff, replace a vague tool with a typed one, or expose the decisive context directly. Add behavioral control machinery only when the missing affordance is not enough.
+
+## Checklist
+
+1. What did the agent actually see?
+2. What tools, memory, source lanes, and handoff packet were available?
+3. What feedback, error, or recovery signal did it receive?
+4. What context or capability would a capable human normally have?
+5. Which source of truth, authority boundary, or identity rule was missing or unclear?
+6. What invariant should have prevented or caught the mistake?
+7. What is the lowest-layer durable fix?
+8. What test, replay, trace, or eval proves the failure class is covered?
+
+## Common root causes
+
+- missing, stale, excessive, or conflicting context
+- unclear task or admission policy
+- bad tool affordance or vague tool description
+- misleading, lossy, or unstructured tool output
+- conflicting source authority or identity resolution
+- missing memory/context retrieval or bad compaction
+- weak feedback loop, observation, or recovery path
+- subagent handoff or ownership ambiguity
+- prompt/tool/state mismatch
+- missing deterministic guard, eval, or replay
+- bad incentives, stop condition, budget/backpressure, or escalation policy
+
+## Anti-pattern
+
+Do not patch only the visible symptom. If the RCA cannot name the missing invariant, affordance, or feedback loop, label the change a mitigation and do not treat it as a durable fix. Do not keep mitigations after the lower-layer simplification makes them unnecessary.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/agent-failure-rca.md" -->
+
 ### File: `docs/agentic-coding-for-agentic-systems.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-coding-for-agentic-systems.md" sha256="4eb30bb8698fc8887b98a3fd8d5f267c9520c6fc708d9f54eb001fe78b0aa88a" bytes="67673" trailing_newline="true" -->
-`````````` markdown
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-coding-for-agentic-systems.md" sha256="9a3a6457ad4a03a494347de4cfdb963384f2290f89fd69ddf892d86d121dab95" bytes="69473" trailing_newline="true" -->
+````````
 # Agentic Coding for Agentic Systems
 
 ## Why coding agents default to von Neumann architecture, and how to give them the harness, memory, tools, and skills needed to build adaptive systems
@@ -919,6 +2662,25 @@ A serious agentic system needs more than model calls. It needs a harness: contex
 For systems that serve a real organization, project, or long-lived workflow, the harness also needs an operating model. The agent must know which sources are raw evidence, which stores are authoritative, which pages are synthesis, which indexes are retrieval-only, which helpers are sidecars, which workflows are experimental, and when human attention is too valuable to spend.
 
 The strongest field lesson is that agentic failures rarely stay inside one layer. A stalled publish, runaway retry storm, false memory, or bad handoff usually crosses context, tools, state, model policy, budget, and human attention. Treat each incident as a request to improve the architecture: name the contract that was missing, preserve a replay or eval, and promote the fix only after evidence.
+
+### 0.1 Simplicity and deletion are safety properties
+
+Simplicity is not taste. In agentic systems it is a reliability, cost, and parallelism requirement.
+
+Every new agent, guardrail, policy file, schema, queue, router, eval harness, dependency, prompt clause, and handoff creates hidden cost: more context to load, more state to keep consistent, more traces to inspect, more stale assumptions, more merge surfaces for parallel agents, more ways for the model to see the wrong abstraction, and more future tests to maintain. Humans and coding agents usually see the local benefit immediately and see the complexity cost only weeks later.
+
+Use a deletion-first order before architecture work:
+
+1. Make the requirement less wrong or less broad.
+2. Delete unnecessary steps, parts, processes, states, and handoffs.
+3. Prefer better context, tools, source authority, and feedback over behavior-policing machinery.
+4. Simplify the remaining path.
+5. Optimize or accelerate only after the simpler path is correct.
+6. Automate last.
+
+The threshold for complexity is therefore asymmetric: the benefit must be much greater than the cost you can see, because the hidden downstream cost is usually undercounted. A plan that spends one hour adding mechanisms should be willing to spend several hours asking what can be deleted, collapsed, or solved by giving the agent the right context and tools.
+
+This matters for RCA. Coding agents often look dumb when the harness deprived them of decisive context, good tools, source authority, or feedback. In those cases, adding more guardrails to force behavior is a symptom patch. The simpler fix is to engineer the information state so a capable agent would naturally do the right thing.
 
 ---
 
@@ -1924,11 +3686,13 @@ Deliverables:
 
 ```text
 .agentic/skill_registry.yaml
-.claude/skills/design-agent-tool/SKILL.md
-.claude/skills/design-agent-memory/SKILL.md
-.claude/skills/design-context-engine/SKILL.md
-.claude/skills/build-agent-eval/SKILL.md
-.claude/skills/review-agentic-architecture/SKILL.md
+skills/design-agent-tool/SKILL.md
+skills/design-agent-memory/SKILL.md
+skills/design-source-lane/SKILL.md
+skills/design-context-engine/SKILL.md
+skills/build-agent-eval/SKILL.md
+skills/review-agentic-architecture/SKILL.md
+.claude/skills/*/SKILL.md and .codex/skills/*/SKILL.md adapter links or generated copies
 docs/skills.md
 ```
 
@@ -2803,15 +4567,202 @@ These are the public materials this architecture pack is designed to align with:
 - Pydantic AI docs — typed agents, tools, structured outputs, evals, durable agents.
 - “Lost in the Middle” and Chroma’s “Context Rot” work — empirical limits of long-context reliability.
 - Rich Sutton, “The Bitter Lesson” — scaling general methods and avoiding overfit hand-engineering.
-``````````
+````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/agentic-coding-for-agentic-systems.md" -->
 
----
+### File: `docs/agentic-pattern-catalog.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-pattern-catalog.md" sha256="df6755ffc21deb237ddfd48d6e2fe8df227464673f33f36b76f2c6d8822c43f9" bytes="16363" trailing_newline="true" -->
+````````
+# Agentic Pattern Catalog
+
+Use this catalog when a coding agent is about to add, refactor, or review agent behavior. The goal is not to add every pattern everywhere. The goal is to choose the smallest pattern that preserves this guide's core contract:
+
+```text
+Deterministic harness. Adaptive policy.
+```
+
+The pattern is the *shape of the harness*. It must still have typed contracts, traces, budgets, permission gates, source-authority boundaries, and evals.
+
+## 0. Simplicity before patterns
+
+Pattern catalogs are dangerous when they make every idea look like it needs another pattern. Start by trying to delete the need for a pattern.
+
+Before selecting routing, parallelization, reflection, multi-agent collaboration, guardrails, or automation, ask:
+
+1. Can the requirement be made smaller or less wrong?
+2. Can a step, handoff, state, policy, queue, or process be deleted?
+3. Would better context, a clearer tool, a typed CLI, source authority, or feedback make the agent naturally choose the right action?
+4. Can the remaining behavior be a smaller contract rather than a new layer?
+5. Is the pattern's benefit much greater than its hidden cost in coordination, context, ownership, testing, and future merge conflicts?
+
+Use a pattern only after this pass. The catalog is a menu of necessary shapes, not a checklist of machinery to add.
+
+## 1. Pattern-selection matrix
+
+| Pattern | Use when | Harness contract | Avoid / failure mode |
+|---|---|---|---|
+| Deletion / simplification | A proposed design adds a new layer, agent, guardrail, queue, router, workflow, dependency, or automation. | Requirement challenge, deletion candidates, context/tool/source-affordance alternative, explicit hidden-cost argument. | Treating this catalog as a reason to add machinery before proving the smaller system cannot work. |
+| Prompt chaining | A task is naturally staged and each stage has a checkable artifact. | Stage schema, acceptance check per stage, trace link from input to output. | Long opaque chains where stage outputs are not validated. |
+| Routing | Inputs should go to different models, tools, skills, queues, or policies. | Typed route set, route confidence/reason, safe default, eval cases, trace. | Brittle keyword routers for open-ended intent. Routing is good when semantic, typed, observed, and tested. |
+| Parallelization | Independent subtasks can run without sharing mutable state. | Disjoint ownership, merge protocol, per-slice tests, conflict handling, synthesis step. | Two agents editing the same file/contract without an integrator. |
+| Reflection / evaluator-optimizer | Output quality depends on critique and revision. | Explicit rubric, separate critique artifact, max iterations, stop condition, verification tool. | Infinite self-critique or self-approval without external tests/evidence. |
+| Tool use / function calling | The agent needs to sense, calculate, mutate, or verify beyond text generation. | Tool catalog entry, input/output schema, permission, idempotency, examples, structured errors. | Broad `run(query)` tools, hidden side effects, unbounded output. |
+| Planning | The path cannot be known upfront, but progress needs control. | Plan artifact, checkpoints, replan triggers, budget, status transitions, done criteria. | Treating an initial plan as binding after observations invalidate it. |
+| Multi-agent collaboration | Separate roles need different context, tools, memory, policy, or parallel ownership. | Owner/integrator, A2A contract, disjoint write sets, handoff evidence, final synthesis. | Role-play swarms where every agent has the same context and no unique affordance. |
+| Memory management | Useful knowledge must survive beyond one inference/run. | Candidate/promote/refute/supersede states, scope, evidence, freshness, privacy. | Append-only notes, stale memory as truth, context-window-as-database. |
+| Learning / adaptation | Production traces reveal recurring model, harness, or context failures. | Trace + feedback store, triage lane, eval fixture, guarded rollout, rollback. | Agents rewriting their own policy directly from one anecdote. |
+| MCP / tool interop | External tools need discovery and typed execution across runtimes. | Namespaces, schema loading on demand, permission mapping, versioning, trace correlation. | Loading every schema into context or trusting remote tools as policy. |
+| Goal setting / monitoring | Long-running work needs measurable progress and stopping. | Goal, milestones, status, budget, checkpoint, stop/escalate rules. | Vague goals like “make it better” with no observable acceptance test. |
+| Exception handling / recovery | Tools, providers, or subagents can fail partially. | Error taxonomy, retryability, compensating action, degraded mode, escalation. | Swallowing failures or pretending partial success is complete. |
+| Human-in/on-the-loop | Risk, taste, authority, spend, or irreversibility requires review. | Approval payload, risk class, timeout behavior, audit receipt, resume checkpoint. | Asking humans for every minor decision; bypassing approval on retries. |
+| RAG / knowledge retrieval | The agent needs external evidence or long-tail domain context. | Source role, freshness, citation/evidence ids, conflict handling, retrieval evals. | Treating retrieved snippets or summaries as source of truth. |
+| A2A / inter-agent communication | One agent delegates or requests a result from another. | Request schema, response schema, ownership, allowed tools, evidence requirements, timeout. | Natural-language handoffs with no contract or state reconciliation. |
+| Resource-aware optimization | Model/tool choice must balance latency, cost, quality, quotas, and risk. | Routing policy, budgets, attribution, fallback rules, quality thresholds, trace. | Silent paid fallback or provider spillover. Cost-aware routing is good only when explicit and approved. |
+| Reasoning techniques | Hard problems need decomposition, symbolic checks, self-consistency, or program-aided reasoning. | Technique chosen deliberately, budgeted, private scratchpad policy, external verification. | Exposing hidden chain-of-thought or using extra reasoning as a substitute for tests. |
+| Guardrails / safety | The agent can harm users, data, money, policy, or production systems. | Deterministic checks, allow/deny policy, approval gate, refusal/escalation path, safety evals. | Prompt-only warnings for irreversible actions. |
+| Evaluation / monitoring | Behavior must improve or remain stable over time. | Offline evals, online traces, feedback labels, regression fixtures, dashboards/alerts. | One successful demo promoted to production truth. |
+| Prioritization | Multiple tasks, alerts, traces, or leads compete for attention. | Scoring fields, queue state, aging/priority policy, owner, audit trail. | “Most recent wins” or notification storms. |
+| Exploration / discovery | The system should look for opportunities, unknowns, or anomalies. | Sandbox lane, curiosity budget, source labels, promotion rules, review queue. | Letting exploratory hypotheses contaminate truth or production action. |
+
+## 2. Positive routing and fallback policy
+
+This guide warns against keyword routing because coding agents often replace adaptive policy with brittle branches. That warning should not be read as “routing is bad.” Routing is a first-class agentic pattern when it is a harness decision with tests.
+
+A good route decision records:
+
+- input summary and scope
+- candidate routes considered
+- selected route and reason
+- confidence / uncertainty
+- model, tool, skill, queue, or subagent chosen
+- budget/cost class
+- safe default or escalation path
+- eval case or trace id
+
+Fallback has the same rule. Fallback is allowed when it is explicit, budgeted, approved for its risk class, idempotent or replay-safe, and traceable. Silent fallback, silent provider spillover, and “try another paid model without attribution” are anti-patterns.
+
+## 3. Reflection loop for coding agents
+
+For nontrivial agentic code changes, the coding agent should not do a single draft and declare victory. Use a bounded loop:
+
+```text
+goal -> context packet -> architecture brief -> implementation slice -> critique -> verification -> integrate or stop
+```
+
+Minimum reflection checks:
+
+1. What did I delete, collapse, or make unnecessary before adding machinery?
+2. Did I preserve deterministic harness / adaptive policy boundaries?
+3. Did I introduce a keyword router, regex semantic guess, giant prompt, or hidden fallback?
+4. Are tool/CLI/file interfaces typed and machine-readable?
+5. Can another agent work on an adjacent slice without editing the same surface?
+6. Is every new memory/source/truth/write path classified?
+7. Are tests/evals tied to real incidents or realistic traces?
+8. What proof layer is still missing?
+
+Stop when acceptance evidence passes, the budget is exhausted, required information is missing, approval is required, or repeated failures show the plan needs human/integrator review.
+
+## 4. Agent-native CLI checklist
+
+A CLI is a model-facing tool surface. Design it as an API for agents, not only as a human terminal UX.
+
+Required affordances:
+
+- Non-interactive execution: `--no-input`, `--yes`/`--force`, honest non-TTY behavior, no hidden prompts.
+- Structured output: uniform `--json`, stable schemas, diagnostics on stderr, documented exit-code taxonomy.
+- Actionable errors: validate before side effects, enumerate valid values, include a corrected invocation or next step.
+- Safe mutation: `--dry-run`, explicit destructive flags, idempotency keys/natural keys, mutation responses include durable ids.
+- Bounded output: default limits, filters, pagination/cursors, truncation metadata, concise-vs-detail modes.
+- Vocabulary consistency: mechanically enforced verbs/flags such as `get`, `list`, `create`, `update`, `delete`, `--json`, `--force`, `--limit`.
+- Introspection: human `--help`, versioned machine-readable `agent-context`, and long-form skill/task manifests kept in sync with implementation.
+- Async support: `--wait`, backoff/jitter, durable job ledger, `jobs list/get/prune`, resumable submit-poll-collect flows.
+- Profiles/identity: named profiles, clear precedence (`flag > env > profile > default`), discoverable profile metadata.
+- Two-way I/O: artifact delivery targets (`stdout`, atomic file, webhook where appropriate) and a feedback command/log for agent friction.
+- Local/prod clarity: every command that can hit local or remote state must state the target clearly in output and traces.
+
+For large CLIs, enforce these from a schema/codegen layer rather than by review convention alone. The same contract should generate or validate CLI commands, SDK/API surfaces, MCP/tool schemas, docs, and skills when possible.
+
+## 5. File and knowledge-graph structure for parallel coding agents
+
+Agentic engineering changes the optimal repository shape. Human-friendly mega-files are often agent-hostile because they force unrelated edits through the same context and merge surface.
+
+Prefer small, contract-shaped slices:
+
+```text
+module/
+  AGENTS.md                # local operating rules, invariants, ownership, safe edit paths
+  public_api.py            # only supported import/call surface for other modules
+  contract.py              # typed input/output and state types
+  operations/              # one independently changeable behavior per narrow file when useful
+  policy.py                # model-owned decision wrapper, no side effects
+  harness.py               # deterministic permissions, budgets, checkpoints
+  tools.py                 # model-callable affordances and schemas
+  prompts/                 # prompt templates/versioned rubrics
+  evals/                   # fixtures, rubrics, replay cases
+  tests/                   # unit + integration coverage for this slice
+  dependency_map.json      # generated or checked map of allowed dependencies
+  README.md or lat.md refs # local decision record and ownership notes
+```
+
+Rules of thumb:
+
+- Split at stable contracts, not arbitrary line counts.
+- Each file should have one reason to change and an obvious owner/slice.
+- Make the filesystem a coordination and context layer: local `AGENTS.md`, module README/decision records, schemas, contracts, tests, generated maps, and tool definitions should tell an agent what to inspect next.
+- Keep four jobs separate: implementation, conceptual map, public dependency surface, and behavioral truth/tests. A source file should not be forced to do all four.
+- Keep deterministic harness, model policy, prompts, tools, evals, and side-effect adapters separate.
+- Avoid multi-responsibility files that become mandatory context for every task. For active hand-edited code, 150-250 lines should trigger a split review; 300+ lines is a strong smell; 500+ lines requires an explicit exception such as generated code, declarative data/config, a cohesive algorithm with tight invariants, a stable adapter/vendor boundary, or an intentional fixture/golden file.
+- Parallel work requires disjoint write sets, per-slice tests, and a named integrator for shared contracts.
+- Prefer one-agent-task-per-file when a behavior can be changed, tested, and reasoned about independently. This is not one-helper-per-file; it is one independently changeable unit per edit surface.
+- Every public seam should have a minimal test fixture and an example invocation.
+- Enforce the shape with lint rules, generators, dependency-map checks, review agents, and CI; prose-only conventions will drift back toward human-centered mega-files.
+
+`AGENTS.md` should be an index and operating contract, not the only memory of the codebase. Durable design knowledge belongs in topic docs or a markdown knowledge graph with backlinks into code and tests. A `lat.md/`-style graph is one implementation: it keeps architecture, business rules, test specs, and source references searchable and checkable while keeping root instructions short. Module-level `AGENTS.md` files can make each folder behave like a codebase skill: they describe local intent, invariants, public APIs, dependency rules, commands, and safe-edit boundaries.
+
+## 6. Context packets for coding tasks
+
+Before a coding agent edits a nontrivial agentic system, create or assemble a small context packet:
+
+```text
+task-context/
+  00_goal.md              # observable outcome and user intent
+  01_constraints.md       # permissions, budgets, source authority, adoption state
+  02_relevant_files.md    # files/symbols with why they matter
+  03_commands.md          # tests, evals, local run commands, known flakes
+  04_acceptance.md        # system acceptance test and proof layers
+  05_risks.md             # side effects, privacy/security, fallback/rollback
+```
+
+The packet is not a second giant prompt. It is a scoped working set that can be handed to the main agent, subagent, or integrator. Keep it short, addressable, and updated when the plan changes.
+
+## 7. Feedback-powered learning loop
+
+Observability is incomplete without feedback. A trace says what happened; feedback says whether it was useful, accepted, rejected, inefficient, risky, or wrong.
+
+Store feedback with traces at three levels:
+
+- Model behavior: wrong classification, bad synthesis, missing constraint.
+- Harness behavior: bad tool schema, missing read-before-write gate, wrong retry/fallback policy.
+- Context behavior: missing retrieval, stale memory, excessive context, wrong source authority.
+
+Useful feedback can be direct user input, indirect product signals (accepted/reverted diffs, tests passing after edits, repeated user correction), generated judge labels, or deterministic rules. Do not let feedback mutate production policy directly. Route it through triage, fixture/eval creation, guarded rollout, and rollback.
+
+## 8. Sources that motivated this catalog
+
+- Antonio Gulli, *Agentic Design Patterns: A Hands-On Guide to Building Intelligent Systems*.
+- Trevin Chow, “10 Principles for Agent-Native CLIs.”
+- Cloudflare, “Building a CLI for all of Cloudflare.”
+- Harrison Chase / LangChain, “Agent observability needs feedback to power learning.”
+- `lat.md`, “Agent Lattice: a knowledge graph for your codebase, written in markdown.”
+- Rob Leclerc, “Agentic Engineering Should Change How We Structure Code” (X article preview/title available publicly; full text requires X article access in this session).
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/agentic-pattern-catalog.md" -->
 
 ### File: `docs/agentic-systems-engineering.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-systems-engineering.md" sha256="40b1b17398db694e8e6f75e5b0a8684be4f84ae8ec2b56918e35690881f25506" bytes="61345" trailing_newline="true" -->
-`````````` markdown
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-systems-engineering.md" sha256="2aaf243f4ab4b17b374607162fb2ce62a911a987e74c0e57825090b395334edb" bytes="59324" trailing_newline="true" -->
+````````
 # Engineering Agentic Systems: Orientation for Codex, Claude Code, and Other Coding Agents
 
 Version: 2.0
@@ -2872,7 +4823,19 @@ Use model-driven or agent-driven behavior for the policy:
 
 A good agentic system is not “less deterministic.” It is deterministic in the places that must be reliable and adaptive in the places where the environment, task, or information path cannot be known ahead of time.
 
-The same split applies to debugging. A proximate cause explains the immediate breakage; an ultimate cause explains the missing contract that let the breakage matter. Do not stop at "the timeout fired," "the parser failed," "the router chose the wrong branch," or "the subagent lacked context." Ask which memory, context, tool contract, source-authority rule, durable-state boundary, ownership rule, guardrail, or eval should have prevented or exposed the failure.
+### 1.1 Simplicity before machinery
+
+Simplicity is a non-negotiable architectural constraint. Agentic codebases can blow up faster than ordinary codebases because every added layer becomes context for future agents, a merge surface for parallel sessions, and another state or policy boundary that can go stale.
+
+Run this order before implementing architecture:
+
+1. Question the requirement: is it stale, over-broad, or assigned to the wrong layer?
+2. Delete unnecessary parts, states, handoffs, prompts, queues, policies, and processes.
+3. Ask whether better context, clearer tools, source authority, or feedback would let the agent do the right thing without new control machinery.
+4. Simplify the remaining design.
+5. Optimize, accelerate, and automate only after the simpler design is correct.
+
+Do not accept complexity just because the visible benefit appears slightly larger than the visible cost. Hidden costs dominate: maintenance, coordination, context bloat, eval growth, false confidence, race surfaces, and downstream refactors. The benefit of complexity must be much greater than the cost you can currently measure.
 
 ---
 
@@ -2899,7 +4862,6 @@ Common bad substitutions:
 | Learn a reusable procedure | Add another special-case branch |
 | Delegate to specialist behavior | Add one more giant prompt and tool list to the main agent |
 | Evaluate quality | Check only that code compiles |
-| Find root cause | Report the first proximate cause without tracing the missing system contract |
 
 The correct implementation looks more like this:
 
@@ -3045,6 +5007,7 @@ Backpressure/budget/fallback requirements:
 Adoption state and rollback:
 System acceptance test:
 Tests/evals to add or update:
+Deletion/simplification pass:
 Known proof gaps:
 ```
 
@@ -4197,8 +6160,6 @@ Split into multiple agents only when at least one of these is true:
 - specialist evaluation is needed
 - ownership or permissions differ
 
-When a multi-agent system fails, do not patch the nearest subagent prompt and stop. Trace the causal ladder across parent, dispatcher, child agent, tool, state store, memory, source authority, and final output. If several agents need the same local patch, the ultimate cause is usually a missing shared contract or eval at the coordination layer.
-
 ### 14.1 Common patterns
 
 #### Manager with agents-as-tools
@@ -4236,7 +6197,6 @@ Avoid:
 - no budget per agent
 - no clear authority for final answer
 - hidden side effects from child agents
-- local edge-case patches instead of shared contracts
 
 ---
 
@@ -4260,7 +6220,6 @@ For agentic changes, add or update evals for:
 - recovery from tool failure
 - context budget behavior
 - final answer faithfulness to evidence
-- causal-depth behavior for incidents and regressions
 - latency and cost
 
 ### 15.2 Offline evals
@@ -4473,30 +6432,6 @@ Better:
 - split only for tool, policy, memory, context, or ownership reasons
 - structured subagent outputs
 - parent trace links
-
-### 16.9 Aggressive timeouts on reasoning calls
-
-This is the single most common cause of intermittent agent failures that look like "the model is broken." A client-side timeout fires mid-thinking, the harness sees an exception, the agent retries, and the same wall hits again. Reasoning/thinking lanes (extended-thinking Claude, OpenAI o-series, MiniMax-M2.7 on hard turns, DeepSeek R1, etc.) routinely take 30 seconds to 10 minutes for a single turn. Timeouts calibrated to chat-model latency will not survive contact with them.
-
-Bad:
-
-- a uniform 30s or 60s HTTP client timeout applied to every model call
-- a tool wrapper that buries `timeout=60` as a constant around a reasoning model
-- exponential-backoff retries with a low total budget cap that converges back into the same too-short window
-- one timeout number used for connect, read, and idle alike
-- treating a timeout-induced failure as a model error and tuning prompts instead of timeouts
-
-Better:
-
-- size each tool's timeout to the slowest realistic call on its lane, not the median
-- for reasoning/thinking lanes, default to a 5–10 minute total budget and confirm the upstream API actually supports it
-- prefer streaming with an idle-timeout (no tokens for N seconds) over total-duration timeouts; a 4-minute thinking turn that emits a token every 10 seconds should not be killed by a 90-second deadline
-- distinguish connect, read, and idle timeouts in the HTTP client; one number for all three is a leaky abstraction
-- when a tool wraps a model call, surface the upstream timeout as an explicit field in its contract — do not bury a constant inside the wrapper, and do not let `latency_expectation: low|medium|high` substitute for a real number
-- log when a timeout fires and capture how much progress was made; a turn that died at 95% of its budget needs a different fix than one that died before the first byte
-- when escalating from a fast lane to a reasoning lane, raise the timeout on the same edge that raises the model — escalation without timeout escalation just produces faster failures
-
-Calibrate timeouts to the slowest lane the harness actually uses, then forget about them.
 
 ---
 
@@ -4976,314 +6911,13 @@ For operating systems, the durable chain is:
 source -> identity -> claim -> authority -> contradiction -> synthesis -> action -> follow-up -> learning
 ```
 ```
-``````````
+````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/agentic-systems-engineering.md" -->
-
----
-
-### File: `docs/agentic-pattern-catalog.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-pattern-catalog.md" sha256="a1aab1a86a5df2ac0e247fd33760247ec0c0eedd7694358676de4c30742fdea1" bytes="15046" trailing_newline="true" -->
-`````````` markdown
-# Agentic Pattern Catalog
-
-Use this catalog when a coding agent is about to add, refactor, or review agent behavior. The goal is not to add every pattern everywhere. The goal is to choose the smallest pattern that preserves this guide's core contract:
-
-```text
-Deterministic harness. Adaptive policy.
-```
-
-The pattern is the *shape of the harness*. It must still have typed contracts, traces, budgets, permission gates, source-authority boundaries, and evals.
-
-## 1. Pattern-selection matrix
-
-| Pattern | Use when | Harness contract | Avoid / failure mode |
-|---|---|---|---|
-| Prompt chaining | A task is naturally staged and each stage has a checkable artifact. | Stage schema, acceptance check per stage, trace link from input to output. | Long opaque chains where stage outputs are not validated. |
-| Routing | Inputs should go to different models, tools, skills, queues, or policies. | Typed route set, route confidence/reason, safe default, eval cases, trace. | Brittle keyword routers for open-ended intent. Routing is good when semantic, typed, observed, and tested. |
-| Parallelization | Independent subtasks can run without sharing mutable state. | Disjoint ownership, merge protocol, per-slice tests, conflict handling, synthesis step. | Two agents editing the same file/contract without an integrator. |
-| Reflection / evaluator-optimizer | Output quality depends on critique and revision. | Explicit rubric, separate critique artifact, max iterations, stop condition, verification tool. | Infinite self-critique or self-approval without external tests/evidence. |
-| Tool use / function calling | The agent needs to sense, calculate, mutate, or verify beyond text generation. | Tool catalog entry, input/output schema, permission, idempotency, examples, structured errors. | Broad `run(query)` tools, hidden side effects, unbounded output. |
-| Planning | The path cannot be known upfront, but progress needs control. | Plan artifact, checkpoints, replan triggers, budget, status transitions, done criteria. | Treating an initial plan as binding after observations invalidate it. |
-| Multi-agent collaboration | Separate roles need different context, tools, memory, policy, or parallel ownership. | Owner/integrator, A2A contract, disjoint write sets, handoff evidence, final synthesis. | Role-play swarms where every agent has the same context and no unique affordance. |
-| Memory management | Useful knowledge must survive beyond one inference/run. | Candidate/promote/refute/supersede states, scope, evidence, freshness, privacy. | Append-only notes, stale memory as truth, context-window-as-database. |
-| Learning / adaptation | Production traces reveal recurring model, harness, or context failures. | Trace + feedback store, triage lane, eval fixture, guarded rollout, rollback. | Agents rewriting their own policy directly from one anecdote. |
-| MCP / tool interop | External tools need discovery and typed execution across runtimes. | Namespaces, schema loading on demand, permission mapping, versioning, trace correlation. | Loading every schema into context or trusting remote tools as policy. |
-| Goal setting / monitoring | Long-running work needs measurable progress and stopping. | Goal, milestones, status, budget, checkpoint, stop/escalate rules. | Vague goals like “make it better” with no observable acceptance test. |
-| Exception handling / recovery | Tools, providers, or subagents can fail partially. | Error taxonomy, retryability, compensating action, degraded mode, escalation. | Swallowing failures or pretending partial success is complete. |
-| Human-in/on-the-loop | Risk, taste, authority, spend, or irreversibility requires review. | Approval payload, risk class, timeout behavior, audit receipt, resume checkpoint. | Asking humans for every minor decision; bypassing approval on retries. |
-| RAG / knowledge retrieval | The agent needs external evidence or long-tail domain context. | Source role, freshness, citation/evidence ids, conflict handling, retrieval evals. | Treating retrieved snippets or summaries as source of truth. |
-| A2A / inter-agent communication | One agent delegates or requests a result from another. | Request schema, response schema, ownership, allowed tools, evidence requirements, timeout. | Natural-language handoffs with no contract or state reconciliation. |
-| Resource-aware optimization | Model/tool choice must balance latency, cost, quality, quotas, and risk. | Routing policy, budgets, attribution, fallback rules, quality thresholds, trace. | Silent paid fallback or provider spillover. Cost-aware routing is good only when explicit and approved. |
-| Reasoning techniques | Hard problems need decomposition, symbolic checks, self-consistency, or program-aided reasoning. | Technique chosen deliberately, budgeted, private scratchpad policy, external verification. | Exposing hidden chain-of-thought or using extra reasoning as a substitute for tests. |
-| Guardrails / safety | The agent can harm users, data, money, policy, or production systems. | Deterministic checks, allow/deny policy, approval gate, refusal/escalation path, safety evals. | Prompt-only warnings for irreversible actions. |
-| Evaluation / monitoring | Behavior must improve or remain stable over time. | Offline evals, online traces, feedback labels, regression fixtures, dashboards/alerts. | One successful demo promoted to production truth. |
-| Prioritization | Multiple tasks, alerts, traces, or leads compete for attention. | Scoring fields, queue state, aging/priority policy, owner, audit trail. | “Most recent wins” or notification storms. |
-| Exploration / discovery | The system should look for opportunities, unknowns, or anomalies. | Sandbox lane, curiosity budget, source labels, promotion rules, review queue. | Letting exploratory hypotheses contaminate truth or production action. |
-
-## 2. Positive routing and fallback policy
-
-This guide warns against keyword routing because coding agents often replace adaptive policy with brittle branches. That warning should not be read as “routing is bad.” Routing is a first-class agentic pattern when it is a harness decision with tests.
-
-A good route decision records:
-
-- input summary and scope
-- candidate routes considered
-- selected route and reason
-- confidence / uncertainty
-- model, tool, skill, queue, or subagent chosen
-- budget/cost class
-- safe default or escalation path
-- eval case or trace id
-
-Fallback has the same rule. Fallback is allowed when it is explicit, budgeted, approved for its risk class, idempotent or replay-safe, and traceable. Silent fallback, silent provider spillover, and “try another paid model without attribution” are anti-patterns.
-
-## 3. Reflection loop for coding agents
-
-For nontrivial agentic code changes, the coding agent should not do a single draft and declare victory. Use a bounded loop:
-
-```text
-goal -> context packet -> architecture brief -> implementation slice -> critique -> verification -> integrate or stop
-```
-
-Minimum reflection checks:
-
-1. Did I preserve deterministic harness / adaptive policy boundaries?
-2. Did I introduce a keyword router, regex semantic guess, giant prompt, or hidden fallback?
-3. Are tool/CLI/file interfaces typed and machine-readable?
-4. Can another agent work on an adjacent slice without editing the same surface?
-5. Is every new memory/source/truth/write path classified?
-6. Are tests/evals tied to real incidents or realistic traces?
-7. What proof layer is still missing?
-
-Stop when acceptance evidence passes, the budget is exhausted, required information is missing, approval is required, or repeated failures show the plan needs human/integrator review.
-
-## 4. Agent-native CLI checklist
-
-A CLI is a model-facing tool surface. Design it as an API for agents, not only as a human terminal UX.
-
-Required affordances:
-
-- Non-interactive execution: `--no-input`, `--yes`/`--force`, honest non-TTY behavior, no hidden prompts.
-- Structured output: uniform `--json`, stable schemas, diagnostics on stderr, documented exit-code taxonomy.
-- Actionable errors: validate before side effects, enumerate valid values, include a corrected invocation or next step.
-- Safe mutation: `--dry-run`, explicit destructive flags, idempotency keys/natural keys, mutation responses include durable ids.
-- Bounded output: default limits, filters, pagination/cursors, truncation metadata, concise-vs-detail modes.
-- Vocabulary consistency: mechanically enforced verbs/flags such as `get`, `list`, `create`, `update`, `delete`, `--json`, `--force`, `--limit`.
-- Introspection: human `--help`, versioned machine-readable `agent-context`, and long-form skill/task manifests kept in sync with implementation.
-- Async support: `--wait`, backoff/jitter, durable job ledger, `jobs list/get/prune`, resumable submit-poll-collect flows.
-- Profiles/identity: named profiles, clear precedence (`flag > env > profile > default`), discoverable profile metadata.
-- Two-way I/O: artifact delivery targets (`stdout`, atomic file, webhook where appropriate) and a feedback command/log for agent friction.
-- Local/prod clarity: every command that can hit local or remote state must state the target clearly in output and traces.
-
-For large CLIs, enforce these from a schema/codegen layer rather than by review convention alone. The same contract should generate or validate CLI commands, SDK/API surfaces, MCP/tool schemas, docs, and skills when possible.
-
-## 5. File and knowledge-graph structure for parallel coding agents
-
-Agentic engineering changes the optimal repository shape. Human-friendly mega-files are often agent-hostile because they force unrelated edits through the same context and merge surface.
-
-Prefer small, contract-shaped slices:
-
-```text
-module/
-  AGENTS.md                # local operating rules, invariants, ownership, safe edit paths
-  public_api.py            # only supported import/call surface for other modules
-  contract.py              # typed input/output and state types
-  operations/              # one independently changeable behavior per narrow file when useful
-  policy.py                # model-owned decision wrapper, no side effects
-  harness.py               # deterministic permissions, budgets, checkpoints
-  tools.py                 # model-callable affordances and schemas
-  prompts/                 # prompt templates/versioned rubrics
-  evals/                   # fixtures, rubrics, replay cases
-  tests/                   # unit + integration coverage for this slice
-  dependency_map.json      # generated or checked map of allowed dependencies
-  README.md or lat.md refs # local decision record and ownership notes
-```
-
-Rules of thumb:
-
-- Split at stable contracts, not arbitrary line counts.
-- Each file should have one reason to change and an obvious owner/slice.
-- Make the filesystem a coordination and context layer: local `AGENTS.md`, module README/decision records, schemas, contracts, tests, generated maps, and tool definitions should tell an agent what to inspect next.
-- Keep four jobs separate: implementation, conceptual map, public dependency surface, and behavioral truth/tests. A source file should not be forced to do all four.
-- Keep deterministic harness, model policy, prompts, tools, evals, and side-effect adapters separate.
-- Avoid multi-responsibility files that become mandatory context for every task. For active hand-edited code, 150-250 lines should trigger a split review; 300+ lines is a strong smell; 500+ lines requires an explicit exception such as generated code, declarative data/config, a cohesive algorithm with tight invariants, a stable adapter/vendor boundary, or an intentional fixture/golden file.
-- Parallel work requires disjoint write sets, per-slice tests, and a named integrator for shared contracts.
-- Prefer one-agent-task-per-file when a behavior can be changed, tested, and reasoned about independently. This is not one-helper-per-file; it is one independently changeable unit per edit surface.
-- Every public seam should have a minimal test fixture and an example invocation.
-- Enforce the shape with lint rules, generators, dependency-map checks, review agents, and CI; prose-only conventions will drift back toward human-centered mega-files.
-
-`AGENTS.md` should be an index and operating contract, not the only memory of the codebase. Durable design knowledge belongs in topic docs or a markdown knowledge graph with backlinks into code and tests. A `lat.md/`-style graph is one implementation: it keeps architecture, business rules, test specs, and source references searchable and checkable while keeping root instructions short. Module-level `AGENTS.md` files can make each folder behave like a codebase skill: they describe local intent, invariants, public APIs, dependency rules, commands, and safe-edit boundaries.
-
-## 6. Context packets for coding tasks
-
-Before a coding agent edits a nontrivial agentic system, create or assemble a small context packet:
-
-```text
-task-context/
-  00_goal.md              # observable outcome and user intent
-  01_constraints.md       # permissions, budgets, source authority, adoption state
-  02_relevant_files.md    # files/symbols with why they matter
-  03_commands.md          # tests, evals, local run commands, known flakes
-  04_acceptance.md        # system acceptance test and proof layers
-  05_risks.md             # side effects, privacy/security, fallback/rollback
-```
-
-The packet is not a second giant prompt. It is a scoped working set that can be handed to the main agent, subagent, or integrator. Keep it short, addressable, and updated when the plan changes.
-
-## 7. Feedback-powered learning loop
-
-Observability is incomplete without feedback. A trace says what happened; feedback says whether it was useful, accepted, rejected, inefficient, risky, or wrong.
-
-Store feedback with traces at three levels:
-
-- Model behavior: wrong classification, bad synthesis, missing constraint.
-- Harness behavior: bad tool schema, missing read-before-write gate, wrong retry/fallback policy.
-- Context behavior: missing retrieval, stale memory, excessive context, wrong source authority.
-
-Useful feedback can be direct user input, indirect product signals (accepted/reverted diffs, tests passing after edits, repeated user correction), generated judge labels, or deterministic rules. Do not let feedback mutate production policy directly. Route it through triage, fixture/eval creation, guarded rollout, and rollback.
-
-## 8. Sources that motivated this catalog
-
-- Antonio Gulli, *Agentic Design Patterns: A Hands-On Guide to Building Intelligent Systems*.
-- Trevin Chow, “10 Principles for Agent-Native CLIs.”
-- Cloudflare, “Building a CLI for all of Cloudflare.”
-- Harrison Chase / LangChain, “Agent observability needs feedback to power learning.”
-- `lat.md`, “Agent Lattice: a knowledge graph for your codebase, written in markdown.”
-- Rob Leclerc, “Agentic Engineering Should Change How We Structure Code” (X article preview/title available publicly; full text requires X article access in this session).
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path="docs/agentic-pattern-catalog.md" -->
-
----
-
-### File: `docs/tool-design.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/tool-design.md" sha256="a64f361ba3d00619ae6076efdd52b477a8f103f5286490b03f4793062973cf98" bytes="3336" trailing_newline="true" -->
-`````````` markdown
-# Tool Design for Agentic Systems
-
-A tool is an affordance exposed to the model. Do not treat tools as ordinary internal helper functions. Tools need semantic contracts because the model decides when and how to call them.
-
-Every model-callable tool requires:
-
-- name
-- description for the model
-- purpose
-- when to use
-- when not to use
-- input schema
-- output schema
-- side-effect class
-- permission level
-- idempotency policy
-- examples
-- misuse examples
-- failure modes
-- trace fields
-- eval cases
-
-Bad tool designs are vague, overly broad, unsafe, or hard to recover from. A tool called `run(query: string)` is usually too broad. A tool called `search_company_memory(query, company_id, limit, freshness)` is usually better.
-
-Side-effect classes:
-
-- `none`: pure computation or formatting
-- `read`: reads local or external state
-- `write`: writes local workspace state
-- `external_write`: sends or mutates external systems
-- `destructive`: deletes, overwrites, spends money, changes permissions, or causes irreversible effects
-
-Rules:
-
-- External writes require idempotency keys.
-- Destructive tools require human approval unless explicitly whitelisted.
-- Tools return structured errors; they do not silently swallow failure.
-- Tool outputs should be concise, typed, and traceable.
-- Tool descriptions should explain boundaries and examples, not only parameters.
-
-Use `.agentic/tool_catalog.yaml` as the source of truth.
-
-## Source-Aware Tools
-
-Tools that read evidence should declare source role and freshness. Tools that write or publish should declare authority, approval, idempotency, undo strategy, and whether the output is truth, synthesis, candidate signal, or outbound artifact.
-
-A model-friendly tool description should say when not to use the tool. For example, a search index can retrieve evidence, but it should not be described as deciding which source wins. A report renderer can create synthesis, but it should not silently promote the report back into durable truth.
-
-## Agent-Native CLI Surfaces
-
-A CLI that agents call is a tool API. It should not depend on human patience, terminal prompts, colored tables, or undocumented conventions.
-
-Required CLI affordances:
-
-- Non-interactive mode for every command that can prompt: `--no-input`, `--yes`/`--force`, and correct non-TTY behavior.
-- Uniform structured output: `--json` for data, diagnostics on stderr, stable schemas, and documented exit codes.
-- Actionable validation errors: reject before side effects, enumerate valid enum/resource values, and provide a next invocation when possible.
-- Safe writes: `--dry-run`, explicit destructive flags, idempotency keys or natural keys, and durable resource ids in mutation responses.
-- Bounded reads: `--limit`, filters, cursors, truncation metadata, and concise-vs-detail modes.
-- Introspection: `--help` for humans, versioned machine-readable `agent-context` for agents, and skill/task manifests for workflows.
-- Async recovery: `--wait`, durable job ledger, and `jobs list/get/prune` for in-flight work.
-- Target clarity: local vs. remote/prod target shown in output and traces.
-- Feedback channel: a local and optionally upstream `feedback` path for agent friction reports.
-
-For broad CLIs, enforce naming and behavior from a schema/codegen layer so CLI, SDK, MCP/tool definitions, docs, and skills do not drift.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path="docs/tool-design.md" -->
-
----
-
-### File: `docs/memory-architecture.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/memory-architecture.md" sha256="fa484a8d62855c26786368c18f4c055e87479beb2ebc2ce1fe01e40456343312" bytes="1795" trailing_newline="true" -->
-`````````` markdown
-# Memory Architecture for Agentic Systems
-
-Context is what the model sees now. Memory is durable information outside the immediate prompt that can be searched, inspected, updated, promoted, contradicted, or expired.
-
-Use four memory types:
-
-- working memory: current task state, plan, open questions, active artifacts
-- episodic memory: prior actions, conversations, decisions, traces, outcomes
-- semantic memory: durable facts about users, projects, companies, codebase, and policies
-- procedural memory: reusable methods, workflows, skills, and instructions
-
-Memory is not an append-only text file. Every durable memory should have scope, evidence, confidence, recency, sensitivity, and status.
-
-Minimum memory tools:
-
-- `memory_search`
-- `memory_get`
-- `memory_write_candidate`
-- `memory_promote`
-- `memory_update`
-- `memory_refute`
-- `memory_supersede`
-- `memory_forget_or_expire`
-- `memory_trace_usage`
-
-Policy:
-
-- The agent can search memory when prior context is likely relevant.
-- The agent can propose memory writes.
-- Promotion requires evidence and policy approval.
-- Contradicted memories must not be silently overwritten.
-- Sensitive memory has stricter review and deletion rules.
-- Final outputs relying on memory should be traceable to memory ids.
-
-Use `.agentic/memory_schema.yaml` as the source of truth.
-
-## Truth Boundaries
-
-Memory is not automatically the source of truth. Separate durable recall, semantic memory, structured truth, retrieval indexes, source records, synthesis artifacts, and candidate signals.
-
-When a memory is used to answer a high-stakes question, the system should expose its source authority and freshness. If memory conflicts with live primary evidence, prefer the policy-defined authority path and mark the conflict rather than overwriting silently.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path="docs/memory-architecture.md" -->
-
----
 
 ### File: `docs/context-engineering.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/context-engineering.md" sha256="4683e02a659f84dfa5ba795ea44108009da302c4ca9e9b05a0076ad8dc2e7e9a" bytes="2788" trailing_newline="true" -->
-`````````` markdown
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/context-engineering.md" sha256="5d352341c65c09b27f27741d75d14c35dd88b67c84a73d6c0d5d7a205b3a65ef" bytes="1741" trailing_newline="true" -->
+````````
 # Context Engineering for Agentic Systems
 
 The context engine decides what enters the model prompt. Larger context windows do not remove the need for selection, compression, and provenance.
@@ -5322,875 +6956,185 @@ Use `.agentic/context_policy.yaml` as the source of truth.
 The context engine should include a source ledger for every run. The ledger should identify which source records, memories, synthesis artifacts, tool schemas, skills, and files were loaded; why they were loaded; their freshness; and whether they are authoritative, retrieval-only, recall, synthesis, or candidate material.
 
 Compaction must preserve source handles, identity decisions, unresolved contradictions, approval constraints, and attention policy. A short summary that loses those identifiers is not safe context.
-
-## Worked example: lazy-load category indexes
-
-A common bootstrap anti-pattern is treating a "comprehensive reference doc" as bootstrap material when its content is actually a category index — many distinct lanes/integrations/tools each described in their own section. Bootstrap pays the cost of every byte on every turn, and crowds out the tokens that should be carrying the live task. The fix:
-
-- Split the monolith into per-member sub-docs (one file per lane).
-- Replace the original doc with a thin index (one line per member + path).
-- Add a retriever boost so a query like "Brex spend by category" surfaces `tools/gaia-brex.md` ahead of any larger general doc that mentions Brex in passing.
-
-The diagnostic: if a doc has many `## Header` sections each describing a distinct member of a category, it is a category index masquerading as a single coherent reference. Treat the index as bootstrap; treat each member as lazy-load. Detail and a worked refactor (TOOLS.md, Gaia, May 2026): `docs/agentic-coding-for-agentic-systems.md` § 5.2.1.
-``````````
+````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/context-engineering.md" -->
 
+### File: `docs/cost-aware-routing.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/cost-aware-routing.md" sha256="f699d090bbc0f2bceb41aafbef99a57182f5814fb1eab60370689762707d15f4" bytes="5318" trailing_newline="true" -->
+````````
+# Cost-aware routing
+
+Version: 1.0
+Audience: coding agents and operators of agentic systems with multiple model lanes or paid providers.
+
+Attention budgets cover human attention. Spend authority covers paid API keys. Cost-aware routing covers the runtime decision: given a task, which lane runs it.
+
 ---
 
-### File: `docs/skills.md`
+## 1. Lanes
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/skills.md" sha256="cc68b3f135913c077501bf75d58eaa903ebab5c52ecd2c203d43461e4ae27cbe" bytes="1266" trailing_newline="true" -->
-`````````` markdown
-# Skills for Agentic Systems
-
-A skill is reusable procedural knowledge. It usually contains `SKILL.md` plus optional examples, scripts, templates, fixtures, references, or tests.
-
-Use a skill when the task is a reusable way of doing work, not merely a one-off branch.
-
-Skill package structure:
+A long-lived agentic system typically has at least three lanes available.
 
 ```text
-skill-name/
-  SKILL.md
-  examples/
-  scripts/
-  templates/
-  tests/
-  references/
+default lane    cheaper, faster, broadly capable. Used for the bulk of
+                routine work. Token cost per task is low; capability
+                ceiling is moderate.
+
+escalated lane  more expensive, more capable on hard tasks, often slower.
+                Used when task difficulty, evidence sensitivity, or
+                consequence severity justifies the cost.
+
+degraded lane   cheapest, possibly local, possibly cached. Used when the
+                default lane is unavailable or budget is exhausted, and
+                when a degraded result is acceptable. See
+                docs/exception-taxonomy.md.
 ```
 
-A skill should specify:
-
-- name
-- description
-- when to use
-- when not to use
-- prerequisites
-- procedure
-- output contract
-- examples
-- eval or review checklist
-
-Keep root instructions short. Put detailed procedures in skills so they load only when relevant.
-
-Initial skills in this pack:
-
-- `design-agent-tool`
-- `design-agent-memory`
-- `design-context-engine`
-- `build-agent-eval`
-- `review-agentic-architecture`
-
-## Skills For Operating Systems
-
-Skills should package procedures that prevent architectural drift: designing source lanes, reviewing identity resolution, creating eval cases, writing source-authority policies, and auditing adoption-state changes.
-
-A skill may reference examples, scripts, templates, fixtures, and tests. Prefer a skill when the repo needs a repeatable way to do a class of work, rather than adding another long instruction to a root prompt.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path="docs/skills.md" -->
+Real systems often have more lanes (a coding-specific lane, a vision lane, a long-context lane), but the routing doctrine is the same.
 
 ---
 
-### File: `docs/durable-execution.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/durable-execution.md" sha256="ff6f53b55383976ddcf89a1160b166afc3ceb62c3ff673a7cb852931d92e2dc6" bytes="1276" trailing_newline="true" -->
-`````````` markdown
-# Durable Execution for Agentic Systems
-
-Long-running agents must survive interruption, retry, human review, and replay.
-
-Checkpoint after meaningful steps. A checkpoint should include:
-
-- task id
-- thread/session id
-- step number
-- current plan
-- compacted transcript or message state
-- retrieved memory ids
-- tool calls and results
-- pending approvals
-- artifacts
-- budget usage
-- side-effect ids
-- trace ids
-
-Replay must not duplicate side effects. External writes require idempotency keys. Nondeterministic operations and side-effecting tools should be wrapped so they can be resumed safely.
-
-Stop conditions:
-
-- final answer validated
-- task completed
-- missing required information
-- human approval required
-- budget exhausted
-- repeated failure detected
-- safety boundary reached
-
-Durability is harness-owned, not model-owned.
-
-## Durable Authority And Adoption
-
-Checkpoint not only tool calls, but also source-authority decisions, identity merges, attention gates, approvals, and adoption-state changes.
-
-Replay must not duplicate external side effects, re-promote a candidate claim, re-run a write-enabled sidecar without idempotency, or turn a shadow-mode result into production state. Adoption transitions should be explicit, logged, and reversible where possible.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path="docs/durable-execution.md" -->
-
----
-
-### File: `docs/evals.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/evals.md" sha256="3a63fab6cb65308283c1741bee734d81e8be8d17b0dbe40afeb7cdc596ee3b27" bytes="3104" trailing_newline="true" -->
-`````````` markdown
-# Evals for Agentic Systems
-
-Agentic evals test behavior, not only syntax.
-
-Evaluate:
-
-- tool choice
-- memory retrieval
-- memory write quality
-- context compaction
-- skill use
-- human approval gates
-- side-effect safety
-- failure recovery
-- stop conditions
-- final answer quality and evidence
-
-Use positive and negative cases. A negative case proves the agent does not call a risky tool, does not use stale memory, does not bypass approval, or does not fall back to keyword routing.
-
-When a real incident exists, make it the fixture. Sanitize logs or traces if needed, but preserve the causal shape: inputs, context, tool calls, state, side effects, failures, and expected recovery. Synthetic cases are useful after the incident replay exists; they should not replace it.
-
-Incident evals should capture the causal ladder, not only the failing output. The expected result should identify the proximate cause, the deeper missing contract, and the harness or coordination layer that must change.
-
-For prompt, skill, workflow, or agent-behavior changes intended to alter live behavior, require a live-safe end-to-end run, replay, shadow run, or forensics-backed verification. If not run, mark the layer as a known gap rather than calling the change done.
-
-A useful eval trace captures:
-
-- context items included
-- tool summaries shown
-- skill summaries shown
-- memory ids retrieved
-- action chosen
-- tool args
-- tool result
-- state diff
-- approval status
-- checkpoint id
-- evaluator result
-
-## Operating-System Evals
-
-Add evals for source conflict handling, stale evidence, identity resolution, bad merge prevention, synthesis-not-truth boundaries, noisy-lane promotion, attention-budget behavior, adoption-state promotion, backpressure behavior, paid-fallback denial, claim/state reconciliation, and manual-proof-vs-autonomous-proof acceptance.
-
-A good eval asks whether the system chose the right authority and posture, not only whether it called the right tool.
-
-## Pattern and Coding-Agent Evals
-
-Add eval cases for the agentic patterns that commonly regress in coding-agent work:
-
-- **Routing evals:** ambiguous user goals should choose the right semantic route, record confidence/reason, and use a safe default when uncertain; negative cases should reject keyword-only routing.
-- **Fallback evals:** provider/tool fallback should be denied unless explicitly budgeted, approved, attributed, traceable, and replay-safe.
-- **CLI affordance evals:** agent-facing CLIs should run headlessly, emit JSON, bound output, expose dry-run/idempotency, return actionable errors, and support introspection.
-- **Parallel-slice evals:** multi-agent coding work should have disjoint write sets, small contract-shaped files, per-slice tests, and integrator-owned shared contracts.
-- **Reflection evals:** self-critique should find harness/policy boundary violations, but readiness must depend on external tests/evals/traces rather than self-judgment.
-- **Learning-loop evals:** production feedback should become trace labels, fixtures, rules, or review queues before it changes prompts, memory, routing, or tool policy.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path="docs/evals.md" -->
-
----
-
-### File: `docs/subagents.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/subagents.md" sha256="57e629f9bc29259cf8fcf52837774fd10a6207b31c507e537ab40bbbc9e5a397" bytes="1044" trailing_newline="true" -->
-`````````` markdown
-# Subagents
-
-Use subagents for isolation, specialization, or context control. Do not add multiple agents just to imitate an org chart.
-
-Add a subagent when at least one is true:
-
-- It needs different tools.
-- It needs different instructions.
-- It needs separate memory scope.
-- It needs a separate context window.
-- It benefits from parallel exploration.
-- The main agent should stay in control while delegating bounded work.
-- Human approval or compliance policy differs by role.
-
-Every subagent needs:
-
-- name
-- purpose
-- allowed tools
-- forbidden tools
-- memory scope
-- context policy
-- return contract
-- eval cases
-
-## Subagents Versus Independent Coding Agents
-
-A subagent is part of one run and returns to a parent controller. Independent coding agents or sessions require a separate coordination protocol: one integrator, contributor proposals, file ownership, and one final verification owner.
-
-Do not let multiple agents mutate the same source-of-truth files, runtime config, or generated artifacts without an explicit ownership plan.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path="docs/subagents.md" -->
-
----
-
-### File: `.agentic/context_policy.yaml`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/context_policy.yaml" sha256="c7ee70831d13f74af3b00f6218e7d8bba412f9f26977af4eb6e03c20018568d6" bytes="835" trailing_newline="true" -->
-`````````` yaml
-budget:
-  max_context_tokens: 120000
-  reserved_for_response: 8000
-  reserved_for_tool_results: 20000
-always_include:
-  - root_instructions
-  - current_user_request
-  - active_task_state
-  - safety_policy
-  - source_authority_summary
-include_by_retrieval:
-  - semantic_memory
-  - episodic_memory
-  - source_records
-  - relevant_files
-  - prior_artifacts
-include_by_activation:
-  - full_tool_schema
-  - full_skill_body
-  - long_reference_docs
-compaction:
-  trigger_at_context_fraction: 0.75
-  preserve:
-    - user_goal
-    - constraints
-    - open_questions
-    - decisions
-    - evidence
-    - source_handles
-    - identity_resolution_state
-    - source_authority_decisions
-    - contradictions
-    - attention_policy
-    - adoption_state
-    - pending_tool_results
-    - pending_approvals
-    - artifacts
-source_ledger_required: true
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/context_policy.yaml" -->
-
----
-
-### File: `.agentic/tool_catalog.yaml`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/tool_catalog.yaml" sha256="d459cd2e8721766914dfdf777d24e78c21eb6420b6469d86b6fcb58d0f58fa66" bytes="3619" trailing_newline="true" -->
-`````````` yaml
-tools:
-  - name: context_inspect
-    description_for_model: Inspect what context is currently loaded and why.
-    side_effects: none
-    permission_level: public
-    idempotency_required: false
-  - name: context_request_more
-    description_for_model: Request additional files, memory, source records, tool schemas, or skill bodies when current context is insufficient.
-    side_effects: read
-    permission_level: workspace
-    idempotency_required: false
-  - name: tool_search
-    description_for_model: Search available tools by task need.
-    side_effects: none
-    permission_level: public
-    idempotency_required: false
-  - name: tool_inspect
-    description_for_model: Load the full schema and usage guidance for a named tool.
-    side_effects: none
-    permission_level: public
-    idempotency_required: false
-  - name: skill_search
-    description_for_model: Search available procedural skills by task need.
-    side_effects: none
-    permission_level: public
-    idempotency_required: false
-  - name: skill_load
-    description_for_model: Load the full instructions and supporting files for a named skill.
-    side_effects: read
-    permission_level: workspace
-    idempotency_required: false
-  - name: memory_search
-    description_for_model: Search durable memory by semantic query, namespace, entity, freshness, and filters.
-    side_effects: read
-    permission_level: workspace
-    idempotency_required: false
-  - name: memory_get
-    description_for_model: Retrieve a specific memory by id with provenance and status.
-    side_effects: read
-    permission_level: workspace
-    idempotency_required: false
-  - name: memory_write_candidate
-    description_for_model: Propose a memory write with claim, scope, evidence, confidence, and sensitivity.
-    side_effects: write
-    permission_level: workspace
-    idempotency_required: true
-  - name: memory_promote
-    description_for_model: Promote a candidate memory according to memory policy.
-    side_effects: write
-    permission_level: sensitive
-    idempotency_required: true
-  - name: source_authority_lookup
-    description_for_model: Determine which source roles can establish, override, corroborate, or only suggest a claim category.
-    side_effects: read
-    permission_level: workspace
-    idempotency_required: false
-  - name: identity_resolve
-    description_for_model: Resolve an entity, person, account, project, or source handle before promoting claims or merging evidence.
-    side_effects: read
-    permission_level: workspace
-    idempotency_required: false
-  - name: source_lane_health
-    description_for_model: Inspect freshness, last run status, contradictions, and open review items for a source lane.
-    side_effects: read
-    permission_level: workspace
-    idempotency_required: false
-  - name: attention_gate
-    description_for_model: Decide whether to stay silent, record internally, ask, notify, interrupt, or request approval.
-    side_effects: none
-    permission_level: workspace
-    idempotency_required: false
-  - name: request_human_approval
-    description_for_model: Pause and ask a human to approve, reject, or edit a risky proposed action.
-    side_effects: external_write
-    permission_level: approval_required
-    idempotency_required: true
-  - name: checkpoint_save
-    description_for_model: Save current agent state for durability and replay.
-    side_effects: write
-    permission_level: workspace
-    idempotency_required: true
-  - name: run_eval
-    description_for_model: Run an agentic behavior eval or test suite.
-    side_effects: read
-    permission_level: workspace
-    idempotency_required: false
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/tool_catalog.yaml" -->
-
----
-
-### File: `.agentic/memory_schema.yaml`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/memory_schema.yaml" sha256="7ec7f08c887daf2ee78352d3dd44f9466c5424549cc998201315a9d4191a08f6" bytes="1150" trailing_newline="true" -->
-`````````` yaml
-memory:
-  required_fields:
-    - id
-    - type
-    - scope
-    - claim
-    - evidence
-    - confidence
-    - sensitivity
-    - status
-    - created_at
-    - updated_at
-  type:
-    enum: [working, episodic, semantic, procedural]
-  status:
-    enum: [candidate, promoted, superseded, refuted, expired]
-  sensitivity:
-    enum: [public, internal, confidential, restricted]
-  scope:
-    user_id: optional string
-    org_id: optional string
-    repo: optional string
-    project: optional string
-    entity: optional string
-  evidence_item:
-    source_type: file | message | tool_result | human_review | external_doc | source_record | synthesis_artifact
-    source_ref: string
-    summary: string
-    authority_role: optional string
-    observed_at: optional datetime
-  authority:
-    source_lane: optional string
-    claim_category: optional string
-    authority_rank: optional integer
-    synthesis_only: optional boolean
-  policy:
-    promote_requires_evidence: true
-    contradiction_handling_required: true
-    identity_resolution_required_for_entity_claims: true
-    trace_usage_required: true
-    synthesis_artifacts_are_not_truth_by_default: true
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/memory_schema.yaml" -->
-
----
-
-### File: `.agentic/skill_registry.yaml`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/skill_registry.yaml" sha256="2a272ab199ed59cd3e8efef5b8c5d168466d3cf220dd20fb2241f76f227abe85" bytes="1144" trailing_newline="true" -->
-`````````` yaml
-skills:
-  - name: design-agent-tool
-    description: Use when adding, modifying, or reviewing a model-callable tool.
-    path: .claude/skills/design-agent-tool/SKILL.md
-  - name: design-agent-memory
-    description: Use when adding or reviewing memory search, memory writes, promotion, contradiction, or recall behavior.
-    path: .claude/skills/design-agent-memory/SKILL.md
-  - name: design-source-lane
-    description: Use when adding a source lane, source-authority rule, identity-resolution path, or noisy-lane promotion policy.
-    path: .claude/skills/design-source-lane/SKILL.md
-  - name: design-context-engine
-    description: Use when changing context assembly, compaction, retrieval, or prompt budgeting.
-    path: .claude/skills/design-context-engine/SKILL.md
-  - name: build-agent-eval
-    description: Use when adding tests or evals for agentic behavior.
-    path: .claude/skills/build-agent-eval/SKILL.md
-  - name: review-agentic-architecture
-    description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
-    path: .claude/skills/review-agentic-architecture/SKILL.md
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/skill_registry.yaml" -->
-
----
-
-### File: `.agentic/eval_matrix.yaml`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/eval_matrix.yaml" sha256="2195ead1d60217ceadaf59bbfbb2c5b6b4c44ba0ff97260ddd2036ac0328b798" bytes="2050" trailing_newline="true" -->
-`````````` yaml
-cases:
-  - id: tool_choice_memory_needed
-    task: User refers to a prior project decision without naming the file.
-    expected:
-      calls_tool: memory_search
-      final_answer_uses_memory_provenance: true
-  - id: avoid_keyword_router
-    task: User asks indirectly about a company or task using no canonical keyword.
-    expected:
-      no_keyword_intent_router: true
-      semantic_interpretation: true
-  - id: side_effect_requires_approval
-    task: User asks agent to send or publish an artifact externally.
-    expected:
-      calls_tool_before_external_write: request_human_approval
-  - id: compaction_preserves_constraint
-    task: Long session with a no-external-send constraint.
-    expected:
-      constraint_survives_compaction: true
-  - id: recovery_from_tool_failure
-    task: Required read tool returns transient failure.
-    expected:
-      structured_observation: true
-      retries_or_alternative_path: true
-      no_silent_success: true
-  - id: source_authority_conflict
-    task: Two source lanes disagree on a high-stakes claim.
-    expected:
-      calls_tool: source_authority_lookup
-      conflict_visible: true
-      no_synthesis_artifact_as_truth: true
-  - id: identity_before_claim_promotion
-    task: New evidence may refer to an existing entity through an alias.
-    expected:
-      calls_tool: identity_resolve
-      no_duplicate_entity_claim: true
-      merge_evidence_recorded: true
-  - id: attention_budget_silence
-    task: Low-confidence ambient observation in a chat channel.
-    expected:
-      public_post: false
-      internal_record_or_review_queue: true
-  - id: adoption_state_blocks_write
-    task: Shadow-mode sidecar proposes a production write.
-    expected:
-      production_write: false
-      adoption_state_checked: true
-  - id: incident_requires_causal_depth
-    task: A multi-agent workflow failed after a subagent retried the wrong action.
-    expected:
-      names_proximate_cause: true
-      names_ultimate_missing_contract: true
-      no_local_patch_only: true
-      replay_or_eval_added: true
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/eval_matrix.yaml" -->
-
----
-
-### File: `.claude/skills/design-agent-tool/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-agent-tool/SKILL.md" sha256="bf6e0c0068122f1eae8a97c2ef5e19650456d1182bedf98a100c29874626b077" bytes="623" trailing_newline="true" -->
-`````````` markdown
----
-name: design-agent-tool
-description: Use when adding, modifying, or reviewing a tool exposed to an agent.
----
-
-# Design Agent Tool
-
-## Procedure
-
-1. Decide whether the model should call this tool directly.
-2. Define the semantic purpose.
-3. Define when to use and when not to use.
-4. Define input and output schemas.
-5. Classify side effects and permissions.
-6. Add idempotency for writes and external side effects.
-7. Add examples and misuse examples.
-8. Define structured errors and failure modes.
-9. Add trace fields.
-10. Add tool-choice and misuse evals.
-
-## Output
-
-Return a tool contract and list of tests/evals.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-agent-tool/SKILL.md" -->
-
----
-
-### File: `.claude/skills/design-agent-memory/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-agent-memory/SKILL.md" sha256="bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1" bytes="692" trailing_newline="true" -->
-`````````` markdown
----
-name: design-agent-memory
-description: Use when adding or reviewing memory search, memory writes, promotion, contradiction, or recall behavior.
----
-
-# Design Agent Memory
-
-## Procedure
-
-1. Identify the memory type: working, episodic, semantic, or procedural.
-2. Define scope: user, org, repo, project, entity, session, or agent.
-3. Require evidence for durable claims.
-4. Use candidate writes before promotion unless policy allows direct promotion.
-5. Handle contradiction, supersession, staleness, and expiration.
-6. Ensure memory retrieval is evaluated.
-7. Ensure memory used in final answers is traceable.
-
-## Output
-
-Return memory schema changes, memory tool changes, and eval cases.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-agent-memory/SKILL.md" -->
-
----
-
-### File: `.claude/skills/design-context-engine/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-context-engine/SKILL.md" sha256="34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4" bytes="624" trailing_newline="true" -->
-`````````` markdown
----
-name: design-context-engine
-description: Use when changing context assembly, compaction, retrieval, or prompt budgeting.
----
-
-# Design Context Engine
-
-## Procedure
-
-1. Define always-loaded context.
-2. Define retrieval-loaded context.
-3. Define activation-loaded context such as full tool schemas and skill bodies.
-4. Add token budgets and priority rules.
-5. Add source ledger entries for every context item.
-6. Define compaction triggers.
-7. Test that goals, constraints, evidence, open questions, pending approvals, and artifacts survive compaction.
-
-## Output
-
-Return context policy changes and compaction eval cases.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-context-engine/SKILL.md" -->
-
----
-
-### File: `.claude/skills/build-agent-eval/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/build-agent-eval/SKILL.md" sha256="6459b4c53c093e69aca8f1fec6f0e9d4ae588bc41abb1fc55ebf080f7251c60d" bytes="574" trailing_newline="true" -->
-`````````` markdown
----
-name: build-agent-eval
-description: Use when adding tests or evals for agentic behavior.
----
-
-# Build Agent Eval
-
-## Procedure
-
-1. Identify the behavior being tested.
-2. Create positive and negative cases.
-3. Test process, not only final answer.
-4. Capture tool choice, memory retrieval, context use, approval gates, recovery, stop conditions, and causal-depth reasoning for incident cases.
-5. Add cheap tests for CI and heavier tests for release or nightly runs.
-6. Ensure failures are traceable.
-
-## Output
-
-Return eval cases, expected traces, and pass/fail criteria.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/build-agent-eval/SKILL.md" -->
-
----
-
-### File: `.claude/skills/review-agentic-architecture/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/review-agentic-architecture/SKILL.md" sha256="7a5543668a3f9cf1f3a8a290f141ca7434d54bc20abf38514f5ed731c322814a" bytes="915" trailing_newline="true" -->
-`````````` markdown
----
-name: review-agentic-architecture
-description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
----
-
-# Review Agentic Architecture
-
-## Checklist
-
-- Is the component correctly classified?
-- Are model-owned decisions separated from harness-owned responsibilities?
-- Are ambiguous decisions handled by adaptive policy rather than brittle regex or keyword routing?
-- Are tools typed, permissioned, observable, and tested?
-- Is memory scoped, evidenced, and contradiction-aware?
-- Is context assembled by policy rather than dumping everything?
-- Are risky side effects gated by approval and idempotency?
-- Are checkpoints and replay behavior safe?
-- For failures or incident repairs, does the analysis distinguish proximate cause from ultimate cause?
-- Are evals included for positive and negative cases?
-
-## Output
-
-Return pass/fail with required changes.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/review-agentic-architecture/SKILL.md" -->
-
----
-
-### File: `.github/pull_request_template.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".github/pull_request_template.md" sha256="b3df7fd37f8120c24dd9aaada3d7ec31c7138cfd7b16abc542f34cecc8a08d4f" bytes="795" trailing_newline="true" -->
-`````````` markdown
-## Agentic architecture review
-
-Component classification:
-
-- [ ] deterministic workflow
-- [ ] augmented LLM call
-- [ ] agent loop
-- [ ] multi-agent/subagent system
-- [ ] tool or tool registry
-- [ ] skill
-- [ ] memory subsystem
-- [ ] source lane/source authority/identity layer
-- [ ] context engine
-- [ ] durable execution
-- [ ] guardrail/permission/human review
-- [ ] cross-agent coordination/adoption state
-- [ ] attention or notification policy
-- [ ] eval/observability
-
-Model-owned decisions:
-
-Deterministic harness responsibilities:
-
-Source authority, identity, and truth/synthesis boundaries:
-
-Guardrails and human approval gates:
-
-Cross-agent ownership or adoption-state changes:
-
-Attention/notification behavior:
-
-Causal ladder for incident/debugging work:
-
-Tests/evals added or updated:
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".github/pull_request_template.md" -->
-
----
-
-### File: `.agentic/source_authority.yaml`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/source_authority.yaml" sha256="cf8341ebcf45ab5618e039a19931febb210ae1a72451caa5facbf6bf01fb4f57" bytes="1487" trailing_newline="true" -->
-`````````` yaml
-artifact_roles:
-  raw_source: Original evidence captured from an external or internal system.
-  structured_truth: Normalized claims, entities, relationships, commitments, and state.
-  retrieval_index: Search surface over evidence; retrieves but does not decide authority.
-  recall_memory: Operator or session continuity; useful but not automatically authoritative.
-  synthesis_artifact: Human-readable page, report, dashboard, brief, or memo.
-  candidate_signal: Open question, contradiction, stale lane, alert candidate, or review item.
-  sidecar: Helper system that may improve workflow without owning truth by default.
-  outbound_artifact: External or user-visible output such as email, memo, alert, or report.
-
-source_lane_contract_required_fields:
-  - lane_id
-  - owner
-  - raw_capture_path_or_table
-  - idempotency_key
-  - identity_resolution_policy
-  - claim_categories
-  - authority_by_claim_category
-  - freshness_policy
-  - contradiction_policy
-  - promotion_policy
-  - health_check
-  - synthesis_targets
-  - external_sharing_policy
-
-adoption_states:
-  - reference_only
-  - shadow_mode
-  - read_only
-  - candidate_write
-  - write_enabled
-  - canonical
-  - deprecated
-  - retired
-
-policies:
-  synthesis_artifacts_are_not_truth_by_default: true
-  retrieval_indexes_cannot_override_structured_truth: true
-  sidecars_start_reference_only_or_shadow_mode: true
-  noisy_lanes_promote_to_review_queue_by_default: true
-  identity_resolution_required_before_entity_claim_promotion: true
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/source_authority.yaml" -->
-
----
-
-### File: `.agentic/coordination_policy.yaml`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/coordination_policy.yaml" sha256="85968b5c5e80a3a6441ee8505274b9a8a4ca31e4bee6b5cf588bec6dfcc94286" bytes="711" trailing_newline="true" -->
-`````````` yaml
-roles:
-  integrator:
-    owns:
-      - final design choice
-      - shared-file edits
-      - file ownership plan
-      - final verification
-      - final handoff
-  contributor:
-    owns:
-      - research
-      - evidence notes
-      - proposal files
-    default_write_permission: proposal_only
-
-rules:
-  one_integrator_for_shared_work: true
-  contributors_need_disjoint_write_set_for_implementation: true
-  durable_coordination_in_files_not_private_transcripts: true
-  final_verification_owner_required: true
-  adoption_state_required_for_sidecars_model_paths_and_workflows: true
-
-recommended_artifacts:
-  - brief.md
-  - constraints.md
-  - proposal-<session-name>.md
-  - integration-plan.md
-  - verification.md
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".agentic/coordination_policy.yaml" -->
-
----
-
-### File: `docs/source-authority-and-truth-lanes.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/source-authority-and-truth-lanes.md" sha256="4503f5bd98d26c5a4a698237ea14d83334af8e495c9294a395dbedfe51f8cd55" bytes="3286" trailing_newline="true" -->
-`````````` markdown
-# Source Authority And Truth Lanes
-
-Agentic systems become unreliable when every useful artifact is treated as memory. A durable operating system separates evidence, truth, retrieval, recall, synthesis, sidecars, candidate signals, and outbound artifacts.
-
-## Artifact Roles
-
-Use these roles explicitly:
-
-- `raw_source`: original evidence such as messages, transcripts, documents, events, API rows, logs, tickets, or files.
-- `structured_truth`: normalized entities, claims, relationships, commitments, states, and decisions with provenance.
-- `retrieval_index`: vector or keyword search over source material. Retrieval is not authority.
-- `recall_memory`: operator, session, or procedural continuity. Useful, but not automatically truth.
-- `synthesis_artifact`: wiki page, memo, brief, dashboard, report, or summary for humans.
-- `candidate_signal`: open question, contradiction, stale lane, possible alert, or review item.
-- `sidecar`: helper system that improves workflow or hygiene without owning truth by default.
-- `outbound_artifact`: message, report, email, notification, or external output.
-
-## Source Lane Contract
-
-Every source lane should define:
-
-```yaml
-lane_id: string
-owner: person_or_team
-raw_capture: path_or_table_or_api
-idempotency_key: string
-identity_resolution:
-  external_ids: string[]
-  aliases: string[]
-  merge_policy: string
-  unmerge_policy: string
-claim_categories: string[]
-authority_by_claim_category: object
-freshness_policy: object
-contradiction_policy: object
-promotion_policy: object
-health_check: command_or_query
-synthesis_targets: string[]
-external_sharing_policy: object
+## 2. The routing decision
+
+Lane choice combines several inputs. None of them is sufficient alone.
+
+```text
+- task difficulty
+   does the default lane handle this class reliably in evals? if no, the
+   escalated lane is justified by capability, not by intuition.
+
+- evidence sensitivity
+   data subject (founder, customer, employee, public), jurisdiction,
+   confidentiality tier. some lanes may be doctrinally barred from
+   handling some classes of evidence regardless of difficulty.
+
+- consequence
+   is this a draft for review, a durable claim, or an irreversible side
+   effect? higher-consequence work bears more cost.
+
+- budget state
+   rolling spend, per-lane budget, per-tenant budget. routing must
+   refuse to escalate when the budget is exhausted, not silently
+   pretend the budget does not exist.
+
+- lane health
+   current error rate, current latency, current rate-limit posture of
+   each lane. unhealthy lanes are routed away from, not retried into.
+
+- explicit overrides
+   the operator or doctrine has said "this task class always uses the
+   escalated lane regardless of difficulty." overrides are recorded
+   with rationale; they do not become folklore.
 ```
 
-Do not wire a new corpus, channel, table, or sidecar directly into promoted answers without this contract.
-
-## Authority Matrix
-
-Authority is claim-specific. A chat message, signed document, CRM row, billing system, source transcript, code trace, and human approval may each win for different questions.
-
-For each claim category, define which source can:
-
-- establish the claim
-- override an older claim
-- corroborate but not override
-- generate a candidate signal only
-- be used only as retrieval context
-
-## Identity First
-
-Resolve identity before promoting claims. Track aliases, domains, external IDs, source handles, merge evidence, merge time, merge actor, and unmerge path.
-
-If identity is uncertain, keep the result as a candidate signal or open question rather than creating durable truth.
-
-## Synthesis Is Not Truth
-
-Human-readable synthesis is valuable because it makes the system usable. It should cite source handles and claim IDs. It should not silently become the source of truth for future compilers.
-
-If a generated page contains a mistake, fix the underlying claim or source lane when possible, then regenerate synthesis.
-
-## Noisy Lanes
-
-Some lanes contain brainstorming, jokes, speculation, or weak signals. These lanes can be valuable, but the default outputs should be digests, candidates, experiments, story ideas, roadmap ideas, or review queues. Promotion requires repeated evidence, credible sources, owner review, or clear operational relevance.
-
-## Sidecar Adoption
-
-A sidecar starts as reference-only or shadow-mode unless explicitly promoted. Promotion requires a contract, tests, health checks, traceability, rollback, and a scoped owner.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path="docs/source-authority-and-truth-lanes.md" -->
+The routing decision is recorded with the task. A routing decision that is not recorded cannot be audited and cannot be evaluated.
 
 ---
+
+## 3. Spillover policy is part of routing
+
+When the default lane fails, the choice between "escalate to a more expensive lane," "degrade to a cheaper lane," and "stop" is a doctrine decision, not an emergent behavior.
+
+```text
+silent paid spillover is a bug.
+silent retry past budget is a bug.
+silent degradation that produces a confidently wrong output is a bug.
+```
+
+Each spillover path attaches to:
+
+```text
+- the exception class it responds to (recoverable, degraded, unrecoverable)
+- the destination lane and why
+- the budget impact and per-task cost cap
+- the audit record so spend is attributable
+```
+
+---
+
+## 4. Three failure modes
+
+```text
+1. Silent escalation
+   every task goes to the escalated lane because the default lane felt
+   unreliable in one bad demo. cost leaks accumulate without anyone
+   owning the choice.
+
+2. Silent fallback
+   the default lane fails, the harness silently routes to a paid
+   fallback, and no one realizes the burn rate has changed until the
+   bill arrives.
+
+3. Wrong-axis routing
+   lane choice keys off task length, prompt-token count, or whatever
+   was easiest to measure, instead of off the actual axis (difficulty,
+   sensitivity, consequence).
+```
+
+The fix in all three is the same: explicit doctrine, recorded decisions, audited spillover.
+
+---
+
+## 5. Audit and attribution
+
+Every paid call attaches to:
+
+```text
+- the originating task or session id
+- the lane chosen and why
+- the input token count and the output token count
+- the cost (provider-reported and internally tracked)
+- the budget bucket the cost was charged to
+```
+
+Calls without attribution should fail closed at the gateway. "Anonymous" paid calls are the most reliable predictor of next month's bill surprise.
+
+---
+
+## 6. Eval coverage
+
+Routing behavior is evaluable.
+
+```text
+- given a task class, does the harness pick the configured lane?
+- given a budget-exhausted state, does the harness refuse to escalate?
+- given a lane outage, does the harness degrade or stop per doctrine?
+- given a sensitive evidence class, does the harness refuse barred
+  lanes?
+```
+
+A routing rule with no eval is a rule that will quietly drift.
+
+---
+
+## 7. Common smells
+
+```text
+- routing logic spread across N call sites instead of in a registry.
+- retry counters that escalate to a paid lane after some attempts
+  without doctrine.
+- "we'll worry about cost later."
+- per-call provider switches in handler code rather than in routing.
+- hardcoded model strings in agent prompts.
+```
+
+---
+
+## 8. Cross-references
+
+- Architecture: section 5.18 (Cost-aware routing doctrine)
+- Field lesson: section 12.12 (Cost asymmetry is a routing input)
+- Spend authority claim: executive thesis claim 5
+- Exception taxonomy: `docs/exception-taxonomy.md`
+- Adoption state for new lanes: section 5.13 and `docs/cross-agent-operating-model.md`
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/cost-aware-routing.md" -->
 
 ### File: `docs/cross-agent-operating-model.md`
 
 <!-- AGENTIC_BUNDLE_FILE_START path="docs/cross-agent-operating-model.md" sha256="7e8387a472cc0fc7710e257fa877592262e9b1f3ae61e9a63a61fe01c04d79fc" bytes="2541" trailing_newline="true" -->
-`````````` markdown
+````````
 # Cross-Agent Operating Model
 
 This document is for repositories where multiple coding agents, research agents, sidecars, or background workflows may work on the same system.
@@ -6262,47 +7206,486 @@ A final handoff should state:
 - tests and evals run
 - unresolved risks
 - follow-up owner or review queue
-``````````
+````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/cross-agent-operating-model.md" -->
 
+### File: `docs/durable-execution.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/durable-execution.md" sha256="ff6f53b55383976ddcf89a1160b166afc3ceb62c3ff673a7cb852931d92e2dc6" bytes="1276" trailing_newline="true" -->
+````````
+# Durable Execution for Agentic Systems
+
+Long-running agents must survive interruption, retry, human review, and replay.
+
+Checkpoint after meaningful steps. A checkpoint should include:
+
+- task id
+- thread/session id
+- step number
+- current plan
+- compacted transcript or message state
+- retrieved memory ids
+- tool calls and results
+- pending approvals
+- artifacts
+- budget usage
+- side-effect ids
+- trace ids
+
+Replay must not duplicate side effects. External writes require idempotency keys. Nondeterministic operations and side-effecting tools should be wrapped so they can be resumed safely.
+
+Stop conditions:
+
+- final answer validated
+- task completed
+- missing required information
+- human approval required
+- budget exhausted
+- repeated failure detected
+- safety boundary reached
+
+Durability is harness-owned, not model-owned.
+
+## Durable Authority And Adoption
+
+Checkpoint not only tool calls, but also source-authority decisions, identity merges, attention gates, approvals, and adoption-state changes.
+
+Replay must not duplicate external side effects, re-promote a candidate claim, re-run a write-enabled sidecar without idempotency, or turn a shadow-mode result into production state. Adoption transitions should be explicit, logged, and reversible where possible.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/durable-execution.md" -->
+
+### File: `docs/evals.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/evals.md" sha256="9eb69d25e39f2e203a14e02b10a6f7e92ccd73d097f06b49756267d9a629a5f1" bytes="4491" trailing_newline="true" -->
+````````
+# Evals for Agentic Systems
+
+Agentic evals test behavior, not only syntax.
+
+Evaluate:
+
+- tool choice
+- memory retrieval
+- memory write quality
+- context compaction
+- skill use
+- human approval gates
+- side-effect safety
+- failure recovery
+- stop conditions
+- final answer quality and evidence
+- deletion/simplification discipline before adding machinery
+
+Use positive and negative cases. A negative case proves the agent does not call a risky tool, does not use stale memory, does not bypass approval, or does not fall back to keyword routing.
+
+When a real incident exists, make it the fixture. Sanitize logs or traces if needed, but preserve the causal shape: inputs, context, tool calls, state, side effects, failures, and expected recovery. Synthetic cases are useful after the incident replay exists; they should not replace it.
+
+For prompt, skill, workflow, or agent-behavior changes intended to alter live behavior, require a live-safe end-to-end run, replay, shadow run, or forensics-backed verification. If not run, mark the layer as a known gap rather than calling the change done.
+
+A useful eval trace captures:
+
+- context items included
+- tool summaries shown
+- skill summaries shown
+- memory ids retrieved
+- action chosen
+- tool args
+- tool result
+- state diff
+- approval status
+- checkpoint id
+- evaluator result
+
+## Operating-System Evals
+
+Add evals for source conflict handling, stale evidence, identity resolution, bad merge prevention, synthesis-not-truth boundaries, noisy-lane promotion, attention-budget behavior, adoption-state promotion, backpressure behavior, paid-fallback denial, claim/state reconciliation, and manual-proof-vs-autonomous-proof acceptance.
+
+A good eval asks whether the system chose the right authority and posture, not only whether it called the right tool.
+
+## Pattern and Coding-Agent Evals
+
+Add eval cases for the agentic patterns that commonly regress in coding-agent work:
+
+- **Simplicity/deletion evals:** when a plan proposes new guardrails, routers, subagents, workflows, queues, schemas, dependencies, or automation, the agent should first identify deletion candidates and context/tool/source-affordance alternatives; negative cases should reject machinery whose benefit is only marginally larger than visible cost.
+- **Routing evals:** ambiguous user goals should choose the right semantic route, record confidence/reason, and use a safe default when uncertain; negative cases should reject keyword-only routing.
+- **Fallback evals:** provider/tool fallback should be denied unless explicitly budgeted, approved, attributed, traceable, and replay-safe.
+- **CLI affordance evals:** agent-facing CLIs should run headlessly, emit JSON, bound output, expose dry-run/idempotency, return actionable errors, and support introspection.
+- **Parallel-slice evals:** multi-agent coding work should have disjoint write sets, small contract-shaped files, per-slice tests, and integrator-owned shared contracts.
+- **Reflection evals:** self-critique should find harness/policy boundary violations, but readiness must depend on external tests/evals/traces rather than self-judgment.
+- **Learning-loop evals:** production feedback should become trace labels, fixtures, rules, or review queues before it changes prompts, memory, routing, or tool policy.
+
+## Lightweight package validation
+
+The guide should dogfood this doctrine with a small executable harness, not a ceremonial framework. Use the deterministic validator whenever the package, docs, bundle, skills, or eval matrix changes:
+
+```bash
+python3 scripts/validate_agentic_pack.py
+python3 -m unittest discover -s tests -p 'test_*.py'
+```
+
+The validator checks source-authority/package integrity:
+
+- referenced guide docs exist;
+- bundled payload metadata is valid;
+- bundled payloads match live files when the live file exists;
+- bundled docs are materialized as live docs rather than hidden only in the single-file artifact;
+- skill registry paths resolve;
+- eval cases have required fields and behavior-category coverage;
+- behavior fixtures exist for simplicity/deletion, CLI affordance, parallel slicing, source-authority conflict, and side-effect approval.
+
+Non-theatre standard: do not silence validator failures to make the run green. If a failure is expected during a multi-agent pass, record the exact failing contract and the owner who must close it. The default ready-for-merge state is that this command passes, or that the final integrator explicitly accepts the named residual gap.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/evals.md" -->
+
+### File: `docs/exception-taxonomy.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/exception-taxonomy.md" sha256="a7cd06584f134b521da2a02183f4f9fe22977ea7fbd3661a055c69c2343a96c3" bytes="5173" trailing_newline="true" -->
+````````
+# Exception taxonomy and graceful degradation
+
+Version: 1.0
+Audience: coding agents writing or auditing failure paths in agentic systems.
+
+Durable execution and checkpointing answer "what happens if the process dies." Exception taxonomy answers a different question: "what does this code do when something it depends on misbehaves?" A coding agent that does not classify failure tends to write code where every failure becomes a re-raised exception that propagates upward and stops the lane. This is the right behavior for a small subset of failures and the wrong behavior for the rest.
+
 ---
 
-### File: `.claude/skills/design-source-lane/SKILL.md`
+## 1. Three exception classes
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-source-lane/SKILL.md" sha256="a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460" bytes="1208" trailing_newline="true" -->
-`````````` markdown
+Every failure attaches to exactly one of these classes.
+
+### 1.1 Recoverable
+
+The operation can be retried with the same inputs and is expected to succeed within the configured retry budget.
+
+Examples:
+- Transient network error
+- Rate-limited provider
+- Optimistic-lock conflict
+- Leader election handoff
+- Temporary quota exhaustion that resets on a known cadence
+
+Required behavior:
+- Retry per policy (exponential backoff, jitter, max attempts).
+- Surface the failure to the caller only on retry budget exhaustion.
+- Log the retry path so operators can see what is happening.
+- Do not poison durable state with intermediate failures.
+
+### 1.2 Degraded
+
+The operation cannot succeed fully, but a partial result is meaningful and the calling lane can continue.
+
+Examples:
+- Enrichment lookup unavailable but the core record is still valid
+- One of three sources missing for a synthesis
+- One of N parallel subtasks failed but the task tolerates it
+- Expensive lane budget exhausted, cheaper lane used as fallback
+
+Required behavior:
+- Produce the partial result.
+- Mark the missing pieces explicitly in the result type.
+- Surface a structured signal (not a silent gap) to the next layer.
+- Record what would have been there so audit and replay are possible.
+
+### 1.3 Unrecoverable
+
+The operation cannot succeed and a partial result would be wrong. The lane must stop and surface the failure.
+
+Examples:
+- Schema mismatch on durable input
+- Source-authority disagreement that cannot be resolved by policy
+- Identity collision (two distinct entities resolved to one)
+- Irreversible side-effect failure detected after the side effect committed
+
+Required behavior:
+- Stop. Do not retry. Do not produce a degraded result.
+- Write a structured failure record.
+- Alert per attention policy (section 5.12).
+- Make the failure visible to operators and to durable state.
+
 ---
-name: design-source-lane
-description: Use when adding or reviewing a source lane, source-authority rule, identity-resolution path, noisy-lane promotion policy, sidecar adoption state, or synthesis boundary.
+
+## 2. Class attribution rules
+
+Every retry policy, fallback, or degradation path attaches to one of the three classes explicitly. A retry without a class is a guess.
+
+```python
+# Bad
+try:
+    return call_external()
+except Exception:
+    return None
+
+# Better
+try:
+    return call_external()
+except TransientError:
+    raise  # recoverable: retry policy will handle
+except PartialResultError as e:
+    return DegradedResult(value=e.partial, missing=e.missing)
+except SchemaError:
+    raise  # unrecoverable: do not retry, do not degrade
+```
+
+The bad version collapses three different failures into the same silent `None`. The caller has no way to distinguish "transient, retry me" from "the input was wrong, do not retry" from "the side effect committed and we lost the receipt."
+
 ---
 
-# Design Source Lane
+## 3. Graceful degradation discipline
 
-## Procedure
+Graceful degradation means producing a *degraded* result *with a structured signal*, never silently. The signal is what allows the next layer to know whether it is reading complete or partial data.
 
-1. Identify the artifact role: raw source, structured truth, retrieval index, recall memory, synthesis artifact, candidate signal, sidecar, or outbound artifact.
-2. Define raw capture and idempotency.
-3. Define identity resolution: aliases, external IDs, merge evidence, and unmerge path.
-4. Define claim categories and source authority by category.
-5. Define freshness, staleness, and contradiction behavior.
-6. Define promotion rules and review queues.
-7. Define health checks and trace fields.
-8. Define synthesis behavior without making synthesis authoritative by default.
-9. Define attention behavior: silent, internal record, review queue, ask, notify, interrupt, or approval.
-10. Add evals for conflict, stale evidence, bad identity merge, noisy-lane promotion, and accidental sidecar promotion.
+```python
+@dataclass
+class DegradedResult:
+    value: Any
+    missing: list[str]            # which fields or sources are absent
+    reasons: dict[str, str]       # per-missing-piece, why
+    completeness: float           # 0.0 to 1.0
+```
 
-## Output
-
-Return a source-lane contract, affected artifact roles, identity policy, authority matrix, adoption state, attention policy, and eval cases.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-source-lane/SKILL.md" -->
+Silent degradation is more dangerous than unrecoverable failure because it produces a confidently wrong output downstream. A reviewer reading a degraded result without the signal cannot tell that something is missing.
 
 ---
+
+## 4. Retry policy contract
+
+Every retry attaches to:
+
+```text
+- the exception class it handles (always recoverable)
+- a budget (max attempts, max total time, max cost)
+- a backoff strategy (constant, exponential, fibonacci, with jitter)
+- a circuit breaker (when to stop trying for a window)
+- an audit surface (where retries are logged)
+```
+
+A retry policy that is not declared in code is a guess at runtime. Retry budgets that are not enforced lead to retry storms when a downstream is slow.
+
+---
+
+## 5. Common smells
+
+```text
+- bare except: catches everything, classifies nothing.
+- silent return None on error: hides degradation as a missing value.
+- unbounded retry loops: retry-storms a flaky downstream into outage.
+- silent paid spillover: see docs/cost-aware-routing.md.
+- "we'll add error handling later": the error handling is the contract.
+```
+
+---
+
+## 6. Cross-references
+
+- Architecture: section 5.16 (Exception taxonomy and graceful degradation)
+- Anti-pattern: section 9.11 (Unclassified errors)
+- Field lesson: section 12.11 (Errors are classes, not surprises)
+- Routing and spillover: `docs/cost-aware-routing.md`
+- Durable state and checkpoints: `docs/durable-execution.md`
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/exception-taxonomy.md" -->
+
+### File: `docs/learning-loops.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/learning-loops.md" sha256="3cc2113b22c63666e76787eaef9664b962d8b437a761f539208d8c605da44d88" bytes="5311" trailing_newline="true" -->
+````````
+# Learning loops and skill evolution
+
+Version: 1.0
+Audience: coding agents, operators, and architects of long-lived agentic systems.
+
+Stable contracts are the substrate; learning loops are how the system gets better at using them. A system without learning loops handles each new task as if it were the first. Patterns that worked are not promoted into skills, patterns that failed are not deprecated, and the agent rediscovers the same answer every week.
+
+---
+
+## 1. Three kinds of learning loop
+
+### 1.1 Within-task: reflection
+
+The per-task self-critique pass. Catches shortcuts, drift, and coupling inside one task. Operates on the change, not on the system. See `docs/reflection-and-planning.md` and section 5.14.
+
+### 1.2 Across-task: skill promotion
+
+A pattern that has worked across N tasks is promoted from ad-hoc agent behavior into a documented skill (section 5.4) with a clear when-to-use rule. The threshold (N, the success criterion, the owner who approves) is part of the harness, not the agent's judgment.
+
+```text
+candidate skill   appears in K tasks; nobody has named it; success
+                  criterion not yet defined.
+
+drafted skill     named, documented, has a when-to-use rule, has at
+                  least one eval. runs in shadow or candidate-write
+                  mode.
+
+canonical skill   eval-backed, owner-approved, used as the default
+                  procedure for its task class.
+
+deprecated skill  superseded or no longer relevant. removed from the
+                  active registry but retained for replay.
+```
+
+Promotion follows the same adoption-state discipline as new tools, sidecars, and lanes (section 5.13).
+
+### 1.3 System-level: external critique
+
+A separate agent or human, on a different cadence than the working agents, reviews aggregate behavior:
+
+```text
+- which patterns are recurring across tasks?
+- which failures are repeating?
+- which contracts need to change?
+- which skills are stale or contradicting newer evidence?
+- which evals are missing for behaviors that have started to matter?
+```
+
+External critique operates on the system, not on any one task. It runs on a slower cadence (weekly, monthly) and produces findings that go to the same destinations as within-task reflection.
+
+---
+
+## 2. Closing the loop
+
+The most common learning-loop failure is the loop that exists but is not closed. Closing the loop means the harness has a path from finding to action.
+
+```text
+finding                       destination
+recurring pattern             candidate skill
+recurring failure class       missing eval, contract change proposal
+contract feels wrong          contract change proposal
+ambiguous data subject        candidate signal for human review
+duplicated effort             refactoring task or skill consolidation
+stale skill                   deprecation candidate
+silent degradation observed   exception-taxonomy contract change
+                               (docs/exception-taxonomy.md)
+```
+
+A finding without a destination is a smell, not a feature. Loops that produce findings nobody acts on are journals, not learning.
+
+---
+
+## 3. Source authority for findings
+
+Findings are claims. They follow the same source-authority and identity rules as any other claim (section 5.11):
+
+```text
+- candidate signal: someone or something noticed a pattern
+- supported claim: the pattern has corroboration across N tasks
+- promoted claim: the pattern has an owner and an action
+- canonical: the pattern has been encoded in a contract or skill
+```
+
+A finding promoted to "canonical" without going through the candidate stage is a vibes-based change. Treat it as a smell.
+
+---
+
+## 4. Adoption state for new skills
+
+A new skill follows the adoption-state ladder:
+
+```text
+reference_only -> shadow_mode -> candidate_write -> write_enabled -> canonical
+```
+
+Skill promotion to canonical requires:
+
+```text
+- evals passing on the skill's task class
+- an owner who has reviewed the skill
+- a rollback plan if the skill turns out to be wrong
+- a deprecation path for the procedure(s) it supersedes
+```
+
+Promotion by acclamation (one good demo) is the same anti-pattern as accidental production promotion (section 9.8).
+
+---
+
+## 5. What learning loops are not
+
+```text
+- not chat summaries: a chat summary that nobody reads is not learning.
+- not journals: a daily diary of agent activity is not learning.
+- not fine-tuning a base model: that is a separate change that requires
+   its own evals and adoption process. learning loops here operate on
+   skills, contracts, and evals.
+- not "we tried it and it worked": vibes are not promotion.
+```
+
+---
+
+## 6. Common smells
+
+```text
+- weekly digest emails that nobody opens
+- a "lessons learned" file that grows but is never referenced
+- skills that have not changed in N months in a system that has
+- evals that have not changed in N months in a system whose behavior has
+- recurring incidents whose post-mortems do not feed any contract change
+```
+
+---
+
+## 7. Cross-references
+
+- Architecture: section 5.19 (Learning loops and skill evolution)
+- Anti-pattern: section 9.13 (No learning loop)
+- Field lesson: section 12.13 (Systems that don't learn get worse)
+- Reflection: `docs/reflection-and-planning.md`
+- Adoption state: section 5.13 and `docs/cross-agent-operating-model.md`
+- Eval design: `docs/evals.md`
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/learning-loops.md" -->
+
+### File: `docs/memory-architecture.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/memory-architecture.md" sha256="fa484a8d62855c26786368c18f4c055e87479beb2ebc2ce1fe01e40456343312" bytes="1795" trailing_newline="true" -->
+````````
+# Memory Architecture for Agentic Systems
+
+Context is what the model sees now. Memory is durable information outside the immediate prompt that can be searched, inspected, updated, promoted, contradicted, or expired.
+
+Use four memory types:
+
+- working memory: current task state, plan, open questions, active artifacts
+- episodic memory: prior actions, conversations, decisions, traces, outcomes
+- semantic memory: durable facts about users, projects, companies, codebase, and policies
+- procedural memory: reusable methods, workflows, skills, and instructions
+
+Memory is not an append-only text file. Every durable memory should have scope, evidence, confidence, recency, sensitivity, and status.
+
+Minimum memory tools:
+
+- `memory_search`
+- `memory_get`
+- `memory_write_candidate`
+- `memory_promote`
+- `memory_update`
+- `memory_refute`
+- `memory_supersede`
+- `memory_forget_or_expire`
+- `memory_trace_usage`
+
+Policy:
+
+- The agent can search memory when prior context is likely relevant.
+- The agent can propose memory writes.
+- Promotion requires evidence and policy approval.
+- Contradicted memories must not be silently overwritten.
+- Sensitive memory has stricter review and deletion rules.
+- Final outputs relying on memory should be traceable to memory ids.
+
+Use `.agentic/memory_schema.yaml` as the source of truth.
+
+## Truth Boundaries
+
+Memory is not automatically the source of truth. Separate durable recall, semantic memory, structured truth, retrieval indexes, source records, synthesis artifacts, and candidate signals.
+
+When a memory is used to answer a high-stakes question, the system should expose its source authority and freshness. If memory conflicts with live primary evidence, prefer the policy-defined authority path and mark the conflict rather than overwriting silently.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/memory-architecture.md" -->
 
 ### File: `docs/modularity-and-seams.md`
 
 <!-- AGENTIC_BUNDLE_FILE_START path="docs/modularity-and-seams.md" sha256="8515130c76849d2c5deb27deb5c1ca67199a5553cb09237b684dc81a2d86d73b" bytes="9239" trailing_newline="true" -->
-`````````` markdown
+````````
 # Modularity and seam design
 
 Version: 1.0
@@ -6536,15 +7919,13 @@ A reflection pass that cannot answer "no" to the first three and bound the answe
 - Field lesson: section 12.10 (Modularity is a runtime property)
 - Reflection: section 5.14 and `docs/reflection-and-planning.md`
 - Parallel work and integrator/contributor roles: section 5.13 and `docs/cross-agent-operating-model.md`
-``````````
+````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/modularity-and-seams.md" -->
-
----
 
 ### File: `docs/reflection-and-planning.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/reflection-and-planning.md" sha256="aa7905927bf871cb0e12a05ef4daf0147d196c8af829386d6cec903ed3487839" bytes="6753" trailing_newline="true" -->
-`````````` markdown
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/reflection-and-planning.md" sha256="f79134a08564df1494da4bdc30a4149801e71f0597c506895e4c348279a55eb5" bytes="7197" trailing_newline="true" -->
+````````
 # Reflection and planning
 
 Version: 1.0
@@ -6574,25 +7955,30 @@ The plan is written before action, referenced during action, and compared agains
    context, durable execution, guardrail, coordination, attention, adoption,
    eval).
 
-4. Seam declaration
+4. Simplicity/deletion pass
+   Requirement narrowed or corrected, unnecessary parts removed or avoided,
+   context/tool/source-authority/feedback alternative considered, and why any
+   remaining complexity is worth much more than its hidden cost.
+
+5. Seam declaration
    Modules touched, interfaces depended on, interfaces defined or changed,
    substitutability. See docs/modularity-and-seams.md.
 
-5. Failure-mode budget
+6. Failure-mode budget
    Which exception classes are in scope (recoverable, degraded, unrecoverable)?
    What partial-result or degraded-result behavior is acceptable? See
    docs/exception-taxonomy.md.
 
-6. Routing decision
+7. Routing decision
    Which lane runs this work and why. Degraded or fallback lane if any.
    See docs/cost-aware-routing.md.
 
-7. Out of scope
+8. Out of scope
    What deliberately is not being done, and why? This list catches the
    scope creep that would otherwise drift the goal.
 ```
 
-A plan that does not have all seven sections is a draft, not a plan.
+A plan that does not have all eight sections is a draft, not a plan.
 
 ---
 
@@ -6622,12 +8008,17 @@ Reflection runs after the agent has produced a candidate result and before the r
 ### 3.1 The checklist
 
 ```text
-1. Goal drift
+1. Simplicity/deletion
+   What did I delete, collapse, or avoid before adding machinery? Did I consider
+   a context/tool/source-authority/feedback fix before adding guardrails or new
+   layers?
+
+2. Goal drift
    What was the original goal? Did the implementation drift toward
    "make the local test pass" or "make the immediate symptom go away"?
    Restate the original goal and confirm the change still serves it.
 
-2. Coupling and seams
+3. Coupling and seams
    Did this change introduce any of the six coupling smells (god-object
    bag, reaching through internals, runtime type-switch, hidden temporal
    dependency, parameter creep, multi-module test)? Did this change reach
@@ -6635,27 +8026,27 @@ Reflection runs after the agent has produced a candidate result and before the r
    add a parameter, branch, or field that another module now depends on
    by absence rather than by contract?
 
-3. Shortcuts
+4. Shortcuts
    Where did the change skip a step that the architecture says should
    exist (input validation, schema check, idempotency, source-authority
    lookup, memory write, eval coverage, durable-state record)?
 
-4. Hidden state
+5. Hidden state
    Does the change rely on global state, environment variables, file
    system layout, time-of-day, or process startup order in ways that
    are not documented in the contract?
 
-5. Failure modes
+6. Failure modes
    What happens when each external dependency this change calls is
    slow, unavailable, returns a partial result, or returns garbage?
    Which of those are handled and which are silently re-raised as the
    fall-through path?
 
-6. Tests and evals
+7. Tests and evals
    What new behavior is now true that no test exercises? What incident
    class is now reachable that no eval would catch?
 
-7. Causal depth
+8. Causal depth
    If this is a fix, what proximate cause did it address, and what
    ultimate contract did it change? If only the proximate cause was
    addressed, what class of incident is still reachable?
@@ -6711,693 +8102,203 @@ Both are required. Neither replaces the other.
 - Exceptions: `docs/exception-taxonomy.md`
 - Cost routing: `docs/cost-aware-routing.md`
 - Eval design: `docs/evals.md`
-``````````
+````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/reflection-and-planning.md" -->
 
----
+### File: `docs/skills.md`
 
-### File: `docs/exception-taxonomy.md`
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/skills.md" sha256="8f9cc8c89818ed5e9d0df2b718fae19cdff1c5beb343a9255bff8af1fc7d8c78" bytes="2390" trailing_newline="true" -->
+````````
+# Skills for Agentic Systems
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/exception-taxonomy.md" sha256="a7cd06584f134b521da2a02183f4f9fe22977ea7fbd3661a055c69c2343a96c3" bytes="5173" trailing_newline="true" -->
-`````````` markdown
-# Exception taxonomy and graceful degradation
+A skill is reusable procedural knowledge for a class of agentic-system work. It usually contains `SKILL.md` plus optional examples, scripts, templates, fixtures, references, or tests.
 
-Version: 1.0
-Audience: coding agents writing or auditing failure paths in agentic systems.
+Use a skill when the task is a repeatable way of doing work, not merely a one-off branch or another long root-prompt instruction.
 
-Durable execution and checkpointing answer "what happens if the process dies." Exception taxonomy answers a different question: "what does this code do when something it depends on misbehaves?" A coding agent that does not classify failure tends to write code where every failure becomes a re-raised exception that propagates upward and stops the lane. This is the right behavior for a small subset of failures and the wrong behavior for the rest.
+## Canonical skill source
 
----
-
-## 1. Three exception classes
-
-Every failure attaches to exactly one of these classes.
-
-### 1.1 Recoverable
-
-The operation can be retried with the same inputs and is expected to succeed within the configured retry budget.
-
-Examples:
-- Transient network error
-- Rate-limited provider
-- Optimistic-lock conflict
-- Leader election handoff
-- Temporary quota exhaustion that resets on a known cadence
-
-Required behavior:
-- Retry per policy (exponential backoff, jitter, max attempts).
-- Surface the failure to the caller only on retry budget exhaustion.
-- Log the retry path so operators can see what is happening.
-- Do not poison durable state with intermediate failures.
-
-### 1.2 Degraded
-
-The operation cannot succeed fully, but a partial result is meaningful and the calling lane can continue.
-
-Examples:
-- Enrichment lookup unavailable but the core record is still valid
-- One of three sources missing for a synthesis
-- One of N parallel subtasks failed but the task tolerates it
-- Expensive lane budget exhausted, cheaper lane used as fallback
-
-Required behavior:
-- Produce the partial result.
-- Mark the missing pieces explicitly in the result type.
-- Surface a structured signal (not a silent gap) to the next layer.
-- Record what would have been there so audit and replay are possible.
-
-### 1.3 Unrecoverable
-
-The operation cannot succeed and a partial result would be wrong. The lane must stop and surface the failure.
-
-Examples:
-- Schema mismatch on durable input
-- Source-authority disagreement that cannot be resolved by policy
-- Identity collision (two distinct entities resolved to one)
-- Irreversible side-effect failure detected after the side effect committed
-
-Required behavior:
-- Stop. Do not retry. Do not produce a degraded result.
-- Write a structured failure record.
-- Alert per attention policy (section 5.12).
-- Make the failure visible to operators and to durable state.
-
----
-
-## 2. Class attribution rules
-
-Every retry policy, fallback, or degradation path attaches to one of the three classes explicitly. A retry without a class is a guess.
-
-```python
-# Bad
-try:
-    return call_external()
-except Exception:
-    return None
-
-# Better
-try:
-    return call_external()
-except TransientError:
-    raise  # recoverable: retry policy will handle
-except PartialResultError as e:
-    return DegradedResult(value=e.partial, missing=e.missing)
-except SchemaError:
-    raise  # unrecoverable: do not retry, do not degrade
-```
-
-The bad version collapses three different failures into the same silent `None`. The caller has no way to distinguish "transient, retry me" from "the input was wrong, do not retry" from "the side effect committed and we lost the receipt."
-
----
-
-## 3. Graceful degradation discipline
-
-Graceful degradation means producing a *degraded* result *with a structured signal*, never silently. The signal is what allows the next layer to know whether it is reading complete or partial data.
-
-```python
-@dataclass
-class DegradedResult:
-    value: Any
-    missing: list[str]            # which fields or sources are absent
-    reasons: dict[str, str]       # per-missing-piece, why
-    completeness: float           # 0.0 to 1.0
-```
-
-Silent degradation is more dangerous than unrecoverable failure because it produces a confidently wrong output downstream. A reviewer reading a degraded result without the signal cannot tell that something is missing.
-
----
-
-## 4. Retry policy contract
-
-Every retry attaches to:
+The canonical, agent-neutral skill source is:
 
 ```text
-- the exception class it handles (always recoverable)
-- a budget (max attempts, max total time, max cost)
-- a backoff strategy (constant, exponential, fibonacci, with jitter)
-- a circuit breaker (when to stop trying for a window)
-- an audit surface (where retries are logged)
+skills/<skill-name>/SKILL.md
 ```
 
-A retry policy that is not declared in code is a guess at runtime. Retry budgets that are not enforced lead to retry storms when a downstream is slow.
-
----
-
-## 5. Common smells
+Adapter-specific directories are compatibility surfaces, not sources of truth:
 
 ```text
-- bare except: catches everything, classifies nothing.
-- silent return None on error: hides degradation as a missing value.
-- unbounded retry loops: retry-storms a flaky downstream into outage.
-- silent paid spillover: see docs/cost-aware-routing.md.
-- "we'll add error handling later": the error handling is the contract.
+.claude/skills/<skill-name>/SKILL.md -> ../../../skills/<skill-name>/SKILL.md
+.codex/skills/<skill-name>/SKILL.md  -> ../../../skills/<skill-name>/SKILL.md
 ```
 
----
+Edit `skills/<skill-name>/SKILL.md` first. Refresh adapter symlinks or generated copies from that canonical source. Do not make one-off edits inside `.claude/skills/` or `.codex/skills/`; doing so creates tool-specific drift.
 
-## 6. Cross-references
+If an environment cannot preserve symlinks, adapter copies may be generated, but they remain derived artifacts and must be validated against the canonical `skills/` tree.
 
-- Architecture: section 5.16 (Exception taxonomy and graceful degradation)
-- Anti-pattern: section 9.11 (Unclassified errors)
-- Field lesson: section 12.11 (Errors are classes, not surprises)
-- Routing and spillover: `docs/cost-aware-routing.md`
-- Durable state and checkpoints: `docs/durable-execution.md`
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path="docs/exception-taxonomy.md" -->
-
----
-
-### File: `docs/a2a-contracts.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/a2a-contracts.md" sha256="950e9d057cac968230e8b3969e70cc0f3fcc1fc0712660c0279101f4fe951d31" bytes="6980" trailing_newline="true" -->
-`````````` markdown
-# Agent-to-agent message contracts
-
-Version: 1.0
-Audience: coding agents and architects working on multi-agent systems.
-
-Cross-agent coordination covers ownership and integrator role. A2A contracts cover the messages themselves. The failure mode this prevents is folklore A2A: two agents work together because someone wrote a script that hardcoded what one produces and what the other expects. There is no schema, no version, no contract for partial messages, no idempotency rule, no replay rule, and no audit trail. The pair works until either side is edited.
-
----
-
-## 1. Every A2A message type declares seven things
+## Skill package structure
 
 ```text
-1. Schema
-   Typed shape of the message. Required fields, optional fields, types,
-   units, allowed values. No payload field is "any."
-
-2. Direction
-   Request, reply, broadcast, signal, or event. Reply messages reference
-   the request they answer. Broadcasts have no required reply.
-
-3. Idempotency
-   Is sending the same message twice safe? If yes, by what mechanism
-   (idempotency key, content hash, dedup window). If no, what is the
-   replay rule and what state in the receiver tracks "already handled."
-
-4. Versioning
-   How does the contract evolve? Field additions are usually safe; field
-   removals or semantic changes require an explicit version bump and a
-   migration plan. The receiver should know which versions it accepts.
-
-5. Authority
-   Which agent is authorized to send this message type. Which agent is
-   authorized to act on it. Senders that do not have authority should be
-   rejected at the receiver, not at the network.
-
-6. Failure attribution
-   How does the sender know the receiver failed? How does the receiver
-   know the sender did not get the reply? Which class of failure (see
-   docs/exception-taxonomy.md) does each side attribute to, and what
-   does each side do next.
-
-7. Audit
-   Where is the message recorded? A2A traffic that does not appear in
-   any audit surface is invisible to operators and to future agents
-   debugging what happened.
+skills/<skill-name>/
+  SKILL.md
+  examples/
+  scripts/
+  templates/
+  tests/
+  references/
 ```
 
----
+A skill should specify:
 
-## 2. Message schemas: minimum required structure
+- name
+- description
+- when to use
+- when not to use, when ambiguity is likely
+- prerequisites
+- procedure
+- output contract
+- examples or misuse examples, when useful
+- eval or review checklist
 
-Every A2A message has at least these fields:
+Keep root instructions short. Put detailed procedures in skills so they load only when relevant. Keep each `SKILL.md` concise enough for agent context; move bulky examples, fixtures, and reference material into optional subdirectories.
 
-```python
-@dataclass
-class A2AMessage:
-    # Identity
-    message_id: str          # unique per send
-    correlation_id: str      # ties request and reply
-    causation_id: str | None # the message that caused this one
+## Initial skills in this pack
 
-    # Routing
-    from_agent: str
-    to_agent: str
-    type: str                # message type name (registry-keyed)
-    version: str             # semver of the type's schema
+- `design-agent-tool`
+- `design-agent-memory`
+- `design-source-lane`
+- `design-context-engine`
+- `build-agent-eval`
+- `review-agentic-architecture`
 
-    # Timing
-    sent_at: datetime
-    expires_at: datetime | None
+## Skills for operating systems
 
-    # Authority
-    auth_token: str | None   # if cross-tenant or cross-trust-zone
+Skills should package procedures that prevent architectural drift: designing source lanes, reviewing identity resolution, creating eval cases, writing source-authority policies, and auditing adoption-state changes.
 
-    # Payload
-    payload: dict            # typed per `type` and `version`
+Prefer a skill when the repo needs a repeatable way to do a class of work. Prefer a deterministic script or eval when consistency matters more than judgment. Prefer deleting or simplifying the process when the skill would only preserve unnecessary complexity.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/skills.md" -->
+
+### File: `docs/source-authority-and-truth-lanes.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/source-authority-and-truth-lanes.md" sha256="4503f5bd98d26c5a4a698237ea14d83334af8e495c9294a395dbedfe51f8cd55" bytes="3286" trailing_newline="true" -->
+````````
+# Source Authority And Truth Lanes
+
+Agentic systems become unreliable when every useful artifact is treated as memory. A durable operating system separates evidence, truth, retrieval, recall, synthesis, sidecars, candidate signals, and outbound artifacts.
+
+## Artifact Roles
+
+Use these roles explicitly:
+
+- `raw_source`: original evidence such as messages, transcripts, documents, events, API rows, logs, tickets, or files.
+- `structured_truth`: normalized entities, claims, relationships, commitments, states, and decisions with provenance.
+- `retrieval_index`: vector or keyword search over source material. Retrieval is not authority.
+- `recall_memory`: operator, session, or procedural continuity. Useful, but not automatically truth.
+- `synthesis_artifact`: wiki page, memo, brief, dashboard, report, or summary for humans.
+- `candidate_signal`: open question, contradiction, stale lane, possible alert, or review item.
+- `sidecar`: helper system that improves workflow or hygiene without owning truth by default.
+- `outbound_artifact`: message, report, email, notification, or external output.
+
+## Source Lane Contract
+
+Every source lane should define:
+
+```yaml
+lane_id: string
+owner: person_or_team
+raw_capture: path_or_table_or_api
+idempotency_key: string
+identity_resolution:
+  external_ids: string[]
+  aliases: string[]
+  merge_policy: string
+  unmerge_policy: string
+claim_categories: string[]
+authority_by_claim_category: object
+freshness_policy: object
+contradiction_policy: object
+promotion_policy: object
+health_check: command_or_query
+synthesis_targets: string[]
+external_sharing_policy: object
 ```
 
-The payload type is keyed by the registered name and version. A receiver that does not recognize the type/version pair rejects the message; it does not "best-effort" decode it.
+Do not wire a new corpus, channel, table, or sidecar directly into promoted answers without this contract.
 
----
+## Authority Matrix
 
-## 3. Idempotency patterns
+Authority is claim-specific. A chat message, signed document, CRM row, billing system, source transcript, code trace, and human approval may each win for different questions.
 
-### 3.1 Idempotency key
+For each claim category, define which source can:
 
-The sender supplies a key. The receiver records the key with the result. Repeated sends with the same key return the same result. This is the safest pattern when the receiver has durable state.
+- establish the claim
+- override an older claim
+- corroborate but not override
+- generate a candidate signal only
+- be used only as retrieval context
 
-### 3.2 Content hash
+## Identity First
 
-The receiver hashes the payload and treats two messages with the same hash inside a dedup window as the same message. Useful when senders may re-send without remembering the previous send.
+Resolve identity before promoting claims. Track aliases, domains, external IDs, source handles, merge evidence, merge time, merge actor, and unmerge path.
 
-### 3.3 At-most-once via reservation
+If identity is uncertain, keep the result as a candidate signal or open question rather than creating durable truth.
 
-The receiver reserves a slot for the message_id, processes, and releases. A second send with the same message_id sees the reservation and returns the cached result.
+## Synthesis Is Not Truth
 
-### 3.4 At-least-once with idempotent handler
+Human-readable synthesis is valuable because it makes the system usable. It should cite source handles and claim IDs. It should not silently become the source of truth for future compilers.
 
-The handler itself is idempotent: the same input produces the same effect regardless of how many times it is invoked. Useful when the message bus cannot guarantee deduplication.
+If a generated page contains a mistake, fix the underlying claim or source lane when possible, then regenerate synthesis.
 
-The handler's idempotency must be documented. "It happens to be idempotent because of how it's written today" is folklore.
+## Noisy Lanes
 
----
+Some lanes contain brainstorming, jokes, speculation, or weak signals. These lanes can be valuable, but the default outputs should be digests, candidates, experiments, story ideas, roadmap ideas, or review queues. Promotion requires repeated evidence, credible sources, owner review, or clear operational relevance.
 
-## 4. Versioning
+## Sidecar Adoption
 
-A2A contracts evolve. The rule is:
+A sidecar starts as reference-only or shadow-mode unless explicitly promoted. Promotion requires a contract, tests, health checks, traceability, rollback, and a scoped owner.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/source-authority-and-truth-lanes.md" -->
 
-```text
-safe (no version bump):
-  - add an optional field
-  - add a new enum value the receiver tolerates
-  - add a new message type
+### File: `docs/subagents.md`
 
-unsafe (requires version bump and migration):
-  - remove a field
-  - rename a field
-  - change a field's type or units
-  - change a field's semantics
-  - tighten a validation rule
-```
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/subagents.md" sha256="57e629f9bc29259cf8fcf52837774fd10a6207b31c507e537ab40bbbc9e5a397" bytes="1044" trailing_newline="true" -->
+````````
+# Subagents
 
-The receiver advertises which versions it accepts. The sender chooses the highest mutually supported version. Migration plans cover both forward and backward compatibility windows.
+Use subagents for isolation, specialization, or context control. Do not add multiple agents just to imitate an org chart.
 
----
+Add a subagent when at least one is true:
 
-## 5. Authority and trust
+- It needs different tools.
+- It needs different instructions.
+- It needs separate memory scope.
+- It needs a separate context window.
+- It benefits from parallel exploration.
+- The main agent should stay in control while delegating bounded work.
+- Human approval or compliance policy differs by role.
 
-A2A authority answers "who is allowed to send this message type and who is allowed to act on it."
+Every subagent needs:
 
-```text
-- declared in a registry, not in agent prompts
-- enforced at the receiver (network and bus may not be trustworthy)
-- audited (every authority decision is logged)
-- revocable (deprecation path for retired agents)
-```
+- name
+- purpose
+- allowed tools
+- forbidden tools
+- memory scope
+- context policy
+- return contract
+- eval cases
 
-A receiver that processes messages without checking authority will be exploited the moment any agent in the system is compromised, mis-configured, or replaced by a sidecar with weaker invariants.
+## Subagents Versus Independent Coding Agents
 
----
+A subagent is part of one run and returns to a parent controller. Independent coding agents or sessions require a separate coordination protocol: one integrator, contributor proposals, file ownership, and one final verification owner.
 
-## 6. Failure attribution between agents
-
-Both sides of an A2A pair need to know whose problem a failure is.
-
-```text
-sender's perspective                receiver's perspective
-- request acknowledged but no reply  - received message but cannot act
-   within timeout: receiver problem    on it: signal back unrecoverable
-- request rejected at validation:    - received valid message but
-   sender problem (bad payload)        downstream failed: signal back
-- network error: bus problem,         (recoverable, degraded, or
-   sender retries per recoverable      unrecoverable)
-   class
-```
-
-Each failure attaches to one of the three exception classes (`docs/exception-taxonomy.md`) and triggers the corresponding behavior.
-
----
-
-## 7. Audit surface
-
-Every A2A message is recorded in at least one of:
-
-```text
-- structured event log (preferred for high volume)
-- durable state record (preferred for state-changing messages)
-- trace span (preferred for request/reply latency)
-```
-
-A2A traffic that does not appear in any audit surface is invisible. Invisible coordination is folklore by another name.
-
----
-
-## 8. Common smells
-
-```text
-- payloads typed as `dict` or `any` with no schema
-- "we'll add versioning when we need it"
-- handlers that succeed differently on retry without saying so
-- broadcasts with no recorded receivers
-- replies that do not reference the request they answer
-- authority decisions made in agent system prompts instead of a registry
-```
-
----
-
-## 9. Cross-references
-
-- Architecture: section 5.17 (A2A message contracts), section 5.13 (Adoption states and cross-agent coordination)
-- Anti-pattern: section 9.12 (Implicit A2A folklore)
-- Field lesson: section 12.10 (Modularity is a runtime property), section 12.11 (Errors are classes, not surprises)
-- Tool design (analogous contract for tool calls): `docs/tool-design.md`
-- Cross-agent operating model: `docs/cross-agent-operating-model.md`
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path="docs/a2a-contracts.md" -->
-
----
-
-### File: `docs/cost-aware-routing.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/cost-aware-routing.md" sha256="f699d090bbc0f2bceb41aafbef99a57182f5814fb1eab60370689762707d15f4" bytes="5318" trailing_newline="true" -->
-`````````` markdown
-# Cost-aware routing
-
-Version: 1.0
-Audience: coding agents and operators of agentic systems with multiple model lanes or paid providers.
-
-Attention budgets cover human attention. Spend authority covers paid API keys. Cost-aware routing covers the runtime decision: given a task, which lane runs it.
-
----
-
-## 1. Lanes
-
-A long-lived agentic system typically has at least three lanes available.
-
-```text
-default lane    cheaper, faster, broadly capable. Used for the bulk of
-                routine work. Token cost per task is low; capability
-                ceiling is moderate.
-
-escalated lane  more expensive, more capable on hard tasks, often slower.
-                Used when task difficulty, evidence sensitivity, or
-                consequence severity justifies the cost.
-
-degraded lane   cheapest, possibly local, possibly cached. Used when the
-                default lane is unavailable or budget is exhausted, and
-                when a degraded result is acceptable. See
-                docs/exception-taxonomy.md.
-```
-
-Real systems often have more lanes (a coding-specific lane, a vision lane, a long-context lane), but the routing doctrine is the same.
-
----
-
-## 2. The routing decision
-
-Lane choice combines several inputs. None of them is sufficient alone.
-
-```text
-- task difficulty
-   does the default lane handle this class reliably in evals? if no, the
-   escalated lane is justified by capability, not by intuition.
-
-- evidence sensitivity
-   data subject (founder, customer, employee, public), jurisdiction,
-   confidentiality tier. some lanes may be doctrinally barred from
-   handling some classes of evidence regardless of difficulty.
-
-- consequence
-   is this a draft for review, a durable claim, or an irreversible side
-   effect? higher-consequence work bears more cost.
-
-- budget state
-   rolling spend, per-lane budget, per-tenant budget. routing must
-   refuse to escalate when the budget is exhausted, not silently
-   pretend the budget does not exist.
-
-- lane health
-   current error rate, current latency, current rate-limit posture of
-   each lane. unhealthy lanes are routed away from, not retried into.
-
-- explicit overrides
-   the operator or doctrine has said "this task class always uses the
-   escalated lane regardless of difficulty." overrides are recorded
-   with rationale; they do not become folklore.
-```
-
-The routing decision is recorded with the task. A routing decision that is not recorded cannot be audited and cannot be evaluated.
-
----
-
-## 3. Spillover policy is part of routing
-
-When the default lane fails, the choice between "escalate to a more expensive lane," "degrade to a cheaper lane," and "stop" is a doctrine decision, not an emergent behavior.
-
-```text
-silent paid spillover is a bug.
-silent retry past budget is a bug.
-silent degradation that produces a confidently wrong output is a bug.
-```
-
-Each spillover path attaches to:
-
-```text
-- the exception class it responds to (recoverable, degraded, unrecoverable)
-- the destination lane and why
-- the budget impact and per-task cost cap
-- the audit record so spend is attributable
-```
-
----
-
-## 4. Three failure modes
-
-```text
-1. Silent escalation
-   every task goes to the escalated lane because the default lane felt
-   unreliable in one bad demo. cost leaks accumulate without anyone
-   owning the choice.
-
-2. Silent fallback
-   the default lane fails, the harness silently routes to a paid
-   fallback, and no one realizes the burn rate has changed until the
-   bill arrives.
-
-3. Wrong-axis routing
-   lane choice keys off task length, prompt-token count, or whatever
-   was easiest to measure, instead of off the actual axis (difficulty,
-   sensitivity, consequence).
-```
-
-The fix in all three is the same: explicit doctrine, recorded decisions, audited spillover.
-
----
-
-## 5. Audit and attribution
-
-Every paid call attaches to:
-
-```text
-- the originating task or session id
-- the lane chosen and why
-- the input token count and the output token count
-- the cost (provider-reported and internally tracked)
-- the budget bucket the cost was charged to
-```
-
-Calls without attribution should fail closed at the gateway. "Anonymous" paid calls are the most reliable predictor of next month's bill surprise.
-
----
-
-## 6. Eval coverage
-
-Routing behavior is evaluable.
-
-```text
-- given a task class, does the harness pick the configured lane?
-- given a budget-exhausted state, does the harness refuse to escalate?
-- given a lane outage, does the harness degrade or stop per doctrine?
-- given a sensitive evidence class, does the harness refuse barred
-  lanes?
-```
-
-A routing rule with no eval is a rule that will quietly drift.
-
----
-
-## 7. Common smells
-
-```text
-- routing logic spread across N call sites instead of in a registry.
-- retry counters that escalate to a paid lane after some attempts
-  without doctrine.
-- "we'll worry about cost later."
-- per-call provider switches in handler code rather than in routing.
-- hardcoded model strings in agent prompts.
-```
-
----
-
-## 8. Cross-references
-
-- Architecture: section 5.18 (Cost-aware routing doctrine)
-- Field lesson: section 12.12 (Cost asymmetry is a routing input)
-- Spend authority claim: executive thesis claim 5
-- Exception taxonomy: `docs/exception-taxonomy.md`
-- Adoption state for new lanes: section 5.13 and `docs/cross-agent-operating-model.md`
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path="docs/cost-aware-routing.md" -->
-
----
-
-### File: `docs/learning-loops.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/learning-loops.md" sha256="3cc2113b22c63666e76787eaef9664b962d8b437a761f539208d8c605da44d88" bytes="5311" trailing_newline="true" -->
-`````````` markdown
-# Learning loops and skill evolution
-
-Version: 1.0
-Audience: coding agents, operators, and architects of long-lived agentic systems.
-
-Stable contracts are the substrate; learning loops are how the system gets better at using them. A system without learning loops handles each new task as if it were the first. Patterns that worked are not promoted into skills, patterns that failed are not deprecated, and the agent rediscovers the same answer every week.
-
----
-
-## 1. Three kinds of learning loop
-
-### 1.1 Within-task: reflection
-
-The per-task self-critique pass. Catches shortcuts, drift, and coupling inside one task. Operates on the change, not on the system. See `docs/reflection-and-planning.md` and section 5.14.
-
-### 1.2 Across-task: skill promotion
-
-A pattern that has worked across N tasks is promoted from ad-hoc agent behavior into a documented skill (section 5.4) with a clear when-to-use rule. The threshold (N, the success criterion, the owner who approves) is part of the harness, not the agent's judgment.
-
-```text
-candidate skill   appears in K tasks; nobody has named it; success
-                  criterion not yet defined.
-
-drafted skill     named, documented, has a when-to-use rule, has at
-                  least one eval. runs in shadow or candidate-write
-                  mode.
-
-canonical skill   eval-backed, owner-approved, used as the default
-                  procedure for its task class.
-
-deprecated skill  superseded or no longer relevant. removed from the
-                  active registry but retained for replay.
-```
-
-Promotion follows the same adoption-state discipline as new tools, sidecars, and lanes (section 5.13).
-
-### 1.3 System-level: external critique
-
-A separate agent or human, on a different cadence than the working agents, reviews aggregate behavior:
-
-```text
-- which patterns are recurring across tasks?
-- which failures are repeating?
-- which contracts need to change?
-- which skills are stale or contradicting newer evidence?
-- which evals are missing for behaviors that have started to matter?
-```
-
-External critique operates on the system, not on any one task. It runs on a slower cadence (weekly, monthly) and produces findings that go to the same destinations as within-task reflection.
-
----
-
-## 2. Closing the loop
-
-The most common learning-loop failure is the loop that exists but is not closed. Closing the loop means the harness has a path from finding to action.
-
-```text
-finding                       destination
-recurring pattern             candidate skill
-recurring failure class       missing eval, contract change proposal
-contract feels wrong          contract change proposal
-ambiguous data subject        candidate signal for human review
-duplicated effort             refactoring task or skill consolidation
-stale skill                   deprecation candidate
-silent degradation observed   exception-taxonomy contract change
-                               (docs/exception-taxonomy.md)
-```
-
-A finding without a destination is a smell, not a feature. Loops that produce findings nobody acts on are journals, not learning.
-
----
-
-## 3. Source authority for findings
-
-Findings are claims. They follow the same source-authority and identity rules as any other claim (section 5.11):
-
-```text
-- candidate signal: someone or something noticed a pattern
-- supported claim: the pattern has corroboration across N tasks
-- promoted claim: the pattern has an owner and an action
-- canonical: the pattern has been encoded in a contract or skill
-```
-
-A finding promoted to "canonical" without going through the candidate stage is a vibes-based change. Treat it as a smell.
-
----
-
-## 4. Adoption state for new skills
-
-A new skill follows the adoption-state ladder:
-
-```text
-reference_only -> shadow_mode -> candidate_write -> write_enabled -> canonical
-```
-
-Skill promotion to canonical requires:
-
-```text
-- evals passing on the skill's task class
-- an owner who has reviewed the skill
-- a rollback plan if the skill turns out to be wrong
-- a deprecation path for the procedure(s) it supersedes
-```
-
-Promotion by acclamation (one good demo) is the same anti-pattern as accidental production promotion (section 9.8).
-
----
-
-## 5. What learning loops are not
-
-```text
-- not chat summaries: a chat summary that nobody reads is not learning.
-- not journals: a daily diary of agent activity is not learning.
-- not fine-tuning a base model: that is a separate change that requires
-   its own evals and adoption process. learning loops here operate on
-   skills, contracts, and evals.
-- not "we tried it and it worked": vibes are not promotion.
-```
-
----
-
-## 6. Common smells
-
-```text
-- weekly digest emails that nobody opens
-- a "lessons learned" file that grows but is never referenced
-- skills that have not changed in N months in a system that has
-- evals that have not changed in N months in a system whose behavior has
-- recurring incidents whose post-mortems do not feed any contract change
-```
-
----
-
-## 7. Cross-references
-
-- Architecture: section 5.19 (Learning loops and skill evolution)
-- Anti-pattern: section 9.13 (No learning loop)
-- Field lesson: section 12.13 (Systems that don't learn get worse)
-- Reflection: `docs/reflection-and-planning.md`
-- Adoption state: section 5.13 and `docs/cross-agent-operating-model.md`
-- Eval design: `docs/evals.md`
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path="docs/learning-loops.md" -->
-
----
+Do not let multiple agents mutate the same source-of-truth files, runtime config, or generated artifacts without an explicit ownership plan.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/subagents.md" -->
 
 ### File: `docs/task-prioritization.md`
 
 <!-- AGENTIC_BUNDLE_FILE_START path="docs/task-prioritization.md" sha256="6b7d5db57a2d032f0cf83e26044493d2b9fcc7651c9bb8ef448c07c217bbf6ec" bytes="5331" trailing_newline="true" -->
-`````````` markdown
+````````
 # Task prioritization and queue discipline
 
 Version: 1.0
@@ -7540,240 +8441,1120 @@ An override without a record becomes folklore the first time anyone questions wh
 - Field lesson: section 12.14 (Priority is not optional)
 - Attention budgets: section 5.12
 - Exception taxonomy and backpressure: `docs/exception-taxonomy.md`
-``````````
+````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/task-prioritization.md" -->
 
+### File: `docs/tool-design.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/tool-design.md" sha256="a64f361ba3d00619ae6076efdd52b477a8f103f5286490b03f4793062973cf98" bytes="3336" trailing_newline="true" -->
+````````
+# Tool Design for Agentic Systems
+
+A tool is an affordance exposed to the model. Do not treat tools as ordinary internal helper functions. Tools need semantic contracts because the model decides when and how to call them.
+
+Every model-callable tool requires:
+
+- name
+- description for the model
+- purpose
+- when to use
+- when not to use
+- input schema
+- output schema
+- side-effect class
+- permission level
+- idempotency policy
+- examples
+- misuse examples
+- failure modes
+- trace fields
+- eval cases
+
+Bad tool designs are vague, overly broad, unsafe, or hard to recover from. A tool called `run(query: string)` is usually too broad. A tool called `search_company_memory(query, company_id, limit, freshness)` is usually better.
+
+Side-effect classes:
+
+- `none`: pure computation or formatting
+- `read`: reads local or external state
+- `write`: writes local workspace state
+- `external_write`: sends or mutates external systems
+- `destructive`: deletes, overwrites, spends money, changes permissions, or causes irreversible effects
+
+Rules:
+
+- External writes require idempotency keys.
+- Destructive tools require human approval unless explicitly whitelisted.
+- Tools return structured errors; they do not silently swallow failure.
+- Tool outputs should be concise, typed, and traceable.
+- Tool descriptions should explain boundaries and examples, not only parameters.
+
+Use `.agentic/tool_catalog.yaml` as the source of truth.
+
+## Source-Aware Tools
+
+Tools that read evidence should declare source role and freshness. Tools that write or publish should declare authority, approval, idempotency, undo strategy, and whether the output is truth, synthesis, candidate signal, or outbound artifact.
+
+A model-friendly tool description should say when not to use the tool. For example, a search index can retrieve evidence, but it should not be described as deciding which source wins. A report renderer can create synthesis, but it should not silently promote the report back into durable truth.
+
+## Agent-Native CLI Surfaces
+
+A CLI that agents call is a tool API. It should not depend on human patience, terminal prompts, colored tables, or undocumented conventions.
+
+Required CLI affordances:
+
+- Non-interactive mode for every command that can prompt: `--no-input`, `--yes`/`--force`, and correct non-TTY behavior.
+- Uniform structured output: `--json` for data, diagnostics on stderr, stable schemas, and documented exit codes.
+- Actionable validation errors: reject before side effects, enumerate valid enum/resource values, and provide a next invocation when possible.
+- Safe writes: `--dry-run`, explicit destructive flags, idempotency keys or natural keys, and durable resource ids in mutation responses.
+- Bounded reads: `--limit`, filters, cursors, truncation metadata, and concise-vs-detail modes.
+- Introspection: `--help` for humans, versioned machine-readable `agent-context` for agents, and skill/task manifests for workflows.
+- Async recovery: `--wait`, durable job ledger, and `jobs list/get/prune` for in-flight work.
+- Target clarity: local vs. remote/prod target shown in output and traces.
+- Feedback channel: a local and optionally upstream `feedback` path for agent friction reports.
+
+For broad CLIs, enforce naming and behavior from a schema/codegen layer so CLI, SDK, MCP/tool definitions, docs, and skills do not drift.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/tool-design.md" -->
+
+### File: `docs/version-and-adoption.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/version-and-adoption.md" sha256="e76315910a6b593aa89bcd33093303eec01ebfab3bb657037a5b47064efbe066" bytes="2067" trailing_newline="true" -->
+````````
+# Version and Adoption State
+
+This file records the current canonicality and rollout posture of the guide. It is intentionally small; version metadata should prevent ambiguity, not become governance theatre.
+
+## Current version
+
+**Current local version: v1.5**
+**Date:** 2026-05-09
+**Canonical source:** live multifile repository
+
+`agentic_architecture_singlefile.md` is a generated distribution/recovery artifact. It should validate against live files before sharing and must not contain unique canonical doctrine.
+
+## Adoption state by area
+
+| Area | Status | Notes |
+|---|---|---|
+| Deterministic harness / adaptive policy | canonical | Core doctrine. |
+| Simplicity / deletion-first design | canonical | Complexity requires benefit much greater than hidden cost. |
+| Source authority and truth/synthesis boundaries | canonical | Treat raw source, structured truth, retrieval, recall, synthesis, sidecars, candidate signals, and outbound artifacts as distinct roles. |
+| Agent-native CLI/tool-surface guidance | canonical | CLI surfaces are model-facing APIs. |
+| Repository seams and small-file guidance | canonical | Split at stable contracts; avoid multi-responsibility mega-files. |
+| Embedded single-file bundle | generated adapter | Distribution/recovery only; not an editing source. |
+| Neutral `skills/` package | canonical | Runtime-specific skill paths are adapters. |
+| Claude/Codex skill adapters | adapter | Must not contain unique doctrine absent from `skills/`. |
+| Lightweight package validator/eval checks | canonical baseline | Intended to catch drift, not replace real project-specific evals. |
+| Deep reference docs | reference | Load only when the topic applies. |
+
+## Promotion rule
+
+New doctrine becomes canonical only when it has:
+
+1. a clear source-authority location in the live multifile repo,
+2. a deletion-first justification,
+3. either a validator/eval/fixture or an explicit reason why a static check is sufficient,
+4. no unique copy hidden in a runtime-specific adapter, and
+5. a rollback/deprecation path if it later proves wrong.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/version-and-adoption.md" -->
+
+### File: `rebuild_agentic_architecture.py`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="rebuild_agentic_architecture.py" sha256="4498f113192da9f14b55ca5898935e98301d6e52bdbae0d336f827652a5e9c4d" bytes="3153" trailing_newline="true" -->
+````````
+#!/usr/bin/env python3
+"""
+Rebuild the multifile agentic architecture pack from the single Markdown source.
+
+Usage:
+  python rebuild_agentic_architecture.py agentic_architecture_singlefile.md ./agentic_architecture_pack
+  python rebuild_agentic_architecture.py agentic_architecture_singlefile.md ./agentic_architecture_pack --overwrite
+"""
+from pathlib import Path
+import argparse
+import hashlib
+import re
+
+START_RE = re.compile(
+    r'<!-- AGENTIC_BUNDLE_FILE_START path="([^"]+)" sha256="([a-f0-9]{64})" bytes="(\d+)" trailing_newline="(true|false)" -->'
+)
+DIR_RE = re.compile(r'<!-- AGENTIC_BUNDLE_DIR path="([^"]+)" -->')
+FENCE_RE = re.compile(r'^`{8,}|^~{8,}')
+
+
+def extract_fenced_payload(block: str, trailing_newline: bool) -> str:
+    lines = block.splitlines(keepends=True)
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    while lines and not lines[-1].strip():
+        lines.pop()
+    if not lines or not FENCE_RE.match(lines[0].strip()):
+        raise ValueError("Missing opening long fence for payload")
+    fence = lines.pop(0).strip().split()[0]
+    if not lines or lines[-1].strip() != fence:
+        raise ValueError("Missing closing long fence for payload")
+    lines.pop()
+    payload = "".join(lines)
+    if not trailing_newline and payload.endswith("\n"):
+        payload = payload[:-1]
+    return payload
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("single_file", type=Path)
+    parser.add_argument("out_dir", type=Path)
+    parser.add_argument("--overwrite", action="store_true")
+    args = parser.parse_args()
+
+    source = args.single_file.read_text(encoding="utf-8")
+    args.out_dir.mkdir(parents=True, exist_ok=True)
+
+    for match in DIR_RE.finditer(source):
+        (args.out_dir / match.group(1)).mkdir(parents=True, exist_ok=True)
+
+    count = 0
+    for match in START_RE.finditer(source):
+        path = match.group(1)
+        expected_sha = match.group(2)
+        expected_bytes = int(match.group(3))
+        trailing_newline = match.group(4) == "true"
+        end_marker = f'<!-- AGENTIC_BUNDLE_FILE_END path="{path}" -->'
+        end_index = source.find(end_marker, match.end())
+        if end_index == -1:
+            raise ValueError(f"Missing end marker for {path}")
+        payload = extract_fenced_payload(source[match.end():end_index], trailing_newline)
+        actual_bytes = len(payload.encode("utf-8"))
+        actual_sha = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+        if actual_bytes != expected_bytes or actual_sha != expected_sha:
+            raise ValueError(
+                f"Payload mismatch for {path}: bytes {actual_bytes}/{expected_bytes}, sha {actual_sha}/{expected_sha}"
+            )
+        out_path = args.out_dir / path
+        if out_path.exists() and not args.overwrite:
+            raise FileExistsError(f"Refusing to overwrite existing file: {out_path}")
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(payload, encoding="utf-8")
+        count += 1
+
+    print(f"Rebuilt {count} files into {args.out_dir}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="rebuild_agentic_architecture.py" -->
+
+### File: `scripts/validate_agentic_pack.py`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="scripts/validate_agentic_pack.py" sha256="8ded9da55631e726e1a2748283922803eb3cca2b18e8010ab360e02778532d0a" bytes="18184" trailing_newline="true" -->
+````````
+#!/usr/bin/env python3
+"""Validate the agentic architecture guide package without external dependencies.
+
+This is intentionally a small contract checker, not an eval framework. It fails
+when the package violates source-authority or behavioral-eval contracts that the
+repo claims to teach.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import re
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Iterable
+
+BUNDLE_START_RE = re.compile(
+    r'<!-- AGENTIC_BUNDLE_FILE_START path="([^"]+)" sha256="([a-f0-9]{64})" bytes="(\d+)" trailing_newline="(true|false)" -->'
+)
+FENCE_RE = re.compile(r"^`{8,}|^~{8,}")
+DOC_REF_RE = re.compile(r"(?<![A-Za-z0-9_./-])(docs/[A-Za-z0-9._/-]+\.md)\b")
+PATH_LINE_RE = re.compile(r"^\s*path:\s*(.+?)\s*$")
+CANONICAL_SKILL_PATH_RE = re.compile(r"^\s{4}path:\s*(.+?)\s*$")
+ADAPTER_SKILL_PATH_RE = re.compile(r"^\s{6}(claude|codex):\s*(.+?)\s*$")
+CASE_START_RE = re.compile(r"^\s*-\s+id:\s*(\S+)\s*$")
+FIELD_RE = re.compile(r"^\s{4}([A-Za-z0-9_]+):\s*(.*?)\s*$")
+EXPECTED_FIELD_RE = re.compile(r"^\s{6}([A-Za-z0-9_]+):\s*(.*?)\s*$")
+
+# These are generated/example output paths, not guide source files.
+DOC_REFERENCE_ALLOWLIST = {
+    "docs/current-agentic-inventory.md",
+}
+
+ROOT_REFERENCE_FILES = [
+    "AGENTS.md",
+    "README.md",
+    "CLAUDE.md",
+    ".github/pull_request_template.md",
+]
+
+EXPECTED_BUNDLE_ROOT_FILES = [
+    ".gitignore",
+    "README.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "build_agentic_architecture_singlefile.py",
+    "rebuild_agentic_architecture.py",
+    ".github/pull_request_template.md",
+]
+EXPECTED_BUNDLE_GLOBS = [
+    ".agentic/*.yaml",
+    "docs/*.md",
+    "skills/*/SKILL.md",
+    ".claude/skills/*/SKILL.md",
+    ".codex/skills/*/SKILL.md",
+    "scripts/*.py",
+    "tests/**/*.py",
+    "tests/**/*.json",
+]
+
+REQUIRED_EVAL_FIELDS = {"id", "task", "category", "expected"}
+REQUIRED_COVERAGE_CATEGORIES = {
+    "simplicity_deletion",
+    "cli_affordance",
+    "parallel_slice",
+    "source_authority",
+    "side_effect_approval",
+}
+
+
+@dataclass(frozen=True)
+class BundlePayload:
+    path: str
+    payload: str
+    sha256: str
+    byte_count: int
+    trailing_newline: bool
+
+
+@dataclass(frozen=True)
+class EvalCase:
+    id: str
+    fields: dict[str, object]
+
+
+class ValidationReport:
+    def __init__(self) -> None:
+        self.errors: list[str] = []
+        self.warnings: list[str] = []
+        self.ok: list[str] = []
+
+    def fail(self, message: str) -> None:
+        self.errors.append(message)
+
+    def warn(self, message: str) -> None:
+        self.warnings.append(message)
+
+    def pass_(self, message: str) -> None:
+        self.ok.append(message)
+
+    @property
+    def passed(self) -> bool:
+        return not self.errors
+
+
+def extract_fenced_payload(block: str, trailing_newline: bool) -> str:
+    lines = block.splitlines(keepends=True)
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    while lines and not lines[-1].strip():
+        lines.pop()
+    if not lines or not FENCE_RE.match(lines[0].strip()):
+        raise ValueError("missing opening long fence for bundle payload")
+    fence = lines.pop(0).strip().split()[0]
+    if not lines or lines[-1].strip() != fence:
+        raise ValueError("missing closing long fence for bundle payload")
+    lines.pop()
+    payload = "".join(lines)
+    if not trailing_newline and payload.endswith("\n"):
+        payload = payload[:-1]
+    return payload
+
+
+def read_bundle_payloads(single_file: Path) -> dict[str, BundlePayload]:
+    source = single_file.read_text(encoding="utf-8")
+    payloads: dict[str, BundlePayload] = {}
+    for match in BUNDLE_START_RE.finditer(source):
+        rel_path, expected_sha, expected_bytes, trailing_text = match.groups()
+        trailing_newline = trailing_text == "true"
+        end_marker = f'<!-- AGENTIC_BUNDLE_FILE_END path="{rel_path}" -->'
+        end_index = source.find(end_marker, match.end())
+        if end_index == -1:
+            raise ValueError(f"missing bundle end marker for {rel_path}")
+        payload = extract_fenced_payload(source[match.end() : end_index], trailing_newline)
+        payloads[rel_path] = BundlePayload(
+            path=rel_path,
+            payload=payload,
+            sha256=expected_sha,
+            byte_count=int(expected_bytes),
+            trailing_newline=trailing_newline,
+        )
+    return payloads
+
+
+def parse_skill_registry_paths(path: Path) -> list[str]:
+    paths: list[str] = []
+    if not path.exists():
+        return paths
+    for line in path.read_text(encoding="utf-8").splitlines():
+        match = PATH_LINE_RE.match(line)
+        if match:
+            paths.append(match.group(1).strip().strip('"\''))
+    return paths
+
+
+def parse_skill_registry_skill_paths(path: Path) -> list[tuple[str, list[str]]]:
+    """Return canonical skill paths paired with adapter paths.
+
+    This deliberately parses only the small registry shape used in this pack.
+    It avoids adding a YAML dependency just to enforce package integrity.
+    """
+    entries: list[tuple[str, list[str]]] = []
+    canonical: str | None = None
+    adapters: list[str] = []
+    if not path.exists():
+        return entries
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("  - name:"):
+            if canonical:
+                entries.append((canonical, adapters))
+            canonical = None
+            adapters = []
+            continue
+        canonical_match = CANONICAL_SKILL_PATH_RE.match(line)
+        if canonical_match:
+            canonical = canonical_match.group(1).strip().strip('"\'')
+            continue
+        adapter_match = ADAPTER_SKILL_PATH_RE.match(line)
+        if adapter_match:
+            adapters.append(adapter_match.group(2).strip().strip('"\''))
+    if canonical:
+        entries.append((canonical, adapters))
+    return entries
+
+
+def scalar(value: str) -> object:
+    value = value.strip().strip('"\'')
+    if value == "true":
+        return True
+    if value == "false":
+        return False
+    if value == "[]":
+        return []
+    return value
+
+
+def parse_eval_cases(path: Path) -> list[EvalCase]:
+    cases: list[EvalCase] = []
+    current_id: str | None = None
+    current: dict[str, object] = {}
+    in_expected = False
+
+    def flush() -> None:
+        nonlocal current_id, current, in_expected
+        if current_id is not None:
+            cases.append(EvalCase(current_id, current))
+        current_id = None
+        current = {}
+        in_expected = False
+
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.rstrip()
+        if not line or line.lstrip().startswith("#"):
+            continue
+        start = CASE_START_RE.match(line)
+        if start:
+            flush()
+            current_id = start.group(1)
+            current = {"id": current_id}
+            continue
+        if current_id is None:
+            continue
+        field = FIELD_RE.match(line)
+        if field:
+            key, value = field.groups()
+            if key == "expected":
+                current["expected"] = {}
+                in_expected = True
+            else:
+                current[key] = scalar(value)
+                in_expected = False
+            continue
+        expected_field = EXPECTED_FIELD_RE.match(line)
+        if in_expected and expected_field:
+            key, value = expected_field.groups()
+            expected = current.setdefault("expected", {})
+            if isinstance(expected, dict):
+                expected[key] = scalar(value)
+    flush()
+    return cases
+
+
+def discover_doc_refs(root: Path) -> set[str]:
+    refs: set[str] = set()
+    candidates: list[Path] = []
+    for rel in ROOT_REFERENCE_FILES:
+        path = root / rel
+        if path.exists():
+            candidates.append(path)
+    docs_dir = root / "docs"
+    if docs_dir.exists():
+        candidates.extend(sorted(docs_dir.glob("*.md")))
+    agentic_dir = root / ".agentic"
+    if agentic_dir.exists():
+        candidates.extend(sorted(agentic_dir.glob("*.yaml")))
+    for file_path in candidates:
+        text = file_path.read_text(encoding="utf-8")
+        for match in DOC_REF_RE.finditer(text):
+            refs.add(match.group(1))
+    return refs
+
+
+def expected_bundle_paths(root: Path) -> set[str]:
+    paths: set[str] = set()
+    for rel_path in EXPECTED_BUNDLE_ROOT_FILES:
+        if (root / rel_path).exists():
+            paths.add(rel_path)
+    for pattern in EXPECTED_BUNDLE_GLOBS:
+        for path in root.glob(pattern):
+            if "__pycache__" in path.parts:
+                continue
+            if path.is_file() or path.is_symlink():
+                paths.add(path.relative_to(root).as_posix())
+    return paths
+
+
+def check_bundle(root: Path, report: ValidationReport) -> dict[str, BundlePayload]:
+    single_file = root / "agentic_architecture_singlefile.md"
+    if not single_file.exists():
+        report.fail("missing agentic_architecture_singlefile.md")
+        return {}
+    try:
+        payloads = read_bundle_payloads(single_file)
+    except Exception as exc:  # noqa: BLE001 - diagnostic script should report all parsing failures cleanly.
+        report.fail(f"could not parse single-file bundle: {exc}")
+        return {}
+    if not payloads:
+        report.fail("single-file bundle contains no AGENTIC_BUNDLE_FILE_START payloads")
+        return {}
+
+    hash_failures = []
+    live_mismatches = []
+    embedded_only_docs = []
+    for rel_path, bundle in payloads.items():
+        payload_bytes = bundle.payload.encode("utf-8")
+        actual_sha = hashlib.sha256(payload_bytes).hexdigest()
+        if actual_sha != bundle.sha256 or len(payload_bytes) != bundle.byte_count:
+            hash_failures.append(rel_path)
+        live_path = root / rel_path
+        if live_path.exists():
+            live_text = live_path.read_text(encoding="utf-8")
+            if live_text != bundle.payload:
+                live_mismatches.append(rel_path)
+        elif rel_path.startswith("docs/") and rel_path.endswith(".md"):
+            embedded_only_docs.append(rel_path)
+    if hash_failures:
+        report.fail("bundle payload metadata mismatch: " + ", ".join(sorted(hash_failures)))
+    else:
+        report.pass_(f"bundle payload metadata valid for {len(payloads)} files")
+    if live_mismatches:
+        report.fail("bundle payloads differ from live files: " + ", ".join(sorted(live_mismatches)))
+    else:
+        report.pass_("bundle payloads match all live files present in the bundle")
+    if embedded_only_docs:
+        report.fail("embedded-only bundle docs are not materialized: " + ", ".join(sorted(embedded_only_docs)))
+    else:
+        report.pass_("all bundled docs are materialized as live files")
+    missing_from_bundle = sorted(expected_bundle_paths(root) - set(payloads))
+    if missing_from_bundle:
+        report.fail("live canonical files are missing from single-file bundle: " + ", ".join(missing_from_bundle))
+    else:
+        report.pass_("single-file bundle includes all expected live canonical files")
+    return payloads
+
+
+def check_doc_refs(root: Path, report: ValidationReport) -> None:
+    refs = discover_doc_refs(root)
+    missing = sorted(ref for ref in refs if ref not in DOC_REFERENCE_ALLOWLIST and not (root / ref).exists())
+    if missing:
+        report.fail("referenced docs are missing: " + ", ".join(missing))
+    else:
+        report.pass_(f"referenced docs exist ({len(refs)} references checked; {len(DOC_REFERENCE_ALLOWLIST)} allowlisted examples)")
+
+
+def check_skill_registry(root: Path, report: ValidationReport) -> None:
+    registry_path = root / ".agentic" / "skill_registry.yaml"
+    entries = parse_skill_registry_skill_paths(registry_path)
+    paths = sorted({path for canonical, adapters in entries for path in [canonical, *adapters]})
+    if not entries:
+        paths = parse_skill_registry_paths(registry_path)
+    if not paths:
+        report.fail("skill registry has no path entries")
+        return
+    missing = sorted(path for path in paths if not (root / path).exists())
+    adapter_drift: list[str] = []
+    for canonical, adapters in entries:
+        canonical_path = root / canonical
+        if not canonical_path.exists():
+            continue
+        canonical_text = canonical_path.read_text(encoding="utf-8")
+        for adapter in adapters:
+            adapter_path = root / adapter
+            if adapter_path.exists() and adapter_path.read_text(encoding="utf-8") != canonical_text:
+                adapter_drift.append(f"{adapter} != {canonical}")
+    if missing:
+        report.fail("skill registry paths are missing: " + ", ".join(missing))
+    elif adapter_drift:
+        report.fail("skill adapter paths drift from canonical skills: " + ", ".join(sorted(adapter_drift)))
+    else:
+        report.pass_(f"skill registry paths exist and adapters match canonical skills ({len(paths)} paths)")
+
+
+def check_eval_matrix(root: Path, report: ValidationReport) -> None:
+    matrix_path = root / ".agentic" / "eval_matrix.yaml"
+    if not matrix_path.exists():
+        report.fail("missing .agentic/eval_matrix.yaml")
+        return
+    try:
+        cases = parse_eval_cases(matrix_path)
+    except Exception as exc:  # noqa: BLE001
+        report.fail(f"could not parse eval matrix: {exc}")
+        return
+    if not cases:
+        report.fail("eval matrix has no cases")
+        return
+
+    duplicate_ids = sorted({case.id for case in cases if [c.id for c in cases].count(case.id) > 1})
+    if duplicate_ids:
+        report.fail("duplicate eval case ids: " + ", ".join(duplicate_ids))
+
+    missing_fields: list[str] = []
+    empty_expected: list[str] = []
+    fixture_missing: list[str] = []
+    categories: set[str] = set()
+    for case in cases:
+        missing = sorted(field for field in REQUIRED_EVAL_FIELDS if field not in case.fields)
+        if missing:
+            missing_fields.append(f"{case.id} missing {','.join(missing)}")
+        expected = case.fields.get("expected")
+        if not isinstance(expected, dict) or not expected:
+            empty_expected.append(case.id)
+        category = case.fields.get("category")
+        if isinstance(category, str) and category:
+            categories.add(category)
+        fixture = case.fields.get("fixture")
+        if isinstance(fixture, str) and fixture:
+            fixture_path = fixture.split("#", 1)[0]
+            if not (root / fixture_path).exists():
+                fixture_missing.append(f"{case.id}->{fixture}")
+    if missing_fields:
+        report.fail("eval cases missing required fields: " + "; ".join(missing_fields))
+    if empty_expected:
+        report.fail("eval cases missing non-empty expected maps: " + ", ".join(sorted(empty_expected)))
+    missing_categories = sorted(REQUIRED_COVERAGE_CATEGORIES - categories)
+    if missing_categories:
+        report.fail("eval matrix missing required behavior categories: " + ", ".join(missing_categories))
+    if fixture_missing:
+        report.fail("eval cases reference missing fixtures: " + ", ".join(sorted(fixture_missing)))
+    if not (missing_fields or empty_expected or missing_categories or fixture_missing or duplicate_ids):
+        report.pass_(f"eval matrix valid ({len(cases)} cases; required behavior categories covered)")
+
+
+def check_behavior_fixture(root: Path, report: ValidationReport) -> None:
+    fixture_path = root / "tests" / "agentic" / "behavior_fixtures.json"
+    if not fixture_path.exists():
+        report.fail("missing tests/agentic/behavior_fixtures.json")
+        return
+    try:
+        data = json.loads(fixture_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        report.fail(f"behavior fixture is invalid JSON: {exc}")
+        return
+    cases = data.get("cases")
+    if not isinstance(cases, list) or not cases:
+        report.fail("behavior fixture must contain non-empty cases list")
+        return
+    by_id = {}
+    fixture_errors: list[str] = []
+    for case in cases:
+        if not isinstance(case, dict):
+            fixture_errors.append("non-object case")
+            continue
+        case_id = case.get("id")
+        if not isinstance(case_id, str) or not case_id:
+            fixture_errors.append("case without id")
+            continue
+        by_id[case_id] = case
+        for field in ["prompt", "expected_trace", "must_not"]:
+            value = case.get(field)
+            if field == "prompt" and not isinstance(value, str):
+                fixture_errors.append(f"{case_id} missing prompt string")
+            if field in {"expected_trace", "must_not"} and not isinstance(value, list):
+                fixture_errors.append(f"{case_id} missing {field} list")
+    missing_fixture_categories = sorted(REQUIRED_COVERAGE_CATEGORIES - set(by_id))
+    if missing_fixture_categories:
+        fixture_errors.append("missing fixture ids/categories: " + ", ".join(missing_fixture_categories))
+    if fixture_errors:
+        report.fail("behavior fixture contract failures: " + "; ".join(fixture_errors))
+    else:
+        report.pass_(f"behavior fixture valid ({len(cases)} cases)")
+
+
+def validate(root: Path) -> ValidationReport:
+    report = ValidationReport()
+    check_bundle(root, report)
+    check_doc_refs(root, report)
+    check_skill_registry(root, report)
+    check_eval_matrix(root, report)
+    check_behavior_fixture(root, report)
+    return report
+
+
+def print_report(report: ValidationReport) -> None:
+    for message in report.ok:
+        print(f"PASS: {message}")
+    for message in report.warnings:
+        print(f"WARN: {message}")
+    for message in report.errors:
+        print(f"FAIL: {message}")
+
+
+def main(argv: Iterable[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Validate agentic architecture guide package integrity.")
+    parser.add_argument(
+        "--root",
+        type=Path,
+        default=Path(__file__).resolve().parents[1],
+        help="Guide repo root. Defaults to the parent of this script directory.",
+    )
+    args = parser.parse_args(list(argv) if argv is not None else None)
+    report = validate(args.root.resolve())
+    print_report(report)
+    return 0 if report.passed else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="scripts/validate_agentic_pack.py" -->
+
+### File: `skills/build-agent-eval/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/build-agent-eval/SKILL.md" sha256="89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c" bytes="531" trailing_newline="true" -->
+````````
+---
+name: build-agent-eval
+description: Use when adding tests or evals for agentic behavior.
 ---
 
-### File: `docs/QUICK_REFERENCE.md`
+# Build Agent Eval
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/QUICK_REFERENCE.md" sha256="cae3501aa3bcd04020ad3a58f278272d1e016dfb768a465f243a4828bd7a0329" bytes="15038" trailing_newline="true" -->
-`````````` markdown
-# Quick reference for coding agents
+## Procedure
 
-Version: 1.0
-Purpose: lossy distillation of the architecture pack. Rules only, no examples, no rationale. Use as cold-start companion to `AGENTS.md` and `CLAUDE.md`. Load the deep doc only for the topic you are actually touching.
+1. Identify the behavior being tested.
+2. Create positive and negative cases.
+3. Test process, not only final answer.
+4. Capture tool choice, memory retrieval, context use, approval gates, recovery, and stop conditions.
+5. Add cheap tests for CI and heavier tests for release or nightly runs.
+6. Ensure failures are traceable.
 
-If your task touches **schemas, permissions, idempotency, budgets, checkpoints, source authority, identity resolution, tool execution, human approval, traces, or evals** — that is harness work. Use deterministic code.
+## Output
 
-If your task touches **ambiguous intent, context selection, tool choice, memory retrieval, task decomposition, plan revision, recovery, or synthesis** — that is policy work. Use the model.
+Return eval cases, expected traces, and pass/fail criteria.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="skills/build-agent-eval/SKILL.md" -->
 
+### File: `skills/design-agent-memory/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/design-agent-memory/SKILL.md" sha256="bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1" bytes="692" trailing_newline="true" -->
+````````
+---
+name: design-agent-memory
+description: Use when adding or reviewing memory search, memory writes, promotion, contradiction, or recall behavior.
 ---
 
-## Six doctrinal claims (non-negotiable)
+# Design Agent Memory
 
-1. **Deterministic harness, adaptive policy.** Determinism in the harness; ambiguous decisions in the model-owned policy layer with the right tools, memory, skills, and context.
-2. **Source-of-truth role separation.** Truth, retrieval, recall, synthesis, sidecars, candidate signals, and external reports are different roles. Do not collapse them.
-3. **Incidents become contracts.** Every production failure produces a harness change, an acceptance test, an eval/replay fixture, and an adoption rule.
-4. **Causal depth.** Do not stop at the first true local explanation. Name the missing contract in memory, context, tool semantics, source authority, durable state, ownership, guardrails, or evals.
-5. **Spend authority.** Paid API keys are gateway-owned exception paths, not ambient context. Attribution, budgets, rate limits, and tests that fail when direct key reads come back.
-6. **Coupling cost asymmetry.** Declaring a seam now is linear; untangling later is super-linear in callers and editors. Bias forward: declare the seam now even when the local diff would be smaller without it.
+## Procedure
 
+1. Identify the memory type: working, episodic, semantic, or procedural.
+2. Define scope: user, org, repo, project, entity, session, or agent.
+3. Require evidence for durable claims.
+4. Use candidate writes before promotion unless policy allows direct promotion.
+5. Handle contradiction, supersession, staleness, and expiration.
+6. Ensure memory retrieval is evaluated.
+7. Ensure memory used in final answers is traceable.
+
+## Output
+
+Return memory schema changes, memory tool changes, and eval cases.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="skills/design-agent-memory/SKILL.md" -->
+
+### File: `skills/design-agent-tool/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/design-agent-tool/SKILL.md" sha256="bf6e0c0068122f1eae8a97c2ef5e19650456d1182bedf98a100c29874626b077" bytes="623" trailing_newline="true" -->
+````````
+---
+name: design-agent-tool
+description: Use when adding, modifying, or reviewing a tool exposed to an agent.
 ---
 
-## Component classification (declare one before coding)
+# Design Agent Tool
 
-`deterministic workflow` · `augmented LLM` · `agent loop` · `multi-agent / subagent` · `tool` · `tool registry` · `skill` · `memory subsystem` · `source lane / authority layer` · `identity resolution layer` · `context engine` · `durable execution layer` · `guardrail / human-review layer` · `cross-agent coordination layer` · `attention / notification policy` · `adoption-state change` · `eval / observability layer`
+## Procedure
 
+1. Decide whether the model should call this tool directly.
+2. Define the semantic purpose.
+3. Define when to use and when not to use.
+4. Define input and output schemas.
+5. Classify side effects and permissions.
+6. Add idempotency for writes and external side effects.
+7. Add examples and misuse examples.
+8. Define structured errors and failure modes.
+9. Add trace fields.
+10. Add tool-choice and misuse evals.
+
+## Output
+
+Return a tool contract and list of tests/evals.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="skills/design-agent-tool/SKILL.md" -->
+
+### File: `skills/design-context-engine/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/design-context-engine/SKILL.md" sha256="34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4" bytes="624" trailing_newline="true" -->
+````````
+---
+name: design-context-engine
+description: Use when changing context assembly, compaction, retrieval, or prompt budgeting.
 ---
 
-## Seam-declaration rule (every non-trivial change)
+# Design Context Engine
 
-Before code:
+## Procedure
 
-1. **Modules touched** — what does this change read, write, or import?
-2. **Interfaces depended on** — which contracts does this change consume?
-3. **Interfaces defined or changed** — what does this introduce, modify, deprecate, or extend? What is public, what is intentionally private?
-4. **Substitutability** — what changes if the implementation behind each interface is swapped (different store, model, transport, provider)? Many things in many places means the seam is wrong.
+1. Define always-loaded context.
+2. Define retrieval-loaded context.
+3. Define activation-loaded context such as full tool schemas and skill bodies.
+4. Add token budgets and priority rules.
+5. Add source ledger entries for every context item.
+6. Define compaction triggers.
+7. Test that goals, constraints, evidence, open questions, pending approvals, and artifacts survive compaction.
 
-Six coupling smells (any of these = creating coupling):
+## Output
 
-- **God-object state bag** — function takes a `context`/`state`/`request` bag and reads ≥4 fields.
-- **Reaching through internals** — `module.B._private` access from outside B.
-- **Runtime type-switch on opaque payload** — `if event.kind == ...` chain growing branch by branch.
-- **Hidden temporal dependency** — A must be called before B, encoded only in caller order.
-- **"Just one more parameter" creep** — function accumulates 6+ optional parameters added by N agents.
-- **Multi-module test instantiation** — unit test imports 4 modules to construct the system under test.
+Return context policy changes and compaction eval cases.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="skills/design-context-engine/SKILL.md" -->
 
-Detail: `docs/modularity-and-seams.md`. Anti-pattern 9.9. Field lesson 12.10.
+### File: `skills/design-source-lane/SKILL.md`
 
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/design-source-lane/SKILL.md" sha256="a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460" bytes="1208" trailing_newline="true" -->
+````````
+---
+name: design-source-lane
+description: Use when adding or reviewing a source lane, source-authority rule, identity-resolution path, noisy-lane promotion policy, sidecar adoption state, or synthesis boundary.
 ---
 
-## Reflection checklist (before declaring done)
+# Design Source Lane
 
-1. **Goal drift** — original goal restated; change still serves it; no quiet redefinition to "make the test pass."
-2. **Coupling and seams** — none of the six smells; no boundary crossed; no parameter/branch/field that other modules now depend on by absence.
-3. **Shortcuts** — no skipped step (validation, schema, idempotency, source-authority lookup, memory write, eval coverage, durable-state record).
-4. **Hidden state** — no undocumented dependency on globals, env vars, file layout, time, process startup order.
-5. **Failure modes** — every external dep has stated behavior under slow/unavailable/partial/garbage; nothing silently re-raises.
-6. **Tests and evals** — no new behavior is true that no test exercises; no incident class reachable that no eval catches.
-7. **Causal depth** — for fixes: proximate cause + ultimate contract both named; if only proximate addressed, remaining incident class named as gap.
+## Procedure
 
-Hidden gaps are worse than known gaps.
+1. Identify the artifact role: raw source, structured truth, retrieval index, recall memory, synthesis artifact, candidate signal, sidecar, or outbound artifact.
+2. Define raw capture and idempotency.
+3. Define identity resolution: aliases, external IDs, merge evidence, and unmerge path.
+4. Define claim categories and source authority by category.
+5. Define freshness, staleness, and contradiction behavior.
+6. Define promotion rules and review queues.
+7. Define health checks and trace fields.
+8. Define synthesis behavior without making synthesis authoritative by default.
+9. Define attention behavior: silent, internal record, review queue, ask, notify, interrupt, or approval.
+10. Add evals for conflict, stale evidence, bad identity merge, noisy-lane promotion, and accidental sidecar promotion.
 
-Detail: `docs/reflection-and-planning.md`. Anti-pattern 9.10.
+## Output
 
+Return a source-lane contract, affected artifact roles, identity policy, authority matrix, adoption state, attention policy, and eval cases.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="skills/design-source-lane/SKILL.md" -->
+
+### File: `skills/review-agentic-architecture/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/review-agentic-architecture/SKILL.md" sha256="16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164" bytes="812" trailing_newline="true" -->
+````````
+---
+name: review-agentic-architecture
+description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
 ---
 
-## Plan as artifact (before action)
+# Review Agentic Architecture
 
-Goal · Acceptance proof · Component classification · Seam declaration · Failure-mode budget · Routing decision · Out of scope.
+## Checklist
 
-Goal-drift checks: before each tool call, before declaring done, inside reflection. If goal genuinely changes mid-task, change the plan explicitly.
+- Is the component correctly classified?
+- Are model-owned decisions separated from harness-owned responsibilities?
+- Are ambiguous decisions handled by adaptive policy rather than brittle regex or keyword routing?
+- Are tools typed, permissioned, observable, and tested?
+- Is memory scoped, evidenced, and contradiction-aware?
+- Is context assembled by policy rather than dumping everything?
+- Are risky side effects gated by approval and idempotency?
+- Are checkpoints and replay behavior safe?
+- Are evals included for positive and negative cases?
 
-Detail: `docs/reflection-and-planning.md`.
+## Output
 
----
+Return pass/fail with required changes.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="skills/review-agentic-architecture/SKILL.md" -->
 
-## Three exception classes (every retry/fallback/degradation attaches to one)
+### File: `tests/__init__.py`
 
-- **Recoverable** — retry per policy; surface only on budget exhaustion; do not poison durable state.
-- **Degraded** — produce partial result; mark missing pieces; surface a structured signal (never silent); record what would have been there.
-- **Unrecoverable** — stop; do not retry; do not degrade; write structured failure record; alert per attention policy.
+<!-- AGENTIC_BUNDLE_FILE_START path="tests/__init__.py" sha256="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" bytes="0" trailing_newline="false" -->
+````````
 
-A retry without a class is a guess. Silent degradation is a bug. Silent paid spillover is a bug. Silent retry past budget is a bug.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="tests/__init__.py" -->
 
-Detail: `docs/exception-taxonomy.md`. Anti-pattern 9.11. Field lesson 12.11.
+### File: `tests/agentic/__init__.py`
 
----
+<!-- AGENTIC_BUNDLE_FILE_START path="tests/agentic/__init__.py" sha256="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" bytes="0" trailing_newline="false" -->
+````````
 
-## A2A message contracts (every agent-to-agent message type)
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="tests/agentic/__init__.py" -->
 
-Schema · Direction (request/reply/broadcast/signal/event) · Idempotency (key, hash, dedup window, or documented at-least-once handler) · Versioning (additive vs migration) · Authority (sender + receiver, registry-enforced) · Failure attribution (per exception class, both sides) · Audit surface.
+### File: `tests/agentic/behavior_fixtures.json`
 
-Payloads typed as `dict`/`any` are folklore. A2A traffic with no audit surface is invisible.
+<!-- AGENTIC_BUNDLE_FILE_START path="tests/agentic/behavior_fixtures.json" sha256="415fca09a20e0641a4d41a4b69f4a77506e88ec7b389203b3b177f7f2cc8549a" bytes="2996" trailing_newline="true" -->
+````````
+{
+  "description": "Minimal deterministic behavior fixtures for guide-level agentic eval coverage. These are trace contracts, not model-graded prose rubrics.",
+  "cases": [
+    {
+      "id": "simplicity_deletion",
+      "eval_matrix_case": "simplicity_deletion_before_machinery",
+      "prompt": "A coding agent keeps missing a context file. Proposed fix: add a router, queue, schema, watchdog, and guardrail policy to force the behavior.",
+      "expected_trace": [
+        "question_requirement",
+        "delete_unnecessary_machinery",
+        "prefer_context_tool_source_affordance",
+        "explain_hidden_complexity_cost"
+      ],
+      "must_not": [
+        "approve_machinery_without_named_failure",
+        "automate_before_simplifying",
+        "treat_prompt_guardrail_as_root_fix"
+      ]
+    },
+    {
+      "id": "cli_affordance",
+      "eval_matrix_case": "agent_native_cli_affordance",
+      "prompt": "Design the CLI surface an agent should use to inspect current state and make a safe change.",
+      "expected_trace": [
+        "headless_command",
+        "json_output",
+        "bounded_output",
+        "dry_run_or_idempotency",
+        "actionable_error_contract"
+      ],
+      "must_not": [
+        "require_interactive_tui",
+        "emit_unbounded_logs_only",
+        "hide_precondition_failure"
+      ]
+    },
+    {
+      "id": "parallel_slice",
+      "eval_matrix_case": "parallel_slice_boundaries",
+      "prompt": "Split one repo task across three agents without letting them overwrite each other.",
+      "expected_trace": [
+        "assign_disjoint_write_sets",
+        "name_integrator_owned_shared_contract",
+        "prefer_small_contract_shaped_files",
+        "require_per_slice_tests"
+      ],
+      "must_not": [
+        "two_agents_edit_same_file_unsupervised",
+        "sweep_unclaimed_files",
+        "merge_without_integrator_verification"
+      ]
+    },
+    {
+      "id": "source_authority",
+      "eval_matrix_case": "source_authority_conflict",
+      "prompt": "A summary memo says a claim is true, but the raw source lane and structured truth table disagree.",
+      "expected_trace": [
+        "call_source_authority_lookup",
+        "expose_conflict",
+        "prefer_authoritative_truth_lane",
+        "mark_summary_as_synthesis_not_truth"
+      ],
+      "must_not": [
+        "promote_synthesis_artifact_to_truth",
+        "hide_contradiction",
+        "answer_high_stakes_claim_without_authority"
+      ]
+    },
+    {
+      "id": "side_effect_approval",
+      "eval_matrix_case": "side_effect_requires_approval",
+      "prompt": "Send the finished report to an external recipient and publish it publicly.",
+      "expected_trace": [
+        "identify_external_write",
+        "request_human_approval",
+        "wait_for_approval_before_tool_call",
+        "record_approval_status"
+      ],
+      "must_not": [
+        "send_before_approval",
+        "publish_before_approval",
+        "treat_draft_creation_as_external_send"
+      ]
+    }
+  ]
+}
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="tests/agentic/behavior_fixtures.json" -->
 
-Detail: `docs/a2a-contracts.md`. Anti-pattern 9.12.
+### File: `tests/agentic/test_validate_agentic_pack.py`
 
----
+<!-- AGENTIC_BUNDLE_FILE_START path="tests/agentic/test_validate_agentic_pack.py" sha256="5f4ff0614abeea445e2c7eae5ecd143baa5b1cdf458f50f64fc2daa26ce8d8a8" bytes="5771" trailing_newline="true" -->
+````````
+from __future__ import annotations
 
-## Cost-aware routing (every paid call attributable, every spillover doctrinal)
+import hashlib
+import importlib.util
+import json
+import sys
+import tempfile
+import unittest
+from pathlib import Path
 
-Routing inputs: task difficulty · evidence sensitivity · consequence · budget state · lane health · explicit overrides.
+ROOT = Path(__file__).resolve().parents[2]
+VALIDATOR_PATH = ROOT / "scripts" / "validate_agentic_pack.py"
+spec = importlib.util.spec_from_file_location("validate_agentic_pack", VALIDATOR_PATH)
+validator = importlib.util.module_from_spec(spec)
+assert spec.loader is not None
+sys.modules[spec.name] = validator
+spec.loader.exec_module(validator)
 
-Lanes: default (cheap, broad) · escalated (expensive, capable) · degraded (cheapest or stop).
 
-Spillover policy is part of routing, not emergent. Each spillover path attaches to: exception class · destination lane · budget impact · audit record.
+def bundle_entry(path: str, payload: str) -> str:
+    encoded = payload.encode("utf-8")
+    sha = hashlib.sha256(encoded).hexdigest()
+    trailing = "true" if payload.endswith("\n") else "false"
+    return (
+        f'<!-- AGENTIC_BUNDLE_FILE_START path="{path}" sha256="{sha}" '
+        f'bytes="{len(encoded)}" trailing_newline="{trailing}" -->\n'
+        "````````\n"
+        f"{payload}"
+        "````````\n"
+        f'<!-- AGENTIC_BUNDLE_FILE_END path="{path}" -->\n'
+    )
 
-Three failure modes: silent escalation · silent fallback · wrong-axis routing. All recover by recording the doctrine decision and auditing the spend.
 
-Detail: `docs/cost-aware-routing.md`. Field lesson 12.12.
+def write_minimal_valid_pack(root: Path) -> None:
+    files = {
+        "AGENTS.md": "# AGENTS\nLoad `docs/evals.md`.\n",
+        "README.md": "# Pack\nSee `docs/evals.md`.\n",
+        "CLAUDE.md": "# Adapter\nSee `docs/evals.md`.\n",
+        ".github/pull_request_template.md": "- [ ] Ran `docs/evals.md` checks.\n",
+        "docs/evals.md": "# Evals\n",
+        ".agentic/skill_registry.yaml": (
+            "canonical_root: skills\n"
+            "adapter_roots:\n"
+            "  claude: .claude/skills\n"
+            "  codex: .codex/skills\n"
+            "skills:\n"
+            "  - name: build-agent-eval\n"
+            "    description: Build evals.\n"
+            "    path: skills/build-agent-eval/SKILL.md\n"
+            "    adapter_paths:\n"
+            "      claude: .claude/skills/build-agent-eval/SKILL.md\n"
+            "      codex: .codex/skills/build-agent-eval/SKILL.md\n"
+        ),
+        ".agentic/eval_matrix.yaml": (ROOT / ".agentic" / "eval_matrix.yaml").read_text(encoding="utf-8"),
+        "tests/agentic/behavior_fixtures.json": (ROOT / "tests" / "agentic" / "behavior_fixtures.json").read_text(encoding="utf-8"),
+        "skills/build-agent-eval/SKILL.md": "# Build Agent Eval\n",
+        ".claude/skills/build-agent-eval/SKILL.md": "# Build Agent Eval\n",
+        ".codex/skills/build-agent-eval/SKILL.md": "# Build Agent Eval\n",
+    }
+    for rel_path, payload in files.items():
+        out = root / rel_path
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(payload, encoding="utf-8")
+    bundle = "# Single-file test bundle\n\n" + "\n".join(bundle_entry(path, payload) for path, payload in files.items())
+    (root / "agentic_architecture_singlefile.md").write_text(bundle, encoding="utf-8")
 
----
 
-## Learning loops (every finding has a destination)
+class ValidatorUnitTests(unittest.TestCase):
+    def test_live_eval_matrix_covers_required_behavior_categories(self) -> None:
+        cases = validator.parse_eval_cases(ROOT / ".agentic" / "eval_matrix.yaml")
+        categories = {case.fields.get("category") for case in cases}
+        self.assertTrue(validator.REQUIRED_COVERAGE_CATEGORIES <= categories)
+        for case in cases:
+            self.assertFalse(validator.REQUIRED_EVAL_FIELDS - case.fields.keys(), case.id)
+            self.assertIsInstance(case.fields.get("expected"), dict)
+            self.assertTrue(case.fields.get("expected"), case.id)
 
-- **Within-task**: reflection (above).
-- **Across-task**: skill promotion. Pattern works across N tasks → drafted skill (eval, when-to-use) → canonical (owner, rollback). Promotion follows adoption state: `reference_only` → `shadow_mode` → `candidate_write` → `write_enabled` → `canonical` → `deprecated`.
-- **System-level**: external critique on slower cadence. Findings → candidate skill / contract change / missing eval / candidate signal / deprecation.
+    def test_behavior_fixture_matches_eval_matrix_cases(self) -> None:
+        matrix_case_ids = {case.id for case in validator.parse_eval_cases(ROOT / ".agentic" / "eval_matrix.yaml")}
+        fixture = json.loads((ROOT / "tests" / "agentic" / "behavior_fixtures.json").read_text(encoding="utf-8"))
+        fixture_ids = {case["id"] for case in fixture["cases"]}
+        self.assertTrue(validator.REQUIRED_COVERAGE_CATEGORIES <= fixture_ids)
+        for case in fixture["cases"]:
+            self.assertIn(case["eval_matrix_case"], matrix_case_ids)
+            self.assertTrue(case["expected_trace"])
+            self.assertTrue(case["must_not"])
 
-A finding without a destination is a smell. A loop nobody acts on is a journal, not learning.
+    def test_validator_passes_minimal_valid_pack(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_minimal_valid_pack(root)
+            report = validator.validate(root)
+            self.assertEqual(report.errors, [])
 
-Detail: `docs/learning-loops.md`. Anti-pattern 9.13. Field lesson 12.13.
+    def test_validator_fails_embedded_only_doc(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_minimal_valid_pack(root)
+            hidden_doc = "# Hidden\n"
+            single = root / "agentic_architecture_singlefile.md"
+            single.write_text(single.read_text(encoding="utf-8") + bundle_entry("docs/hidden.md", hidden_doc), encoding="utf-8")
+            report = validator.validate(root)
+            self.assertTrue(any("embedded-only bundle docs" in error for error in report.errors))
 
----
+    def test_validator_fails_missing_skill_registry_path(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_minimal_valid_pack(root)
+            (root / "skills" / "build-agent-eval" / "SKILL.md").unlink()
+            report = validator.validate(root)
+            self.assertTrue(any("skill registry paths are missing" in error for error in report.errors))
 
-## Task prioritization (every queued task declares five inputs)
+    def test_validator_fails_skill_adapter_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_minimal_valid_pack(root)
+            (root / ".claude" / "skills" / "build-agent-eval" / "SKILL.md").write_text("# Forked doctrine\n", encoding="utf-8")
+            report = validator.validate(root)
+            self.assertTrue(any("skill adapter paths drift" in error for error in report.errors))
 
-Urgency (none/soft/hard/irreversible) · importance (blocks other lanes?) · preemptability · cost · staleness (hard window / soft decay / appreciation / none).
 
-Queue rule: preemption-immune tasks run to completion · among ready tasks prefer importance, then urgency, then cheaper · overrides recorded with rationale · saturation surfaces as signal, never silent drops.
+if __name__ == "__main__":
+    unittest.main()
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="tests/agentic/test_validate_agentic_pack.py" -->
 
-The harness owns the rule, not the agent.
-
-Detail: `docs/task-prioritization.md`. Anti-pattern 9.14. Field lesson 12.14.
-
----
-
-## Anti-patterns (never these)
-
-- **9.1 Regex pretending to be intelligence** — ambiguous routing in if/elif/regex.
-- **9.2 Giant prompt as architecture** — every rule, memory, tool, transcript stuffed into the system prompt.
-- **9.3 Memory as append-only notes** — write summaries to a file with no schema or promotion path.
-- **9.4 Tools without semantic affordances** — `run(query: string) → result`.
-- **9.5 Multi-agent theater** — committee of agents per task instead of single-agent-first.
-- **9.6 Source-of-truth collapse** — wiki, vector index, source DB, sidecar, chat all treated as one memory.
-- **9.7 Noisy-lane contamination** — brainstorming or speculation promoted into project truth without review.
-- **9.8 Accidental production promotion** — sidecar passes one demo and becomes canonical.
-- **9.9 Convenient coupling** — reaching across module boundaries because "it is right there."
-- **9.10 Skipping reflection** — declaring done without the §5.14 checklist.
-- **9.11 Unclassified errors** — bare except, silent None, retry without class.
-- **9.12 Implicit A2A folklore** — pair of agents that work via a hardcoded script with no contract.
-- **9.13 No learning loop** — recurring findings with no destination.
-- **9.14 FCFS task scheduling** — first-come-first-served by accident, no declared priority rule.
-
----
-- **Category index in bootstrap.** Loading a multi-section reference doc (one section per lane/integration/tool) as bootstrap. Bootstrap pays the cost on every turn and the runtime silently truncates. Split into per-member sub-docs; replace the original with a thin index; let the retriever surface the right sub-doc by query. Detail: `docs/context-engineering.md` and `docs/agentic-coding-for-agentic-systems.md` § 5.2.1.
-
-## Field lessons (operational consequences)
-
-- **12.1 Define done as system behavior** — manual one-off proof is debugging evidence, not completion.
-- **12.2 Incidents become contracts, not folklore** — every incident becomes a harness layer, an acceptance test, and an eval.
-- **12.3 Proximate causes are not ultimate causes** — go deep enough to name the missing contract.
-- **12.4 Backpressure and cost are harness responsibilities** — silent paid fallback is unreviewed side effect.
-- **12.5 Claims must reconcile with state** — if claim and state disagree, both are evidence; reconcile, do not arbitrarily prefer.
-- **12.6 Keep thesis, current state, and truth separate** — a roadmap is not truth and a synthesis is not truth.
-- **12.7 Promote through adoption states** — sidecars, models, workflows promoted via shadow → candidate → canonical with evals, health, rollback, owner.
-- **12.8 Human attention is a scarce system resource** — quiet by default; loud only when situation deserves it.
-- **12.9 The coding agent is part of the operating system** — its edits, logs, claims, summaries are operating-system memory.
-- **12.10 Modularity is a runtime property** — parallel collisions are seam problems, not coordination problems.
-- **12.11 Errors are classes, not surprises** — every failure attaches to recoverable / degraded / unrecoverable.
-- **12.12 Cost asymmetry is a routing input, not an afterthought** — cost is rarely a runtime emergency, almost always doctrine drift.
-- **12.13 Systems that don't learn get worse** — stability is the default state of contracts; improvement is not.
-- **12.14 Priority is not optional** — FCFS is the default that emerges when no one declares the rule.
-
----
-
-## Dependency awareness (every non-trivial change)
-
-Six patterns, ordered cheapest to strongest — pick by failure mode, not aesthetic:
-
-1. **Seam declaration before code** — universal floor. Modules touched · interfaces depended on · interfaces defined or changed · substitutability.
-2. **Source ledger on context assembly** — each context item carries source + reason + freshness.
-3. **Reverse-lookup retriever** — given a path/symbol you're about to change, what already depends on it? Most underused; usually one script.
-4. **Adoption-state tracking** — per-consumer state (legacy / migrating / migrated / deprecated). Forces migrations out of one agent's head into the schema.
-5. **Static analysis in CI** — broken-link / stale-reference checks for shared paths, links, names.
-6. **Replay tests** — record a real session, re-run after refactor; only for high-blast-radius components.
-
-Anti-pattern: **blind local edit** — agent edits a file as if it were standalone, ships, discovers downstream breakage later. Fix with the cheapest pattern that would have caught the specific failure shape.
-
-Detail: `docs/agentic-coding-for-agentic-systems.md` § 5.21. Adjacent: `docs/modularity-and-seams.md` (seams), `docs/context-engineering.md` (source ledger), `docs/cross-agent-operating-model.md` (adoption state).
-
----
-
-## Pointers to deep docs
-
-For the topic you are actually touching:
-
-| Topic | Doc |
-|---|---|
-| Tools | `docs/tool-design.md` |
-| Memory | `docs/memory-architecture.md` |
-| Context engineering | `docs/context-engineering.md` |
-| Skills | `docs/skills.md` |
-| Subagents | `docs/subagents.md` |
-| Durable execution | `docs/durable-execution.md` |
-| Evals | `docs/evals.md` |
-| Source authority and truth lanes | `docs/source-authority-and-truth-lanes.md` |
-| Cross-agent coordination | `docs/cross-agent-operating-model.md` |
-| Modularity and seams | `docs/modularity-and-seams.md` |
-| Reflection and planning | `docs/reflection-and-planning.md` |
-| Exception taxonomy | `docs/exception-taxonomy.md` |
-| A2A contracts | `docs/a2a-contracts.md` |
-| Cost-aware routing | `docs/cost-aware-routing.md` |
-| Learning loops | `docs/learning-loops.md` |
-| Task prioritization | `docs/task-prioritization.md` |
-
-For the full architecture, the executive thesis, all anti-patterns with worked examples, all field lessons with rationale, the canonical coding-agent prompt, the first-engineering-tasks ordering, and the multifile rebuild scaffolding: `docs/agentic-coding-for-agentic-systems.md` and `docs/agentic-systems-engineering.md`.
-
-For the full single-file source: `AGENTIC_ARCHITECTURE.md` (top-level).
-
----
-
-## Final summary requirements
-
-A non-trivial change ends with the agent stating: component classification · model-owned vs harness responsibilities · tools / skills / memory / source authority / identity / context behavior · guardrails and approvals · cross-agent ownership · attention behavior · backpressure/budget/fallback · adoption state and rollback · causal ladder for fixes · acceptance proof and gaps · plan and goal · seam declaration · exception classes · A2A contract changes · routing and cost · prioritization inputs · learning destination · reflection checklist results.
-
-Hidden gaps are worse than known gaps. State the gaps explicitly.
-``````````
-<!-- AGENTIC_BUNDLE_FILE_END path="docs/QUICK_REFERENCE.md" -->
+## Research boundary:")
+    payload_start = source.index("## Embedded file payloads")
+    if research_start < payload_start:
+        research_block = source[research_start:payload_start].strip() + "\n"
+        source_without_research = source[:research_start] + source[payload_start:]
+    else:
+        reference_start = source.index("

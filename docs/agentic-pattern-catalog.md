@@ -8,10 +8,25 @@ Deterministic harness. Adaptive policy.
 
 The pattern is the *shape of the harness*. It must still have typed contracts, traces, budgets, permission gates, source-authority boundaries, and evals.
 
+## 0. Simplicity before patterns
+
+Pattern catalogs are dangerous when they make every idea look like it needs another pattern. Start by trying to delete the need for a pattern.
+
+Before selecting routing, parallelization, reflection, multi-agent collaboration, guardrails, or automation, ask:
+
+1. Can the requirement be made smaller or less wrong?
+2. Can a step, handoff, state, policy, queue, or process be deleted?
+3. Would better context, a clearer tool, a typed CLI, source authority, or feedback make the agent naturally choose the right action?
+4. Can the remaining behavior be a smaller contract rather than a new layer?
+5. Is the pattern's benefit much greater than its hidden cost in coordination, context, ownership, testing, and future merge conflicts?
+
+Use a pattern only after this pass. The catalog is a menu of necessary shapes, not a checklist of machinery to add.
+
 ## 1. Pattern-selection matrix
 
 | Pattern | Use when | Harness contract | Avoid / failure mode |
 |---|---|---|---|
+| Deletion / simplification | A proposed design adds a new layer, agent, guardrail, queue, router, workflow, dependency, or automation. | Requirement challenge, deletion candidates, context/tool/source-affordance alternative, explicit hidden-cost argument. | Treating this catalog as a reason to add machinery before proving the smaller system cannot work. |
 | Prompt chaining | A task is naturally staged and each stage has a checkable artifact. | Stage schema, acceptance check per stage, trace link from input to output. | Long opaque chains where stage outputs are not validated. |
 | Routing | Inputs should go to different models, tools, skills, queues, or policies. | Typed route set, route confidence/reason, safe default, eval cases, trace. | Brittle keyword routers for open-ended intent. Routing is good when semantic, typed, observed, and tested. |
 | Parallelization | Independent subtasks can run without sharing mutable state. | Disjoint ownership, merge protocol, per-slice tests, conflict handling, synthesis step. | Two agents editing the same file/contract without an integrator. |
@@ -61,13 +76,14 @@ goal -> context packet -> architecture brief -> implementation slice -> critique
 
 Minimum reflection checks:
 
-1. Did I preserve deterministic harness / adaptive policy boundaries?
-2. Did I introduce a keyword router, regex semantic guess, giant prompt, or hidden fallback?
-3. Are tool/CLI/file interfaces typed and machine-readable?
-4. Can another agent work on an adjacent slice without editing the same surface?
-5. Is every new memory/source/truth/write path classified?
-6. Are tests/evals tied to real incidents or realistic traces?
-7. What proof layer is still missing?
+1. What did I delete, collapse, or make unnecessary before adding machinery?
+2. Did I preserve deterministic harness / adaptive policy boundaries?
+3. Did I introduce a keyword router, regex semantic guess, giant prompt, or hidden fallback?
+4. Are tool/CLI/file interfaces typed and machine-readable?
+5. Can another agent work on an adjacent slice without editing the same surface?
+6. Is every new memory/source/truth/write path classified?
+7. Are tests/evals tied to real incidents or realistic traces?
+8. What proof layer is still missing?
 
 Stop when acceptance evidence passes, the budget is exhausted, required information is missing, approval is required, or repeated failures show the plan needs human/integrator review.
 

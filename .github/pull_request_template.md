@@ -16,6 +16,9 @@ Component classification:
 - [ ] cross-agent coordination/adoption state
 - [ ] attention or notification policy
 - [ ] eval/observability
+- [ ] agent-native CLI or tool surface
+- [ ] repository structure / parallel-agent seam
+- [ ] learning-loop or feedback pipeline
 
 Model-owned decisions:
 
@@ -31,6 +34,13 @@ Attention/notification behavior:
 
 Tests/evals added or updated:
 
+Source-authority and package-integrity proof:
+
+- [ ] Live multifile files are canonical.
+- [ ] Single-file bundle contains no unique canonical content.
+- [ ] Runtime-specific adapters contain no unique doctrine.
+- [ ] Referenced docs/skills/eval fixtures exist and validate.
+
 Acceptance proof:
 
 - Commands/evals/reviews run:
@@ -39,11 +49,13 @@ Acceptance proof:
 - Known residual gaps accepted by integrator:
 - Rollback or revert path:
 
-Cost/complexity check:
+Deletion-first simplicity check:
 
+- Requirement narrowed or corrected:
+- Parts/processes/guards/handoffs deleted or avoided:
+- Context/tool/source-authority/feedback alternative considered:
 - Smallest viable guardrail/change considered:
-- Added complexity and why it is worth it:
-- Simpler alternatives rejected:
+- Remaining complexity and why its benefit is much greater than hidden cost:
 
 Agent Failure RCA, if this fixes agent behavior:
 
