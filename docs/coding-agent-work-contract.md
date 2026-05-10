@@ -56,7 +56,8 @@ Include:
 - files/components out of scope;
 - protected files;
 - side-effect boundaries;
-- whether commit/push/deploy/send/writeback is allowed.
+- whether commit/push/deploy/send/writeback is allowed;
+- repository hygiene end-state: commit claimed files locally, revert, stash with name, or user-requested no-commit.
 
 ### 3. Assumptions and ambiguities
 
@@ -110,6 +111,7 @@ Before claiming done, fill this matrix. If a layer is skipped, say why and wheth
 | Topology/dependency | new/moved code files or package seams | gate command/result or n/a |
 | Real-world fixture | bug/failure/judgment claim exists | source case or gap |
 | Source/authority | durable claim, memory, source lane, or external source used | source handles |
+| Repository hygiene | every touched repo | `git status --short --branch`; commit/stash/revert/no-commit reason |
 
 ### 8. Stop conditions
 
@@ -162,6 +164,7 @@ Orientation evidence:
 Plan:
 Evidence required:
 Skipped evidence/gaps:
+Repository hygiene end-state:
 Learning trail:
 ```
 

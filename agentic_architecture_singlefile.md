@@ -680,8 +680,8 @@ files:
     sha256: 4149f79872562980aa6f91da56f51ac1d0999f23e92aec8d01c4008a3e1a5c95
     trailing_newline: true
   - path: docs/00-agentic-change-protocol.md
-    bytes: 6725
-    sha256: 34aa854d8f4b162fbed700409c4bef969cc9ed0f06727761035767663244539f
+    bytes: 6969
+    sha256: fc1144577d599424fa88e7d5def324049f75e511d0eddfc259a23977a0962cb3
     trailing_newline: true
   - path: docs/QUICK_REFERENCE.md
     bytes: 16413
@@ -708,8 +708,8 @@ files:
     sha256: 2aaf243f4ab4b17b374607162fb2ce62a911a987e74c0e57825090b395334edb
     trailing_newline: true
   - path: docs/coding-agent-work-contract.md
-    bytes: 7138
-    sha256: 7e41d1da231fe0580844c19aa1c8b588a2a265534ea2c8f203a3d6e65cd60f0d
+    bytes: 7398
+    sha256: 6359cd69ffb71e08c73b811406589bf2da4b7cc2e51cbd90b67ac43a26d01904
     trailing_newline: true
   - path: docs/context-engineering.md
     bytes: 1741
@@ -2054,7 +2054,7 @@ if __name__ == "__main__":
 
 ### File: `docs/00-agentic-change-protocol.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/00-agentic-change-protocol.md" sha256="34aa854d8f4b162fbed700409c4bef969cc9ed0f06727761035767663244539f" bytes="6725" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/00-agentic-change-protocol.md" sha256="fc1144577d599424fa88e7d5def324049f75e511d0eddfc259a23977a0962cb3" bytes="6969" trailing_newline="true" -->
 ````````
 # Agentic Change Protocol
 
@@ -2149,6 +2149,8 @@ Before calling work done, try to disprove readiness:
 - Did new/moved code respect the repo topology and run the executable topology/dependency guard?
 - Are source/truth/memory/context/tool boundaries still clear?
 - Are untested layers named honestly?
+- Is every touched repo clean, locally committed with only claimed files, reverted, stashed with a descriptive name, or explicitly user-approved as uncommitted?
+- Does the final report show `git status --short --branch` for every touched repo?
 - If this fixes agent behavior, does the RCA identify the missing invariant or affordance?
 
 Report known gaps explicitly instead of letting "tests pass" stand in for system proof.
@@ -6951,7 +6953,7 @@ source -> identity -> claim -> authority -> contradiction -> synthesis -> action
 
 ### File: `docs/coding-agent-work-contract.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/coding-agent-work-contract.md" sha256="7e41d1da231fe0580844c19aa1c8b588a2a265534ea2c8f203a3d6e65cd60f0d" bytes="7138" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/coding-agent-work-contract.md" sha256="6359cd69ffb71e08c73b811406589bf2da4b7cc2e51cbd90b67ac43a26d01904" bytes="7398" trailing_newline="true" -->
 ````````
 # Coding Agent Work Contract
 
@@ -7011,7 +7013,8 @@ Include:
 - files/components out of scope;
 - protected files;
 - side-effect boundaries;
-- whether commit/push/deploy/send/writeback is allowed.
+- whether commit/push/deploy/send/writeback is allowed;
+- repository hygiene end-state: commit claimed files locally, revert, stash with name, or user-requested no-commit.
 
 ### 3. Assumptions and ambiguities
 
@@ -7065,6 +7068,7 @@ Before claiming done, fill this matrix. If a layer is skipped, say why and wheth
 | Topology/dependency | new/moved code files or package seams | gate command/result or n/a |
 | Real-world fixture | bug/failure/judgment claim exists | source case or gap |
 | Source/authority | durable claim, memory, source lane, or external source used | source handles |
+| Repository hygiene | every touched repo | `git status --short --branch`; commit/stash/revert/no-commit reason |
 
 ### 8. Stop conditions
 
@@ -7117,6 +7121,7 @@ Orientation evidence:
 Plan:
 Evidence required:
 Skipped evidence/gaps:
+Repository hygiene end-state:
 Learning trail:
 ```
 

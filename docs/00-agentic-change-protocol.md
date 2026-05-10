@@ -91,6 +91,8 @@ Before calling work done, try to disprove readiness:
 - Did new/moved code respect the repo topology and run the executable topology/dependency guard?
 - Are source/truth/memory/context/tool boundaries still clear?
 - Are untested layers named honestly?
+- Is every touched repo clean, locally committed with only claimed files, reverted, stashed with a descriptive name, or explicitly user-approved as uncommitted?
+- Does the final report show `git status --short --branch` for every touched repo?
 - If this fixes agent behavior, does the RCA identify the missing invariant or affordance?
 
 Report known gaps explicitly instead of letting "tests pass" stand in for system proof.
