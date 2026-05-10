@@ -680,12 +680,12 @@ files:
     sha256: 4149f79872562980aa6f91da56f51ac1d0999f23e92aec8d01c4008a3e1a5c95
     trailing_newline: true
   - path: docs/00-agentic-change-protocol.md
-    bytes: 5564
-    sha256: eed3dcc9bf1266ec74a8eab52c1f7ccbf3dadf666d38e8df108368b23dbf8787
+    bytes: 6725
+    sha256: 34aa854d8f4b162fbed700409c4bef969cc9ed0f06727761035767663244539f
     trailing_newline: true
   - path: docs/QUICK_REFERENCE.md
-    bytes: 16271
-    sha256: 101e793e9aa46ede90d003381e96e6c281399e82e0094bda5ddffe4866639e82
+    bytes: 16413
+    sha256: 584d884aff7bb210ad82d40f562d3c5b851a740cf5811734f247f8e3e7b97a25
     trailing_newline: true
   - path: docs/a2a-contracts.md
     bytes: 6980
@@ -708,8 +708,8 @@ files:
     sha256: 2aaf243f4ab4b17b374607162fb2ce62a911a987e74c0e57825090b395334edb
     trailing_newline: true
   - path: docs/coding-agent-work-contract.md
-    bytes: 5481
-    sha256: f1987d168419508a3e4606c67c7a8ee9f46cc6249a63a732fabe9c877cbdf7c8
+    bytes: 7138
+    sha256: 7e41d1da231fe0580844c19aa1c8b588a2a265534ea2c8f203a3d6e65cd60f0d
     trailing_newline: true
   - path: docs/context-engineering.md
     bytes: 1741
@@ -2054,7 +2054,7 @@ if __name__ == "__main__":
 
 ### File: `docs/00-agentic-change-protocol.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/00-agentic-change-protocol.md" sha256="eed3dcc9bf1266ec74a8eab52c1f7ccbf3dadf666d38e8df108368b23dbf8787" bytes="5564" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/00-agentic-change-protocol.md" sha256="34aa854d8f4b162fbed700409c4bef969cc9ed0f06727761035767663244539f" bytes="6725" trailing_newline="true" -->
 ````````
 # Agentic Change Protocol
 
@@ -2066,7 +2066,19 @@ Name the primary component you are changing: workflow, agent loop, multi-agent s
 
 If more than one applies, pick one primary component and list the secondary ones. Do not expand scope just because many categories are adjacent.
 
-## 2. Run the deletion-first simplicity pass
+## 2. Basic Spine First for product/rewrite/agentic-system work
+
+This is a brake, not more machinery. Before adding architecture, abstractions, agents, contracts, routers, monitors, or eval frameworks for product/rewrite/agentic-system work, state the minimum user-visible product spine and its proof:
+
+- **Minimum spine:** the shortest real user/input-to-result path that must work.
+- **Canonical proof:** the single command, acceptance test, or live-safe check that proves that spine.
+- **Current result:** `pass`, `fail`, or `not available`.
+- **If fail/not available:** the task may only fix/create that spine check, or explicitly label itself a non-readiness spike.
+- **Brake:** core spine gaps are blockers, not named residual risks, unless the user explicitly accepts the spike boundary.
+
+For Type0, the default spine is: real feed/tip/wire input → normalized signal → admission decision → lane/story assignment → story processing → fact-check/publish/reject guard → traceable result.
+
+## 3. Run the deletion-first simplicity pass
 
 Simplicity is a safety property for agentic systems. Every new part creates coordination cost, context cost, stale-state risk, eval surface area, ownership ambiguity, and future merge conflict risk. These costs are usually hidden until a later agent touches the system.
 
@@ -2081,7 +2093,7 @@ Before adding a new agent, schema, router, policy layer, eval harness, guardrail
 
 A complexity addition is justified only when its expected benefit is much greater than its visible cost. “Slightly better than the cost we can see” is not enough because the hidden cost is usually the larger part.
 
-## 3. If a guardrail remains, choose the smallest useful one
+## 4. If a guardrail remains, choose the smallest useful one
 
 Prefer the smallest deterministic guardrail that prevents a named failure class.
 
@@ -2095,7 +2107,7 @@ Before adding a new agent, schema, router, eval harness, policy layer, or CI gat
 
 If the benefit is not clearly larger than the hidden cost, write the simpler rule and defer the machinery until a real failure demands it.
 
-## 4. Separate harness from policy
+## 5. Separate harness from policy
 
 Deterministic harness owns schemas, permissions, idempotency, budgets, checkpoints, memory APIs, source authority, identity resolution, context assembly, tool execution, approval gates, traces, and evals.
 
@@ -2103,17 +2115,17 @@ Model policy owns ambiguity, context gathering, tool choice, memory retrieval, t
 
 Do not bury harness responsibilities inside prompts. Do not replace adaptive behavior with brittle keywords unless the behavior is genuinely deterministic and tested.
 
-## 5. Run Agent Failure RCA when relevant
+## 6. Run Agent Failure RCA when relevant
 
 If the change fixes an agent mistake, repeated agent error, multi-agent confusion, context/tool/memory issue, or symptom patch risk, load `docs/agent-failure-rca.md` and answer the human counterfactual before coding.
 
 The default stance is: agents often fail because the system withheld context, tools, feedback, source clarity, or authority that a capable human would have had. Fix the missing affordance before adding behavior-policing machinery.
 
-## 6. Define filesystem topology as an executable contract
+## 7. Define filesystem topology as an executable contract
 
 For code changes, name the package/module destination before editing. If the repo has a topology, dependency-map, or import-boundary test, include it in the acceptance rubric. If a non-trivial change would add code in a root/convenience layer and no executable guard exists, add the smallest useful guard first. Prose-only hierarchy guidance is not a control.
 
-## 7. Define done as evidence
+## 8. Define done as evidence
 
 Before implementation, write a small acceptance rubric:
 
@@ -2125,9 +2137,9 @@ Before implementation, write a small acceptance rubric:
 - manual proof vs autonomous/system proof gap
 - rollback/adoption state when relevant
 
-For small changes, a few bullets are enough. For larger changes, use a dedicated plan only when it reduces risk more than it adds process.
+For small changes, a few bullets are enough. For contained Tier 1 coding work, the Coding Agent Work Contract can be the plan artifact. For larger or riskier work, use a dedicated plan only when it reduces risk more than it adds process, and extend the work contract rather than duplicating it.
 
-## 8. Final acceptance
+## 9. Final acceptance
 
 Before calling work done, try to disprove readiness:
 
@@ -2145,7 +2157,7 @@ Report known gaps explicitly instead of letting "tests pass" stand in for system
 
 ### File: `docs/QUICK_REFERENCE.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/QUICK_REFERENCE.md" sha256="101e793e9aa46ede90d003381e96e6c281399e82e0094bda5ddffe4866639e82" bytes="16271" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/QUICK_REFERENCE.md" sha256="584d884aff7bb210ad82d40f562d3c5b851a740cf5811734f247f8e3e7b97a25" bytes="16413" trailing_newline="true" -->
 ````````
 # Quick reference for coding agents
 
@@ -2175,6 +2187,8 @@ If your task touches **ambiguous intent, context selection, tool choice, memory 
 ## Coding Agent Work Contract (every non-trivial coding task)
 
 Before editing, fill or assemble `docs/coding-agent-work-contract.md` using `.agentic/coding_agent_work_contract_template.md` unless the task is tiny and deterministic. Minimum fields: Objective · In scope · Out of scope/stop conditions · Orientation evidence · Plan · Evidence required · Skipped evidence/gaps · Learning trail.
+
+Artifact precedence: Tier 1 contained coding work can use this contract as the plan; Tier 2/3 `uberplan` should extend it, not duplicate it.
 
 ---
 
@@ -6937,7 +6951,7 @@ source -> identity -> claim -> authority -> contradiction -> synthesis -> action
 
 ### File: `docs/coding-agent-work-contract.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/coding-agent-work-contract.md" sha256="f1987d168419508a3e4606c67c7a8ee9f46cc6249a63a732fabe9c877cbdf7c8" bytes="5481" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/coding-agent-work-contract.md" sha256="7e41d1da231fe0580844c19aa1c8b588a2a265534ea2c8f203a3d6e65cd60f0d" bytes="7138" trailing_newline="true" -->
 ````````
 # Coding Agent Work Contract
 
@@ -6975,6 +6989,17 @@ Good:
 Bad:
 
 > Improve reliability.
+
+### 1A. Basic Spine First for product/rewrite/agentic-system work
+
+Before adding architecture, abstractions, agents, contracts, routers, monitors, or eval frameworks, name:
+
+- minimum user-visible product spine;
+- single canonical command, acceptance test, or live-safe check that proves it;
+- current result: `pass`, `fail`, or `not available`;
+- if `fail` or `not available`, whether this task only fixes/creates that spine check or is explicitly a non-readiness spike.
+
+Core spine gaps are blockers, not residual risks, unless the user explicitly accepts the spike boundary. For Type0, default to: real feed/tip/wire input → normalized signal → admission decision → lane/story assignment → story processing → fact-check/publish/reject guard → traceable result.
 
 ### 2. Scope and non-scope
 
@@ -7031,6 +7056,7 @@ Before claiming done, fill this matrix. If a layer is skipped, say why and wheth
 
 | Layer | Required when | Evidence |
 |---|---|---|
+| Basic product spine | product/rewrite/agentic-system work | spine name, canonical proof, current pass/fail/not available result |
 | Unit/regression | deterministic code logic changed | command/result or n/a reason |
 | Integration | cross-module/service/runtime behavior changed | command/result or n/a reason |
 | Eval/golden/replay | LLM judgment, prompt, skill, classifier, agent behavior changed | eval/replay/rubric or explicit gap |
@@ -7047,6 +7073,7 @@ Stop and ask before proceeding if:
 - protected files need edits not explicitly authorized;
 - external side effects are needed;
 - required evidence cannot be gathered;
+- the basic product spine is failing/not available and scope is drifting into architecture instead of fixing the spine check or declaring a spike;
 - scope expands materially;
 - privacy/secret boundary is unclear;
 - tests/evals reveal a different root cause;
@@ -7083,6 +7110,7 @@ Route outcomes:
 ```text
 Work contract:
 Objective:
+Basic spine first (if product/rewrite/agentic-system):
 In scope:
 Out of scope / stop conditions:
 Orientation evidence:
@@ -7099,6 +7127,14 @@ Learning trail:
 - Use `docs/learning-loops.md` when findings should become skills, evals, or contract changes.
 - Use `docs/evals.md` when agent behavior, prompts, or judgment require eval coverage.
 - Use this contract as the concrete task-start artifact that ties those docs to one coding task.
+
+## Relationship to Uber planning
+
+Do not create duplicate planning bureaucracy.
+
+- Tier 0 / tiny deterministic work: inline note is enough.
+- Tier 1 / contained non-trivial coding: this work contract is usually the plan artifact.
+- Tier 2/3 / high-risk, agentic-system, runtime, prompt/skill, cross-repo, deletion/refactor, or ambiguous architecture work: `uberplan` may extend this contract into a full plan contract, but should reuse the same objective, scope, evidence, and stop-condition fields instead of creating an unrelated second plan.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/coding-agent-work-contract.md" -->
 

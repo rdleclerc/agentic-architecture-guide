@@ -35,6 +35,17 @@ Bad:
 
 > Improve reliability.
 
+### 1A. Basic Spine First for product/rewrite/agentic-system work
+
+Before adding architecture, abstractions, agents, contracts, routers, monitors, or eval frameworks, name:
+
+- minimum user-visible product spine;
+- single canonical command, acceptance test, or live-safe check that proves it;
+- current result: `pass`, `fail`, or `not available`;
+- if `fail` or `not available`, whether this task only fixes/creates that spine check or is explicitly a non-readiness spike.
+
+Core spine gaps are blockers, not residual risks, unless the user explicitly accepts the spike boundary. For Type0, default to: real feed/tip/wire input → normalized signal → admission decision → lane/story assignment → story processing → fact-check/publish/reject guard → traceable result.
+
 ### 2. Scope and non-scope
 
 Name exactly what may change and what may not change.
@@ -90,6 +101,7 @@ Before claiming done, fill this matrix. If a layer is skipped, say why and wheth
 
 | Layer | Required when | Evidence |
 |---|---|---|
+| Basic product spine | product/rewrite/agentic-system work | spine name, canonical proof, current pass/fail/not available result |
 | Unit/regression | deterministic code logic changed | command/result or n/a reason |
 | Integration | cross-module/service/runtime behavior changed | command/result or n/a reason |
 | Eval/golden/replay | LLM judgment, prompt, skill, classifier, agent behavior changed | eval/replay/rubric or explicit gap |
@@ -106,6 +118,7 @@ Stop and ask before proceeding if:
 - protected files need edits not explicitly authorized;
 - external side effects are needed;
 - required evidence cannot be gathered;
+- the basic product spine is failing/not available and scope is drifting into architecture instead of fixing the spine check or declaring a spike;
 - scope expands materially;
 - privacy/secret boundary is unclear;
 - tests/evals reveal a different root cause;
@@ -142,6 +155,7 @@ Route outcomes:
 ```text
 Work contract:
 Objective:
+Basic spine first (if product/rewrite/agentic-system):
 In scope:
 Out of scope / stop conditions:
 Orientation evidence:
@@ -158,3 +172,11 @@ Learning trail:
 - Use `docs/learning-loops.md` when findings should become skills, evals, or contract changes.
 - Use `docs/evals.md` when agent behavior, prompts, or judgment require eval coverage.
 - Use this contract as the concrete task-start artifact that ties those docs to one coding task.
+
+## Relationship to Uber planning
+
+Do not create duplicate planning bureaucracy.
+
+- Tier 0 / tiny deterministic work: inline note is enough.
+- Tier 1 / contained non-trivial coding: this work contract is usually the plan artifact.
+- Tier 2/3 / high-risk, agentic-system, runtime, prompt/skill, cross-repo, deletion/refactor, or ambiguous architecture work: `uberplan` may extend this contract into a full plan contract, but should reuse the same objective, scope, evidence, and stop-condition fields instead of creating an unrelated second plan.
