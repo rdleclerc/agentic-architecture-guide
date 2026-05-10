@@ -4,6 +4,8 @@ This repository builds agentic operating systems. Read this whole file (it is sh
 
 For any non-trivial guide/code/prompt/tool/workflow change, load `docs/00-agentic-change-protocol.md` first. It is the compact working protocol; the larger docs are references, not default context dumps.
 
+For any non-trivial coding task, first assemble or fill the Coding Agent Work Contract in `docs/coding-agent-work-contract.md` (template: `.agentic/coding_agent_work_contract_template.md`) unless the task is tiny and deterministic.
+
 Source authority rule: the live multifile repo is canonical. `agentic_architecture_singlefile.md` is a generated distribution/recovery artifact and must not contain unique live doctrine. If bundle content is useful, materialize it as a live file or mark it archival/non-authoritative.
 
 ## Topic → file routing (lazy load)
@@ -13,6 +15,7 @@ Read the matching doc only when the listed task applies:
 | If you are working on… | Load |
 |---|---|
 | Any non-trivial agentic-system change | `docs/00-agentic-change-protocol.md` |
+| Non-trivial coding task / coding-agent work contract | `docs/coding-agent-work-contract.md` and `.agentic/coding_agent_work_contract_template.md` |
 | Starting under tight context or needing a rule-only refresher | `docs/QUICK_REFERENCE.md` |
 | Current guide version, canonicality, adapter status, or rollout state | `docs/version-and-adoption.md` |
 | Agent errors, repeated mistakes, symptom patches, poor context/tools/feedback | `docs/agent-failure-rca.md` |

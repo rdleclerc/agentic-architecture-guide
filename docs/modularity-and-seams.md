@@ -22,7 +22,7 @@ Humans hold this asymmetry in working memory because they have lived through it.
 
 ## 2. The seam-declaration rule
 
-Every non-trivial change brief answers four questions before code is written. These belong in the architecture brief alongside component classification and harness/policy split.
+Every non-trivial change brief answers five questions before code is written. These belong in the architecture brief alongside component classification and harness/policy split.
 
 ```text
 1. Modules touched
@@ -36,7 +36,11 @@ Every non-trivial change brief answers four questions before code is written. Th
    Which contracts does this change introduce, modify, deprecate, or extend?
    For each, what is the public surface and what is intentionally private?
 
-4. Substitutability
+4. Filesystem/package destination
+   Which package owns this change, and which repo-local topology/dependency gate
+   proves future agents cannot add the same behavior to a convenience/root layer?
+
+5. Substitutability
    What would have to change if the implementation behind each interface were
    swapped (different store, different model, different transport, different
    provider)? If the answer is "many things in many places," the seam is in the
@@ -216,6 +220,8 @@ The reflection checklist (`docs/reflection-and-planning.md`) explicitly asks:
 - Did this change reach across a module boundary that previously had a seam?
 - Did this change add a parameter, branch, or field that another module
   now depends on by absence rather than by contract?
+- Did this change add or move code without a repo-local topology/dependency gate
+  proving the intended package seam?
 - If a future task had to swap the implementation behind any interface
   this change touches, what would have to change with it?
 ```

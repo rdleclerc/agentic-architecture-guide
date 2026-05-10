@@ -22,6 +22,13 @@ If your task touches **ambiguous intent, context selection, tool choice, memory 
 
 ---
 
+
+## Coding Agent Work Contract (every non-trivial coding task)
+
+Before editing, fill or assemble `docs/coding-agent-work-contract.md` using `.agentic/coding_agent_work_contract_template.md` unless the task is tiny and deterministic. Minimum fields: Objective · In scope · Out of scope/stop conditions · Orientation evidence · Plan · Evidence required · Skipped evidence/gaps · Learning trail.
+
+---
+
 ## Component classification (declare one before coding)
 
 `deterministic workflow` · `augmented LLM` · `agent loop` · `multi-agent / subagent` · `tool` · `tool registry` · `skill` · `memory subsystem` · `source lane / authority layer` · `identity resolution layer` · `context engine` · `durable execution layer` · `guardrail / human-review layer` · `cross-agent coordination layer` · `attention / notification policy` · `adoption-state change` · `eval / observability layer` · `agent-native CLI or tool surface` · `repository structure / parallel-agent seam` · `learning-loop or feedback pipeline`
@@ -69,7 +76,7 @@ Detail: `docs/reflection-and-planning.md`. Anti-pattern 9.10.
 
 ## Plan as artifact (before action)
 
-Goal · Acceptance proof · Component classification · Simplicity/deletion pass · Seam declaration · Failure-mode budget · Routing decision · Out of scope.
+Goal · Acceptance proof · Coding Agent Work Contract when non-trivial · Component classification · Simplicity/deletion pass · Seam declaration · Failure-mode budget · Routing decision · Out of scope.
 
 Goal-drift checks: before each tool call, before declaring done, inside reflection. If goal genuinely changes mid-task, change the plan explicitly.
 

@@ -51,27 +51,32 @@ If the change fixes an agent mistake, repeated agent error, multi-agent confusio
 
 The default stance is: agents often fail because the system withheld context, tools, feedback, source clarity, or authority that a capable human would have had. Fix the missing affordance before adding behavior-policing machinery.
 
-## 6. Define done as evidence
+## 6. Define filesystem topology as an executable contract
+
+For code changes, name the package/module destination before editing. If the repo has a topology, dependency-map, or import-boundary test, include it in the acceptance rubric. If a non-trivial change would add code in a root/convenience layer and no executable guard exists, add the smallest useful guard first. Prose-only hierarchy guidance is not a control.
+
+## 7. Define done as evidence
 
 Before implementation, write a small acceptance rubric:
 
 - expected system behavior
 - files/components in scope and out of scope
 - user approval or side-effect boundaries
-- commands/tests/evals/reviews to run
+- commands/tests/evals/reviews to run, including repo topology/dependency gates when code files are added or moved
 - deletion/simplification pass result
 - manual proof vs autonomous/system proof gap
 - rollback/adoption state when relevant
 
 For small changes, a few bullets are enough. For larger changes, use a dedicated plan only when it reduces risk more than it adds process.
 
-## 7. Final acceptance
+## 8. Final acceptance
 
 Before calling work done, try to disprove readiness:
 
 - Did the implementation drift from the plan?
 - Did it add complexity without preventing a named failure?
 - Did it skip a simpler context/tool/source-authority fix?
+- Did new/moved code respect the repo topology and run the executable topology/dependency guard?
 - Are source/truth/memory/context/tool boundaries still clear?
 - Are untested layers named honestly?
 - If this fixes agent behavior, does the RCA identify the missing invariant or affordance?

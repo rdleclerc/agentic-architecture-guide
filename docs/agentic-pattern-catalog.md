@@ -141,6 +141,7 @@ Rules of thumb:
 - Prefer one-agent-task-per-file when a behavior can be changed, tested, and reasoned about independently. This is not one-helper-per-file; it is one independently changeable unit per edit surface.
 - Every public seam should have a minimal test fixture and an example invocation.
 - Enforce the shape with lint rules, generators, dependency-map checks, review agents, and CI; prose-only conventions will drift back toward human-centered mega-files.
+- Prefer one small repo-local topology test over more review ceremony. If agents keep adding root-level modules, add a failing test that allowlists the root and forces new behavior into domain packages.
 
 `AGENTS.md` should be an index and operating contract, not the only memory of the codebase. Durable design knowledge belongs in topic docs or a markdown knowledge graph with backlinks into code and tests. A `lat.md/`-style graph is one implementation: it keeps architecture, business rules, test specs, and source references searchable and checkable while keeping root instructions short. Module-level `AGENTS.md` files can make each folder behave like a codebase skill: they describe local intent, invariants, public APIs, dependency rules, commands, and safe-edit boundaries.
 

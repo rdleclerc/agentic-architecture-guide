@@ -544,6 +544,7 @@ The rebuild parser checks each file payload against the SHA-256 and byte count i
 ├── docs/agentic-coding-for-agentic-systems.md
 ├── docs/agentic-pattern-catalog.md
 ├── docs/agentic-systems-engineering.md
+├── docs/coding-agent-work-contract.md
 ├── docs/context-engineering.md
 ├── docs/cost-aware-routing.md
 ├── docs/cross-agent-operating-model.md
@@ -663,8 +664,8 @@ files:
     sha256: 56ad3185f6dc57e0053b17879f412e81f15e5a19f70d04d8fdd58ba17e9b6ab1
     trailing_newline: true
   - path: AGENTS.md
-    bytes: 7777
-    sha256: 936a40f450f5bf15ba15deab9c96516b41561e9ac2e7f5196c23148274e34374
+    bytes: 8160
+    sha256: bc13259d7e7cb994d30f8c56520d7d1160953c7b3eab565ffaa7acf9f0302284
     trailing_newline: true
   - path: CLAUDE.md
     bytes: 371
@@ -679,12 +680,12 @@ files:
     sha256: 4149f79872562980aa6f91da56f51ac1d0999f23e92aec8d01c4008a3e1a5c95
     trailing_newline: true
   - path: docs/00-agentic-change-protocol.md
-    bytes: 4969
-    sha256: c18712cc278558cab40aa8c1617502283b042f245a5ad61b2d55f60ac64f1112
+    bytes: 5564
+    sha256: eed3dcc9bf1266ec74a8eab52c1f7ccbf3dadf666d38e8df108368b23dbf8787
     trailing_newline: true
   - path: docs/QUICK_REFERENCE.md
-    bytes: 15818
-    sha256: 306e346f74eb446588d97ebe5f85a68f1bc3c1306176e3c486579b980d18a62b
+    bytes: 16271
+    sha256: 101e793e9aa46ede90d003381e96e6c281399e82e0094bda5ddffe4866639e82
     trailing_newline: true
   - path: docs/a2a-contracts.md
     bytes: 6980
@@ -699,12 +700,16 @@ files:
     sha256: 9a3a6457ad4a03a494347de4cfdb963384f2290f89fd69ddf892d86d121dab95
     trailing_newline: true
   - path: docs/agentic-pattern-catalog.md
-    bytes: 16363
-    sha256: df6755ffc21deb237ddfd48d6e2fe8df227464673f33f36b76f2c6d8822c43f9
+    bytes: 16566
+    sha256: e242f50ba72a991f589a23a2af67b5f7e57e3fefdfbefe0868da0e146adb548d
     trailing_newline: true
   - path: docs/agentic-systems-engineering.md
     bytes: 59324
     sha256: 2aaf243f4ab4b17b374607162fb2ce62a911a987e74c0e57825090b395334edb
+    trailing_newline: true
+  - path: docs/coding-agent-work-contract.md
+    bytes: 5481
+    sha256: f1987d168419508a3e4606c67c7a8ee9f46cc6249a63a732fabe9c877cbdf7c8
     trailing_newline: true
   - path: docs/context-engineering.md
     bytes: 1741
@@ -739,8 +744,8 @@ files:
     sha256: fa484a8d62855c26786368c18f4c055e87479beb2ebc2ce1fe01e40456343312
     trailing_newline: true
   - path: docs/modularity-and-seams.md
-    bytes: 9239
-    sha256: 8515130c76849d2c5deb27deb5c1ca67199a5553cb09237b684dc81a2d86d73b
+    bytes: 9555
+    sha256: 6159520b44848303c10c8eed664e6659fe88380f3b5b8028ac8d7eec40786580
     trailing_newline: true
   - path: docs/reflection-and-planning.md
     bytes: 7197
@@ -1659,13 +1664,15 @@ agentic_architecture_pack/
 
 ### File: `AGENTS.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="936a40f450f5bf15ba15deab9c96516b41561e9ac2e7f5196c23148274e34374" bytes="7777" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="bc13259d7e7cb994d30f8c56520d7d1160953c7b3eab565ffaa7acf9f0302284" bytes="8160" trailing_newline="true" -->
 ````````
 # AGENTS.md
 
 This repository builds agentic operating systems. Read this whole file (it is short). For deeper detail, load only the doc(s) relevant to the task you are about to do — do not load everything by default.
 
 For any non-trivial guide/code/prompt/tool/workflow change, load `docs/00-agentic-change-protocol.md` first. It is the compact working protocol; the larger docs are references, not default context dumps.
+
+For any non-trivial coding task, first assemble or fill the Coding Agent Work Contract in `docs/coding-agent-work-contract.md` (template: `.agentic/coding_agent_work_contract_template.md`) unless the task is tiny and deterministic.
 
 Source authority rule: the live multifile repo is canonical. `agentic_architecture_singlefile.md` is a generated distribution/recovery artifact and must not contain unique live doctrine. If bundle content is useful, materialize it as a live file or mark it archival/non-authoritative.
 
@@ -1676,6 +1683,7 @@ Read the matching doc only when the listed task applies:
 | If you are working on… | Load |
 |---|---|
 | Any non-trivial agentic-system change | `docs/00-agentic-change-protocol.md` |
+| Non-trivial coding task / coding-agent work contract | `docs/coding-agent-work-contract.md` and `.agentic/coding_agent_work_contract_template.md` |
 | Starting under tight context or needing a rule-only refresher | `docs/QUICK_REFERENCE.md` |
 | Current guide version, canonicality, adapter status, or rollout state | `docs/version-and-adoption.md` |
 | Agent errors, repeated mistakes, symptom patches, poor context/tools/feedback | `docs/agent-failure-rca.md` |
@@ -2046,7 +2054,7 @@ if __name__ == "__main__":
 
 ### File: `docs/00-agentic-change-protocol.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/00-agentic-change-protocol.md" sha256="c18712cc278558cab40aa8c1617502283b042f245a5ad61b2d55f60ac64f1112" bytes="4969" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/00-agentic-change-protocol.md" sha256="eed3dcc9bf1266ec74a8eab52c1f7ccbf3dadf666d38e8df108368b23dbf8787" bytes="5564" trailing_newline="true" -->
 ````````
 # Agentic Change Protocol
 
@@ -2101,27 +2109,32 @@ If the change fixes an agent mistake, repeated agent error, multi-agent confusio
 
 The default stance is: agents often fail because the system withheld context, tools, feedback, source clarity, or authority that a capable human would have had. Fix the missing affordance before adding behavior-policing machinery.
 
-## 6. Define done as evidence
+## 6. Define filesystem topology as an executable contract
+
+For code changes, name the package/module destination before editing. If the repo has a topology, dependency-map, or import-boundary test, include it in the acceptance rubric. If a non-trivial change would add code in a root/convenience layer and no executable guard exists, add the smallest useful guard first. Prose-only hierarchy guidance is not a control.
+
+## 7. Define done as evidence
 
 Before implementation, write a small acceptance rubric:
 
 - expected system behavior
 - files/components in scope and out of scope
 - user approval or side-effect boundaries
-- commands/tests/evals/reviews to run
+- commands/tests/evals/reviews to run, including repo topology/dependency gates when code files are added or moved
 - deletion/simplification pass result
 - manual proof vs autonomous/system proof gap
 - rollback/adoption state when relevant
 
 For small changes, a few bullets are enough. For larger changes, use a dedicated plan only when it reduces risk more than it adds process.
 
-## 7. Final acceptance
+## 8. Final acceptance
 
 Before calling work done, try to disprove readiness:
 
 - Did the implementation drift from the plan?
 - Did it add complexity without preventing a named failure?
 - Did it skip a simpler context/tool/source-authority fix?
+- Did new/moved code respect the repo topology and run the executable topology/dependency guard?
 - Are source/truth/memory/context/tool boundaries still clear?
 - Are untested layers named honestly?
 - If this fixes agent behavior, does the RCA identify the missing invariant or affordance?
@@ -2132,7 +2145,7 @@ Report known gaps explicitly instead of letting "tests pass" stand in for system
 
 ### File: `docs/QUICK_REFERENCE.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/QUICK_REFERENCE.md" sha256="306e346f74eb446588d97ebe5f85a68f1bc3c1306176e3c486579b980d18a62b" bytes="15818" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/QUICK_REFERENCE.md" sha256="101e793e9aa46ede90d003381e96e6c281399e82e0094bda5ddffe4866639e82" bytes="16271" trailing_newline="true" -->
 ````````
 # Quick reference for coding agents
 
@@ -2155,6 +2168,13 @@ If your task touches **ambiguous intent, context selection, tool choice, memory 
 6. **Spend authority.** Paid API keys are gateway-owned exception paths, not ambient context. Attribution, budgets, rate limits, and tests that fail when direct key reads come back.
 7. **Coupling cost asymmetry.** Declaring a seam now is linear; untangling later is super-linear in callers and editors. Bias forward: declare the seam now even when the local diff would be smaller without it.
 8. **Agent-native interfaces.** CLIs, repo shape, local docs, skills, and file seams are model-facing surfaces. Design them for headless JSON, bounded output, dry-runs/idempotency, small cohesive files, and disjoint multi-agent write sets.
+
+---
+
+
+## Coding Agent Work Contract (every non-trivial coding task)
+
+Before editing, fill or assemble `docs/coding-agent-work-contract.md` using `.agentic/coding_agent_work_contract_template.md` unless the task is tiny and deterministic. Minimum fields: Objective · In scope · Out of scope/stop conditions · Orientation evidence · Plan · Evidence required · Skipped evidence/gaps · Learning trail.
 
 ---
 
@@ -2205,7 +2225,7 @@ Detail: `docs/reflection-and-planning.md`. Anti-pattern 9.10.
 
 ## Plan as artifact (before action)
 
-Goal · Acceptance proof · Component classification · Simplicity/deletion pass · Seam declaration · Failure-mode budget · Routing decision · Out of scope.
+Goal · Acceptance proof · Coding Agent Work Contract when non-trivial · Component classification · Simplicity/deletion pass · Seam declaration · Failure-mode budget · Routing decision · Out of scope.
 
 Goal-drift checks: before each tool call, before declaring done, inside reflection. If goal genuinely changes mid-task, change the plan explicitly.
 
@@ -4572,7 +4592,7 @@ These are the public materials this architecture pack is designed to align with:
 
 ### File: `docs/agentic-pattern-catalog.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-pattern-catalog.md" sha256="df6755ffc21deb237ddfd48d6e2fe8df227464673f33f36b76f2c6d8822c43f9" bytes="16363" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-pattern-catalog.md" sha256="e242f50ba72a991f589a23a2af67b5f7e57e3fefdfbefe0868da0e146adb548d" bytes="16566" trailing_newline="true" -->
 ````````
 # Agentic Pattern Catalog
 
@@ -4717,6 +4737,7 @@ Rules of thumb:
 - Prefer one-agent-task-per-file when a behavior can be changed, tested, and reasoned about independently. This is not one-helper-per-file; it is one independently changeable unit per edit surface.
 - Every public seam should have a minimal test fixture and an example invocation.
 - Enforce the shape with lint rules, generators, dependency-map checks, review agents, and CI; prose-only conventions will drift back toward human-centered mega-files.
+- Prefer one small repo-local topology test over more review ceremony. If agents keep adding root-level modules, add a failing test that allowlists the root and forces new behavior into domain packages.
 
 `AGENTS.md` should be an index and operating contract, not the only memory of the codebase. Durable design knowledge belongs in topic docs or a markdown knowledge graph with backlinks into code and tests. A `lat.md/`-style graph is one implementation: it keeps architecture, business rules, test specs, and source references searchable and checkable while keeping root instructions short. Module-level `AGENTS.md` files can make each folder behave like a codebase skill: they describe local intent, invariants, public APIs, dependency rules, commands, and safe-edit boundaries.
 
@@ -6914,6 +6935,173 @@ source -> identity -> claim -> authority -> contradiction -> synthesis -> action
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/agentic-systems-engineering.md" -->
 
+### File: `docs/coding-agent-work-contract.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/coding-agent-work-contract.md" sha256="f1987d168419508a3e4606c67c7a8ee9f46cc6249a63a732fabe9c877cbdf7c8" bytes="5481" trailing_newline="true" -->
+````````
+# Coding Agent Work Contract
+
+Audience: coding agents and human operators working in any project.
+
+Use this contract before a **non-trivial coding task**. It makes coding agents more reliable by forcing the smallest useful loop:
+
+```text
+intent → orientation → bounded plan → surgical patch → evidence → learning trail
+```
+
+This is a project-agnostic template. Project-specific repos may add stricter rules, but they should not weaken this contract.
+
+## When to use it
+
+Use for tasks that touch any of these:
+
+- code, tests, prompts, skills, workflows, runtime config, automation, tools, schemas, or docs that guide agents;
+- shared repos or machine-level config;
+- external side effects, secrets, user data, browser/UI, email, social, DBs, queues, provider calls, long-running agents, or deployment paths;
+- any change where “tests pass” would not by itself prove the system is safe.
+
+For tiny deterministic edits, use the minimal inline version below. Do not turn typo fixes into a governance project.
+
+## Contract fields
+
+### 1. Objective
+
+State the concrete user-visible outcome in one or two sentences.
+
+Good:
+
+> Add a small validator that rejects missing evidence rows in coding-agent task contracts.
+
+Bad:
+
+> Improve reliability.
+
+### 2. Scope and non-scope
+
+Name exactly what may change and what may not change.
+
+Include:
+
+- files/components in scope;
+- files/components out of scope;
+- protected files;
+- side-effect boundaries;
+- whether commit/push/deploy/send/writeback is allowed.
+
+### 3. Assumptions and ambiguities
+
+List assumptions. If an assumption would change the implementation materially, stop and ask.
+
+### 4. Orientation before edits
+
+Before patching, cite evidence that you found the right layer:
+
+- repo/project rules read;
+- active claims or ownership checked, where applicable;
+- existing implementation or similar pattern inspected;
+- tests/evals/fixtures located or gap named;
+- source-of-truth docs identified;
+- duplicate implementation path rejected or explained.
+
+### 5. Plan with evidence targets
+
+Each step should have a proof target.
+
+```text
+1. Add template → evidence: file exists, links resolve.
+2. Add validator → evidence: focused unit tests pass.
+3. Update docs → evidence: source authority and gaps recorded.
+```
+
+### 6. Patch discipline
+
+Default rules:
+
+- smallest change that satisfies the contract;
+- no speculative features;
+- no adjacent refactor or formatting sweep;
+- match existing style;
+- delete/simplify before adding;
+- every changed line should trace to objective or evidence;
+- optional validators/frameworks/automation wait until a real failure proves need.
+
+### 7. Evidence matrix
+
+Before claiming done, fill this matrix. If a layer is skipped, say why and whether it is a gap.
+
+| Layer | Required when | Evidence |
+|---|---|---|
+| Unit/regression | deterministic code logic changed | command/result or n/a reason |
+| Integration | cross-module/service/runtime behavior changed | command/result or n/a reason |
+| Eval/golden/replay | LLM judgment, prompt, skill, classifier, agent behavior changed | eval/replay/rubric or explicit gap |
+| Browser/e2e | user-visible web/UI changed | URL/screenshot/console result or n/a |
+| Security/privacy | secrets/auth/user data/outbound side effects involved | scan/review result or n/a |
+| Topology/dependency | new/moved code files or package seams | gate command/result or n/a |
+| Real-world fixture | bug/failure/judgment claim exists | source case or gap |
+| Source/authority | durable claim, memory, source lane, or external source used | source handles |
+
+### 8. Stop conditions
+
+Stop and ask before proceeding if:
+
+- protected files need edits not explicitly authorized;
+- external side effects are needed;
+- required evidence cannot be gathered;
+- scope expands materially;
+- privacy/secret boundary is unclear;
+- tests/evals reveal a different root cause;
+- multiple agents/claims overlap on the same files;
+- implementation requires runtime automation or new services not in scope.
+
+### 9. Review lane
+
+For medium/high-risk work, run at least one review pass before done:
+
+- architecture/source-authority review;
+- hidden-complexity/simplifier review;
+- security/privacy review;
+- dead-code/orphan review;
+- agent-advocate/human-counterfactual review.
+
+Use deterministic tests first. LLM reviewers do not replace tests or human approval.
+
+### 10. Learning trail
+
+Route outcomes:
+
+| Finding | Destination |
+|---|---|
+| recurring successful workflow | skill candidate |
+| recurring failure class | eval fixture / quality gate |
+| missing context | source doc / context policy |
+| confusing tool surface | tool/API/CLI improvement deep dive |
+| useful but unapproved durable lesson | memory candidate |
+| stale or bloated instruction | simplify/delete proposal |
+
+## Minimal inline version
+
+```text
+Work contract:
+Objective:
+In scope:
+Out of scope / stop conditions:
+Orientation evidence:
+Plan:
+Evidence required:
+Skipped evidence/gaps:
+Learning trail:
+```
+
+## Relationship to other guide docs
+
+- Use `docs/00-agentic-change-protocol.md` for the broader agentic-system change protocol.
+- Use `docs/context-engineering.md` when context loading/compaction is part of the change.
+- Use `docs/learning-loops.md` when findings should become skills, evals, or contract changes.
+- Use `docs/evals.md` when agent behavior, prompts, or judgment require eval coverage.
+- Use this contract as the concrete task-start artifact that ties those docs to one coding task.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="docs/coding-agent-work-contract.md" -->
+
 ### File: `docs/context-engineering.md`
 
 <!-- AGENTIC_BUNDLE_FILE_START path="docs/context-engineering.md" sha256="5d352341c65c09b27f27741d75d14c35dd88b67c84a73d6c0d5d7a205b3a65ef" bytes="1741" trailing_newline="true" -->
@@ -7684,7 +7872,7 @@ When a memory is used to answer a high-stakes question, the system should expose
 
 ### File: `docs/modularity-and-seams.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/modularity-and-seams.md" sha256="8515130c76849d2c5deb27deb5c1ca67199a5553cb09237b684dc81a2d86d73b" bytes="9239" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/modularity-and-seams.md" sha256="6159520b44848303c10c8eed664e6659fe88380f3b5b8028ac8d7eec40786580" bytes="9555" trailing_newline="true" -->
 ````````
 # Modularity and seam design
 
@@ -7710,7 +7898,7 @@ Humans hold this asymmetry in working memory because they have lived through it.
 
 ## 2. The seam-declaration rule
 
-Every non-trivial change brief answers four questions before code is written. These belong in the architecture brief alongside component classification and harness/policy split.
+Every non-trivial change brief answers five questions before code is written. These belong in the architecture brief alongside component classification and harness/policy split.
 
 ```text
 1. Modules touched
@@ -7724,7 +7912,11 @@ Every non-trivial change brief answers four questions before code is written. Th
    Which contracts does this change introduce, modify, deprecate, or extend?
    For each, what is the public surface and what is intentionally private?
 
-4. Substitutability
+4. Filesystem/package destination
+   Which package owns this change, and which repo-local topology/dependency gate
+   proves future agents cannot add the same behavior to a convenience/root layer?
+
+5. Substitutability
    What would have to change if the implementation behind each interface were
    swapped (different store, different model, different transport, different
    provider)? If the answer is "many things in many places," the seam is in the
@@ -7904,6 +8096,8 @@ The reflection checklist (`docs/reflection-and-planning.md`) explicitly asks:
 - Did this change reach across a module boundary that previously had a seam?
 - Did this change add a parameter, branch, or field that another module
   now depends on by absence rather than by contract?
+- Did this change add or move code without a repo-local topology/dependency gate
+  proving the intended package seam?
 - If a future task had to swap the implementation behind any interface
   this change touches, what would have to change with it?
 ```
