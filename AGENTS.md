@@ -43,6 +43,10 @@ Do **not** load `agentic_architecture_singlefile.md` — it is a compiled human 
 
 Core rule: deterministic harness, adaptive policy.
 
+High-agent-affordance default: architect OpenClaw, Type0, Gaia/Gaia Brain, Soho House, and shared agentic-media work so capable agents can inspect sources, use clear tools, apply concise skills, and exercise judgment. Before adding hard gates, hidden automation, routing layers, reviewer loops, or deterministic substitutes for judgment, first ask whether a better skill, typed tool, source lane, context packet, or feedback loop would preserve more agency with less machinery. If a coding agent chooses a lower-affordance design, it must explain why and get explicit approval.
+
+Skill/tool creation rule: use `skills/skill-creator-pro` when creating or improving skills. Use `skills/design-agent-tool` before implementing or reviewing OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
+
 Second rule: simplicity/deletion before machinery. Complexity has hidden downstream cost. Before adding an agent, schema, router, policy layer, eval harness, guardrail, workflow, dependency, or automation, run the deletion-first order:
 
 1. Make the requirement less wrong or less broad.

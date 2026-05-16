@@ -51,6 +51,7 @@ Keep root instructions short. Put detailed procedures in skills so they load onl
 
 ## Initial skills in this pack
 
+- `skill-creator-pro`
 - `design-agent-tool`
 - `design-agent-memory`
 - `design-source-lane`
@@ -63,3 +64,5 @@ Keep root instructions short. Put detailed procedures in skills so they load onl
 Skills should package procedures that prevent architectural drift: designing source lanes, reviewing identity resolution, creating eval cases, writing source-authority policies, and auditing adoption-state changes.
 
 Prefer a skill when the repo needs a repeatable way to do a class of work. Prefer a deterministic script or eval when consistency matters more than judgment. Prefer deleting or simplifying the process when the skill would only preserve unnecessary complexity.
+
+When creating or improving skills, use `skill-creator-pro` as the lifecycle: capture intent, draft, test with realistic prompts, compare against a baseline when possible, collect human feedback, and iterate. If the skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, use `design-agent-tool` before implementation so the resulting affordance is agent-usable, typed, recoverable, and traceable.

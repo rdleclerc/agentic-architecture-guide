@@ -1,0 +1,1 @@
+../../../skills/skill-creator-pro/SKILL.md

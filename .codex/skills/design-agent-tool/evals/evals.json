@@ -1,0 +1,44 @@
+{
+  "skill_name": "design-agent-tool",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Design a Type0 source-chase CLI that Sonny can use on X/Twitter tips with linked articles, first replies, and screenshots. The tool must not decide accept/reject.",
+      "expected_output": "A tool contract that separates raw source artifacts from Sonny judgment, includes X/reply/media/OCR receipts, structured errors, and tool-choice evals.",
+      "files": [],
+      "expectations": [
+        "The output states what affordance the tool buys the agent",
+        "The output separates source authority from model/editorial judgment",
+        "The output includes when to use and when not to use",
+        "The output includes input and output schemas or schema requirements",
+        "The output includes structured errors and trace fields",
+        "The output includes eval cases where Sonny should not terminally reject before source chase"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review this proposed Gaia Brain memory tool: `memory(action, text, score)` can search, write, delete, and summarize memories depending on the action string. What should change?",
+      "expected_output": "A critique that rejects the mega-tool, separates read/write/destructive operations, adds provenance/source roles, permissions, idempotency, and evals.",
+      "files": [],
+      "expectations": [
+        "The output identifies the mega-tool/action-string anti-pattern",
+        "The output separates read, write, and destructive capabilities",
+        "The output requires provenance and source-authority labels",
+        "The output requires idempotency for writes",
+        "The output requires permission or approval for destructive actions"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Soho House needs a bookmark-intake tool that can classify X bookmarks and decide which ones become company intelligence. Draft the agent-facing tool contract.",
+      "expected_output": "A high-affordance contract where the tool exposes raw bookmark evidence and candidate classifications but does not hide source trails behind a final score.",
+      "files": [],
+      "expectations": [
+        "The output distinguishes raw bookmark evidence from candidate classification",
+        "The output avoids making the tool the final intelligence judge",
+        "The output includes recovery paths for missing/inaccessible X content",
+        "The output includes misuse examples or near misses"
+      ]
+    }
+  ]
+}
