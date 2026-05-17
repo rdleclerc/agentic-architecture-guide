@@ -51,7 +51,7 @@ Keep root instructions short. Put detailed procedures in skills so they load onl
 
 ## Initial skills in this pack
 
-- `skill-creator-pro`
+- `openclaw-skill-creator`
 - `design-agent-tool`
 - `design-agent-memory`
 - `design-source-lane`
@@ -65,4 +65,4 @@ Skills should package procedures that prevent architectural drift: designing sou
 
 Prefer a skill when the repo needs a repeatable way to do a class of work. Prefer a deterministic script or eval when consistency matters more than judgment. Prefer deleting or simplifying the process when the skill would only preserve unnecessary complexity.
 
-When creating or improving skills, use `skill-creator-pro` as the lifecycle: capture intent, draft, test with realistic prompts, compare against a baseline when possible, collect human feedback, and iterate. If the skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, use `design-agent-tool` before implementation so the resulting affordance is agent-usable, typed, recoverable, and traceable.
+When creating or improving OpenClaw-targeted skills, use `openclaw-skill-creator` as the lifecycle: capture intent, draft, test with realistic prompts, compare against a baseline when possible, collect human feedback, and iterate. For general Codex skills, use the runtime-native general skill creator instead. If the OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, use `design-agent-tool` before implementation so the resulting affordance is agent-usable, typed, recoverable, and traceable.

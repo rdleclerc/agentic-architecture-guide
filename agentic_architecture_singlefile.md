@@ -524,15 +524,15 @@ The rebuild parser checks each file payload against the SHA-256 and byte count i
 ├── .claude/skills/design-agent-tool/SKILL.md
 ├── .claude/skills/design-context-engine/SKILL.md
 ├── .claude/skills/design-source-lane/SKILL.md
+├── .claude/skills/openclaw-skill-creator/SKILL.md
 ├── .claude/skills/review-agentic-architecture/SKILL.md
-├── .claude/skills/skill-creator-pro/SKILL.md
 ├── .codex/skills/build-agent-eval/SKILL.md
 ├── .codex/skills/design-agent-memory/SKILL.md
 ├── .codex/skills/design-agent-tool/SKILL.md
 ├── .codex/skills/design-context-engine/SKILL.md
 ├── .codex/skills/design-source-lane/SKILL.md
+├── .codex/skills/openclaw-skill-creator/SKILL.md
 ├── .codex/skills/review-agentic-architecture/SKILL.md
-├── .codex/skills/skill-creator-pro/SKILL.md
 ├── .github/pull_request_template.md
 ├── .gitignore
 ├── AGENTS.md
@@ -570,8 +570,8 @@ The rebuild parser checks each file payload against the SHA-256 and byte count i
 ├── skills/design-agent-tool/SKILL.md
 ├── skills/design-context-engine/SKILL.md
 ├── skills/design-source-lane/SKILL.md
+├── skills/openclaw-skill-creator/SKILL.md
 ├── skills/review-agentic-architecture/SKILL.md
-├── skills/skill-creator-pro/SKILL.md
 ├── tests/__init__.py
 ├── tests/agentic/__init__.py
 ├── tests/agentic/behavior_fixtures.json
@@ -600,8 +600,8 @@ files:
     sha256: 7ec7f08c887daf2ee78352d3dd44f9466c5424549cc998201315a9d4191a08f6
     trailing_newline: true
   - path: .agentic/skill_registry.yaml
-    bytes: 2889
-    sha256: 96678fa484624b49edbaf9ba0829afc0d2af47db35094ce2717b7fcc9e7a8ba0
+    bytes: 2969
+    sha256: 9276aba5c380263e576ca5d0795ad0e3cd99e3c59fce60d9aae4dbef9a0e56af
     trailing_newline: true
   - path: .agentic/source_authority.yaml
     bytes: 1487
@@ -620,8 +620,8 @@ files:
     sha256: bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1
     trailing_newline: true
   - path: .claude/skills/design-agent-tool/SKILL.md
-    bytes: 6183
-    sha256: e7222dc5e5d95920ab4e46bc198a3e56d53ac7d952204e1b5ef8b63c4be299ce
+    bytes: 6206
+    sha256: b79f9f100cb642cdefc7555c2b34f5c33ce185d8a7e9e2f6f5cc8bd2845c318c
     trailing_newline: true
   - path: .claude/skills/design-context-engine/SKILL.md
     bytes: 624
@@ -631,13 +631,13 @@ files:
     bytes: 1208
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
+  - path: .claude/skills/openclaw-skill-creator/SKILL.md
+    bytes: 30304
+    sha256: beba7771b5837060ae7354502b0cb530eac6b2fc0c4f589471c8c23d9502d2b4
+    trailing_newline: true
   - path: .claude/skills/review-agentic-architecture/SKILL.md
     bytes: 812
     sha256: 16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164
-    trailing_newline: true
-  - path: .claude/skills/skill-creator-pro/SKILL.md
-    bytes: 35440
-    sha256: cd9bb5102f71b32766eca597b8c105e96a14f194afe695781cd2bc36c7471475
     trailing_newline: true
   - path: .codex/skills/build-agent-eval/SKILL.md
     bytes: 531
@@ -648,8 +648,8 @@ files:
     sha256: bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1
     trailing_newline: true
   - path: .codex/skills/design-agent-tool/SKILL.md
-    bytes: 6183
-    sha256: e7222dc5e5d95920ab4e46bc198a3e56d53ac7d952204e1b5ef8b63c4be299ce
+    bytes: 6206
+    sha256: b79f9f100cb642cdefc7555c2b34f5c33ce185d8a7e9e2f6f5cc8bd2845c318c
     trailing_newline: true
   - path: .codex/skills/design-context-engine/SKILL.md
     bytes: 624
@@ -659,13 +659,13 @@ files:
     bytes: 1208
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
+  - path: .codex/skills/openclaw-skill-creator/SKILL.md
+    bytes: 30304
+    sha256: beba7771b5837060ae7354502b0cb530eac6b2fc0c4f589471c8c23d9502d2b4
+    trailing_newline: true
   - path: .codex/skills/review-agentic-architecture/SKILL.md
     bytes: 812
     sha256: 16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164
-    trailing_newline: true
-  - path: .codex/skills/skill-creator-pro/SKILL.md
-    bytes: 35440
-    sha256: cd9bb5102f71b32766eca597b8c105e96a14f194afe695781cd2bc36c7471475
     trailing_newline: true
   - path: .github/pull_request_template.md
     bytes: 1943
@@ -676,8 +676,8 @@ files:
     sha256: 56ad3185f6dc57e0053b17879f412e81f15e5a19f70d04d8fdd58ba17e9b6ab1
     trailing_newline: true
   - path: AGENTS.md
-    bytes: 9060
-    sha256: 44706e535a34a5f0769347ff00578436bf1cb0183c009075c28cc02f092e9448
+    bytes: 9151
+    sha256: ee9748fabd6e59c9939d12e2b0579994120b8b7b5964204da9d48c93477af830
     trailing_newline: true
   - path: CLAUDE.md
     bytes: 371
@@ -764,8 +764,8 @@ files:
     sha256: f79134a08564df1494da4bdc30a4149801e71f0597c506895e4c348279a55eb5
     trailing_newline: true
   - path: docs/skills.md
-    bytes: 2867
-    sha256: d756d1c8336229a03f1ad858ed0fce188dc3740fc67d5d9994a3422298738d42
+    bytes: 2984
+    sha256: 07f650856bf8dc496d52ede585191d876579b8f874f579b87db92c31c05d461a
     trailing_newline: true
   - path: docs/source-authority-and-truth-lanes.md
     bytes: 3286
@@ -804,8 +804,8 @@ files:
     sha256: bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1
     trailing_newline: true
   - path: skills/design-agent-tool/SKILL.md
-    bytes: 6183
-    sha256: e7222dc5e5d95920ab4e46bc198a3e56d53ac7d952204e1b5ef8b63c4be299ce
+    bytes: 6206
+    sha256: b79f9f100cb642cdefc7555c2b34f5c33ce185d8a7e9e2f6f5cc8bd2845c318c
     trailing_newline: true
   - path: skills/design-context-engine/SKILL.md
     bytes: 624
@@ -815,13 +815,13 @@ files:
     bytes: 1208
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
+  - path: skills/openclaw-skill-creator/SKILL.md
+    bytes: 30304
+    sha256: beba7771b5837060ae7354502b0cb530eac6b2fc0c4f589471c8c23d9502d2b4
+    trailing_newline: true
   - path: skills/review-agentic-architecture/SKILL.md
     bytes: 812
     sha256: 16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164
-    trailing_newline: true
-  - path: skills/skill-creator-pro/SKILL.md
-    bytes: 35440
-    sha256: cd9bb5102f71b32766eca597b8c105e96a14f194afe695781cd2bc36c7471475
     trailing_newline: true
   - path: tests/__init__.py
     bytes: 0
@@ -1070,7 +1070,7 @@ memory:
 
 ### File: `.agentic/skill_registry.yaml`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/skill_registry.yaml" sha256="96678fa484624b49edbaf9ba0829afc0d2af47db35094ce2717b7fcc9e7a8ba0" bytes="2889" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/skill_registry.yaml" sha256="9276aba5c380263e576ca5d0795ad0e3cd99e3c59fce60d9aae4dbef9a0e56af" bytes="2969" trailing_newline="true" -->
 ````````
 version: 1
 canonical_root: skills
@@ -1081,12 +1081,12 @@ policy:
   canonical_source: skills/<skill-name>/SKILL.md
   adapter_contract: Adapter skill paths mirror the canonical skill directories for runtime compatibility. Do not edit adapter paths directly; update the canonical skill and regenerate or refresh adapters.
 skills:
-  - name: skill-creator-pro
-    description: Use when creating, modifying, improving, evaluating, benchmarking, or packaging an AgentSkill; includes draft/eval/improve lifecycle and trigger-description optimization.
-    path: skills/skill-creator-pro/SKILL.md
+  - name: openclaw-skill-creator
+    description: Use when creating, modifying, improving, evaluating, benchmarking, or packaging an OpenClaw-targeted skill; includes draft/eval/improve lifecycle and trigger-description optimization. Do not use as the general Codex skill creator.
+    path: skills/openclaw-skill-creator/SKILL.md
     adapter_paths:
-      claude: .claude/skills/skill-creator-pro/SKILL.md
-      codex: .codex/skills/skill-creator-pro/SKILL.md
+      claude: .claude/skills/openclaw-skill-creator/SKILL.md
+      codex: .codex/skills/openclaw-skill-creator/SKILL.md
   - name: design-agent-tool
     description: Use when adding, modifying, reviewing, or debugging any tool exposed to an agent, including OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or workflow commands.
     path: skills/design-agent-tool/SKILL.md
@@ -1322,7 +1322,7 @@ Return memory schema changes, memory tool changes, and eval cases.
 
 ### File: `.claude/skills/design-agent-tool/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-agent-tool/SKILL.md" sha256="e7222dc5e5d95920ab4e46bc198a3e56d53ac7d952204e1b5ef8b63c4be299ce" bytes="6183" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-agent-tool/SKILL.md" sha256="b79f9f100cb642cdefc7555c2b34f5c33ce185d8a7e9e2f6f5cc8bd2845c318c" bytes="6206" trailing_newline="true" -->
 ````````
 ---
 name: design-agent-tool
@@ -1429,7 +1429,7 @@ Return:
 
 ## When composing with Skill Creator
 
-If a new or changed skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the skill itself, use `skill-creator-pro` for the draft → eval → improve lifecycle.
+If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-skill-creator` for the draft → eval → improve lifecycle.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-agent-tool/SKILL.md" -->
 
@@ -1490,62 +1490,43 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-source-lane/SKILL.md" -->
 
-### File: `.claude/skills/review-agentic-architecture/SKILL.md`
+### File: `.claude/skills/openclaw-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/review-agentic-architecture/SKILL.md" sha256="16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164" bytes="812" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-skill-creator/SKILL.md" sha256="beba7771b5837060ae7354502b0cb530eac6b2fc0c4f589471c8c23d9502d2b4" bytes="30304" trailing_newline="true" -->
 ````````
 ---
-name: review-agentic-architecture
-description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
+name: openclaw-skill-creator
+description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general Codex skill-creator; use the repo-local Codex `skill-creator` for general Codex skills.
 ---
 
-# Review Agentic Architecture
+# OpenClaw Skill Creator
 
-## Checklist
-
-- Is the component correctly classified?
-- Are model-owned decisions separated from harness-owned responsibilities?
-- Are ambiguous decisions handled by adaptive policy rather than brittle regex or keyword routing?
-- Are tools typed, permissioned, observable, and tested?
-- Is memory scoped, evidenced, and contradiction-aware?
-- Is context assembled by policy rather than dumping everything?
-- Are risky side effects gated by approval and idempotency?
-- Are checkpoints and replay behavior safe?
-- Are evals included for positive and negative cases?
-
-## Output
-
-Return pass/fail with required changes.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/review-agentic-architecture/SKILL.md" -->
-
-### File: `.claude/skills/skill-creator-pro/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/skill-creator-pro/SKILL.md" sha256="cd9bb5102f71b32766eca597b8c105e96a14f194afe695781cd2bc36c7471475" bytes="35440" trailing_newline="true" -->
-````````
----
-name: skill-creator-pro
-description: Create new skills, modify and improve existing skills, and measure skill performance with eval-driven iteration. Use when users want to create a skill from scratch, edit or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy. Also use when someone says 'turn this into a skill', 'make a skill for X', 'improve this skill', 'test this skill', 'run evals on this skill', or mentions skill descriptions, skill triggering, or skill quality.
----
-
-# Skill Creator
-
-> ## OpenClaw Adaptations
+> ## Scope Boundary
 >
-> This skill is adapted from [Anthropic's official skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)
-> for the OpenClaw runtime. Key differences from Claude Code:
+> This skill creates and improves **OpenClaw-targeted skills**. It is not the
+> general Codex skill-creator. For general Codex skills, use the repo-local
+> `skill-creator` skill in `agentic-uber-skills`.
 >
-> **Subagent spawning**: Use `sessions_spawn` with `mode: "run"` instead of Claude Code's
-> native subagent system. Example:
+> This skill is adapted from public skill-creator methodology for the OpenClaw
+> runtime. Keep provenance visible, but do not copy proprietary or leaked code.
+>
+> When running from Codex, translate the workflow into Codex terms. Do not run
+> `claude -p`, `sessions_spawn`, Claude.ai, Cowork, or `present_files` steps
+> unless the current runtime explicitly provides them and the user has approved
+> that execution path.
+>
+> ## OpenClaw Runtime Notes
+>
+> **OpenClaw executor**: In OpenClaw runtimes that expose `sessions_spawn`, use it with `mode: "run"` instead of assuming another runtime's native subagent system. Example:
 > ```
 > sessions_spawn(task="Execute this task with skill at <path>...",
 >   mode="run", runTimeoutSeconds=300)
 > ```
 >
-> **Description optimization (`claude -p`)**: The `run_loop.py` and `run_eval.py` scripts
-> call `claude -p` (Claude Code CLI). If Claude Code is installed on the host, they work
-> as-is. Otherwise, test trigger phrases manually via `sessions_spawn` or skip automated
-> description optimization.
+> **Legacy description optimization scripts**: The bundled `run_loop.py` and `run_eval.py`
+> scripts originated in Claude Code trigger testing. In Codex or plain OpenClaw sessions,
+> do not run them as-is. Use manual held-out trigger evals, a runtime-native executor, or
+> adapt the scripts before use.
 >
 > **Eval viewer (headless)**: OpenClaw typically runs headless. Always use `--static`:
 > ```bash
@@ -1556,9 +1537,8 @@ description: Create new skills, modify and improve existing skills, and measure 
 > ```
 > Then send the HTML file to the user via `message(action=send, filePath=...)`.
 >
-> **Claude.ai / Cowork sections**: These sections at the bottom of this file are for
-> Claude.ai and Cowork environments. OpenClaw users should follow the main workflow
-> with the adaptations noted above.
+> **Runtime-specific notes**: Runtime-specific automation is optional. The portable
+> contract is intent capture, draft, eval, review, improve, and package.
 >
 > ## Local agent-affordance extensions
 >
@@ -1566,13 +1546,13 @@ description: Create new skills, modify and improve existing skills, and measure 
 >
 > If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `design-agent-tool` before implementation and include the resulting tool contract or a summary of it in the skill/eval package.
 
-A skill for creating new skills and iteratively improving them.
+A skill for creating new OpenClaw skills and iteratively improving them.
 
 At a high level, the process of creating a skill goes like this:
 
 - Decide what you want the skill to do and roughly how it should do it
 - Write a draft of the skill
-- Create a few test prompts and run claude-with-access-to-the-skill on them
+- Create a few test prompts and run a fresh agent or runtime-supported executor with access to the skill
 - Help the user evaluate the results both qualitatively and quantitatively
   - While the runs happen in the background, draft some quantitative evals if there aren't any (if there are some, you can either use as is or modify if you feel something needs to change about them). Then explain them to the user (or if they already existed, explain the ones that already exist)
   - Use the `eval-viewer/generate_review.py` script to show the user the results for them to look at, and also let them look at the quantitative metrics
@@ -1609,7 +1589,7 @@ It's OK to briefly explain terms if you're in doubt, and feel free to clarify te
 
 Start by understanding the user's intent. The current conversation might already contain a workflow the user wants to capture (e.g., they say "turn this into a skill"). If so, extract answers from the conversation history first — the tools used, the sequence of steps, corrections the user made, input/output formats observed. The user may need to fill the gaps, and should confirm before proceeding to the next step.
 
-1. What should this skill enable Claude to do?
+1. What should this skill enable an OpenClaw agent to do?
 2. When should this skill trigger? (what user phrases/contexts)
 3. What's the expected output format?
 4. Should we set up test cases to verify the skill works? Skills with objectively verifiable outputs (file transforms, data extraction, code generation, fixed workflow steps) benefit from test cases. Skills with subjective outputs (writing style, art) often don't need them. Suggest the appropriate default based on the skill type, but let the user decide.
@@ -1625,7 +1605,7 @@ Check available MCPs - if useful for research (searching docs, finding similar s
 Based on the user interview, fill in these components:
 
 - **name**: Skill identifier
-- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific contexts for when to use it. All "when to use" info goes here, not in the body. Note: currently Claude has a tendency to "undertrigger" skills -- to not use them when they'd be useful. To combat this, please make the skill descriptions a little bit "pushy". So for instance, instead of "How to build a simple fast dashboard to display internal Anthropic data.", you might write "How to build a simple fast dashboard to display internal Anthropic data. Make sure to use this skill whenever the user mentions dashboards, data visualization, internal metrics, or wants to display any kind of company data, even if they don't explicitly ask for a 'dashboard.'"
+- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic Codex skill-authoring tasks that belong to the general `skill-creator`.
 - **compatibility**: Required tools, dependencies (optional, rarely needed)
 - **the rest of the skill :)**
 
@@ -1805,7 +1785,7 @@ Put each with_skill version before its baseline counterpart.
    ```
    For iteration 2+, also pass `--previous-workspace <workspace>/iteration-<N-1>`.
 
-   **Cowork / headless environments:** If `webbrowser.open()` is not available or the environment has no display, use `--static <output_path>` to write a standalone HTML file instead of starting a server. Feedback will be downloaded as a `feedback.json` file when the user clicks "Submit All Reviews". After download, copy `feedback.json` into the workspace directory for the next iteration to pick up.
+   **Headless environments:** If `webbrowser.open()` is not available or the environment has no display, use `--static <output_path>` to write a standalone HTML file instead of starting a server. If the viewer writes feedback to a file, copy that feedback file into the workspace directory for the next iteration to pick up.
 
 Note: please use generate_review.py to create the viewer; there's no need to write custom HTML.
 
@@ -1893,7 +1873,7 @@ This is optional, requires subagents, and most users won't need it. The human re
 
 ## Description Optimization
 
-The description field in SKILL.md frontmatter is the primary mechanism that determines whether Claude invokes a skill. After creating or improving a skill, offer to optimize the description for better triggering accuracy.
+The description field in SKILL.md frontmatter is the primary mechanism that determines whether an agent invokes a skill. After creating or improving an OpenClaw skill, offer to optimize the description for better triggering accuracy.
 
 ### Step 1: Generate trigger eval queries
 
@@ -1906,7 +1886,7 @@ Create 20 eval queries — a mix of should-trigger and should-not-trigger. Save 
 ]
 ```
 
-The queries must be realistic and something a Claude Code or Claude.ai user would actually type. Not abstract requests, but requests that are concrete and specific and have a good amount of detail. For instance, file paths, personal context about the user's job or situation, column names and values, company names, URLs. A little bit of backstory. Some might be in lowercase or contain abbreviations or typos or casual speech. Use a mix of different lengths, and focus on edge cases rather than making them clear-cut (the user will get a chance to sign off on them).
+The queries must be realistic and something an OpenClaw, Gaia, Type0, Soho, or agentic-media operator would actually type. Not abstract requests, but requests that are concrete and specific and have a good amount of detail. For instance, file paths, local project context, channel names, source-lane names, workflow names, company names, URLs, tool names, or messy user shorthand. Some might be lowercase or contain abbreviations, typos, or casual speech. Use a mix of different lengths, and focus on edge cases rather than making them clear-cut.
 
 Bad: `"Format this data"`, `"Extract text from PDF"`, `"Create a chart"`
 
@@ -1935,28 +1915,15 @@ This step matters — bad eval queries lead to bad descriptions.
 
 ### Step 3: Run the optimization loop
 
-Tell the user: "This will take some time — I'll run the optimization loop in the background and check on it periodically."
+Tell the user: "This will take some time — I'll run or simulate the optimization loop and check on it periodically."
 
-Save the eval set to the workspace, then run in the background:
+Save the eval set to the workspace. If the current runtime has an approved trigger-eval executor, use it. If it does not, run the held-out trigger/non-trigger cases manually in a fresh context or with runtime-supported subagents, then record the observed trigger behavior and revise the description from that evidence.
 
-```bash
-python -m scripts.run_loop \
-  --eval-set <path-to-trigger-eval.json> \
-  --skill-path <path-to-skill> \
-  --model <model-id-powering-this-session> \
-  --max-iterations 5 \
-  --verbose
-```
-
-Use the model ID from your system prompt (the one powering the current session) so the triggering test matches what the user actually experiences.
-
-While it runs, periodically tail the output to give the user updates on which iteration it's on and what the scores look like.
-
-This handles the full optimization loop automatically. It splits the eval set into 60% train and 40% held-out test, evaluates the current description (running each query 3 times to get a reliable trigger rate), then calls Claude to propose improvements based on what failed. It re-evaluates each new description on both train and test, iterating up to 5 times. When it's done, it opens an HTML report in the browser showing the results per iteration and returns JSON with `best_description` — selected by test score rather than train score to avoid overfitting.
+This handles the full optimization loop automatically only in runtimes where its executor is available. It splits the eval set into 60% train and 40% held-out test, evaluates the current description, proposes improvements based on what failed, and re-evaluates each new description on both train and test. When the automatic executor is not available, run the eval set manually with a fresh Codex/OpenClaw context and generate a static HTML report from the recorded results.
 
 ### How skill triggering works
 
-Understanding the triggering mechanism helps design better eval queries. Skills appear in Claude's `available_skills` list with their name + description, and Claude decides whether to consult a skill based on that description. The important thing to know is that Claude only consults skills for tasks it can't easily handle on its own — simple, one-step queries like "read this PDF" may not trigger a skill even if the description matches perfectly, because Claude can handle them directly with basic tools. Complex, multi-step, or specialized queries reliably trigger skills when the description matches.
+Understanding the triggering mechanism helps design better eval queries. Skills appear to an agent with their name and description, and the agent decides whether to consult a skill based on that description plus runtime policy. Simple one-step queries may not need a skill even if the description matches. Complex, multi-step, or specialized OpenClaw queries should trigger when the description matches.
 
 This means your eval queries should be substantive enough that Claude would actually benefit from consulting a skill. Simple queries like "read file X" are poor test cases — they won't trigger skills regardless of description quality.
 
@@ -1966,54 +1933,15 @@ Take `best_description` from the JSON output and update the skill's SKILL.md fro
 
 ---
 
-### Package and Present (only if `present_files` tool is available)
+### Package and Present
 
-Check whether you have access to the `present_files` tool. If you don't, skip this step. If you do, package the skill and present the .skill file to the user:
+Package only when the current runtime and user actually need a portable `.skill` artifact. Otherwise, leave the skill in the repo and report the path.
 
 ```bash
 python -m scripts.package_skill <path/to/skill-folder>
 ```
 
-After packaging, direct the user to the resulting `.skill` file path so they can install it.
-
----
-
-## Claude.ai-specific instructions
-
-In Claude.ai, the core workflow is the same (draft → test → review → improve → repeat), but because Claude.ai doesn't have subagents, some mechanics change. Here's what to adapt:
-
-**Running test cases**: No subagents means no parallel execution. For each test case, read the skill's SKILL.md, then follow its instructions to accomplish the test prompt yourself. Do them one at a time. This is less rigorous than independent subagents (you wrote the skill and you're also running it, so you have full context), but it's a useful sanity check — and the human review step compensates. Skip the baseline runs — just use the skill to complete the task as requested.
-
-**Reviewing results**: If you can't open a browser (e.g., Claude.ai's VM has no display, or you're on a remote server), skip the browser reviewer entirely. Instead, present results directly in the conversation. For each test case, show the prompt and the output. If the output is a file the user needs to see (like a .docx or .xlsx), save it to the filesystem and tell them where it is so they can download and inspect it. Ask for feedback inline: "How does this look? Anything you'd change?"
-
-**Benchmarking**: Skip the quantitative benchmarking — it relies on baseline comparisons which aren't meaningful without subagents. Focus on qualitative feedback from the user.
-
-**The iteration loop**: Same as before — improve the skill, rerun the test cases, ask for feedback — just without the browser reviewer in the middle. You can still organize results into iteration directories on the filesystem if you have one.
-
-**Description optimization**: This section requires the `claude` CLI tool (specifically `claude -p`) which is only available in Claude Code. Skip it if you're on Claude.ai.
-
-**Blind comparison**: Requires subagents. Skip it.
-
-**Packaging**: The `package_skill.py` script works anywhere with Python and a filesystem. On Claude.ai, you can run it and the user can download the resulting `.skill` file.
-
-**Updating an existing skill**: The user might be asking you to update an existing skill, not create a new one. In this case:
-- **Preserve the original name.** Note the skill's directory name and `name` frontmatter field -- use them unchanged. E.g., if the installed skill is `research-helper`, output `research-helper.skill` (not `research-helper-v2`).
-- **Copy to a writeable location before editing.** The installed skill path may be read-only. Copy to `/tmp/skill-name/`, edit there, and package from the copy.
-- **If packaging manually, stage in `/tmp/` first**, then copy to the output directory -- direct writes may fail due to permissions.
-
----
-
-## Cowork-Specific Instructions
-
-If you're in Cowork, the main things to know are:
-
-- You have subagents, so the main workflow (spawn test cases in parallel, run baselines, grade, etc.) all works. (However, if you run into severe problems with timeouts, it's OK to run the test prompts in series rather than parallel.)
-- You don't have a browser or display, so when generating the eval viewer, use `--static <output_path>` to write a standalone HTML file instead of starting a server. Then proffer a link that the user can click to open the HTML in their browser.
-- For whatever reason, the Cowork setup seems to disincline Claude from generating the eval viewer after running the tests, so just to reiterate: whether you're in Cowork or in Claude Code, after running tests, you should always generate the eval viewer for the human to look at examples before revising the skill yourself and trying to make corrections, using `generate_review.py` (not writing your own boutique html code). Sorry in advance but I'm gonna go all caps here: GENERATE THE EVAL VIEWER *BEFORE* evaluating inputs yourself. You want to get them in front of the human ASAP!
-- Feedback works differently: since there's no running server, the viewer's "Submit All Reviews" button will download `feedback.json` as a file. You can then read it from there (you may have to request access first).
-- Packaging works — `package_skill.py` just needs Python and a filesystem.
-- Description optimization (`run_loop.py` / `run_eval.py`) should work in Cowork just fine since it uses `claude -p` via subprocess, not a browser, but please save it until you've fully finished making the skill and the user agrees it's in good shape.
-- **Updating an existing skill**: The user might be asking you to update an existing skill, not create a new one. Follow the update guidance in the claude.ai section above.
+After packaging, report the resulting `.skill` file path.
 
 ---
 
@@ -2034,18 +1962,47 @@ Repeating one more time the core loop here for emphasis:
 
 - Figure out what the skill is about
 - Draft or edit the skill
-- Run claude-with-access-to-the-skill on test prompts
+- Run a fresh agent or runtime-supported executor with access to the skill on test prompts
 - With the user, evaluate the outputs:
   - Create benchmark.json and run `eval-viewer/generate_review.py` to help the user review them
   - Run quantitative evals
 - Repeat until you and the user are satisfied
 - Package the final skill and return it to the user.
 
-Please add steps to your TodoList, if you have such a thing, to make sure you don't forget. If you're in Cowork, please specifically put "Create evals JSON and run `eval-viewer/generate_review.py` so human can review test cases" in your TodoList to make sure it happens.
+Please add steps to your task list, if you have such a thing, to make sure you don't forget. Specifically include "Create evals JSON and run `eval-viewer/generate_review.py` or an equivalent static report so the human can review test cases" before revising the skill from your own judgment.
 
 Good luck!
 ````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/skill-creator-pro/SKILL.md" -->
+<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/openclaw-skill-creator/SKILL.md" -->
+
+### File: `.claude/skills/review-agentic-architecture/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/review-agentic-architecture/SKILL.md" sha256="16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164" bytes="812" trailing_newline="true" -->
+````````
+---
+name: review-agentic-architecture
+description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
+---
+
+# Review Agentic Architecture
+
+## Checklist
+
+- Is the component correctly classified?
+- Are model-owned decisions separated from harness-owned responsibilities?
+- Are ambiguous decisions handled by adaptive policy rather than brittle regex or keyword routing?
+- Are tools typed, permissioned, observable, and tested?
+- Is memory scoped, evidenced, and contradiction-aware?
+- Is context assembled by policy rather than dumping everything?
+- Are risky side effects gated by approval and idempotency?
+- Are checkpoints and replay behavior safe?
+- Are evals included for positive and negative cases?
+
+## Output
+
+Return pass/fail with required changes.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/review-agentic-architecture/SKILL.md" -->
 
 ### File: `.codex/skills/build-agent-eval/SKILL.md`
 
@@ -2102,7 +2059,7 @@ Return memory schema changes, memory tool changes, and eval cases.
 
 ### File: `.codex/skills/design-agent-tool/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/design-agent-tool/SKILL.md" sha256="e7222dc5e5d95920ab4e46bc198a3e56d53ac7d952204e1b5ef8b63c4be299ce" bytes="6183" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/design-agent-tool/SKILL.md" sha256="b79f9f100cb642cdefc7555c2b34f5c33ce185d8a7e9e2f6f5cc8bd2845c318c" bytes="6206" trailing_newline="true" -->
 ````````
 ---
 name: design-agent-tool
@@ -2209,7 +2166,7 @@ Return:
 
 ## When composing with Skill Creator
 
-If a new or changed skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the skill itself, use `skill-creator-pro` for the draft → eval → improve lifecycle.
+If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-skill-creator` for the draft → eval → improve lifecycle.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/design-agent-tool/SKILL.md" -->
 
@@ -2270,62 +2227,43 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/design-source-lane/SKILL.md" -->
 
-### File: `.codex/skills/review-agentic-architecture/SKILL.md`
+### File: `.codex/skills/openclaw-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/review-agentic-architecture/SKILL.md" sha256="16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164" bytes="812" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-skill-creator/SKILL.md" sha256="beba7771b5837060ae7354502b0cb530eac6b2fc0c4f589471c8c23d9502d2b4" bytes="30304" trailing_newline="true" -->
 ````````
 ---
-name: review-agentic-architecture
-description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
+name: openclaw-skill-creator
+description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general Codex skill-creator; use the repo-local Codex `skill-creator` for general Codex skills.
 ---
 
-# Review Agentic Architecture
+# OpenClaw Skill Creator
 
-## Checklist
-
-- Is the component correctly classified?
-- Are model-owned decisions separated from harness-owned responsibilities?
-- Are ambiguous decisions handled by adaptive policy rather than brittle regex or keyword routing?
-- Are tools typed, permissioned, observable, and tested?
-- Is memory scoped, evidenced, and contradiction-aware?
-- Is context assembled by policy rather than dumping everything?
-- Are risky side effects gated by approval and idempotency?
-- Are checkpoints and replay behavior safe?
-- Are evals included for positive and negative cases?
-
-## Output
-
-Return pass/fail with required changes.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/review-agentic-architecture/SKILL.md" -->
-
-### File: `.codex/skills/skill-creator-pro/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/skill-creator-pro/SKILL.md" sha256="cd9bb5102f71b32766eca597b8c105e96a14f194afe695781cd2bc36c7471475" bytes="35440" trailing_newline="true" -->
-````````
----
-name: skill-creator-pro
-description: Create new skills, modify and improve existing skills, and measure skill performance with eval-driven iteration. Use when users want to create a skill from scratch, edit or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy. Also use when someone says 'turn this into a skill', 'make a skill for X', 'improve this skill', 'test this skill', 'run evals on this skill', or mentions skill descriptions, skill triggering, or skill quality.
----
-
-# Skill Creator
-
-> ## OpenClaw Adaptations
+> ## Scope Boundary
 >
-> This skill is adapted from [Anthropic's official skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)
-> for the OpenClaw runtime. Key differences from Claude Code:
+> This skill creates and improves **OpenClaw-targeted skills**. It is not the
+> general Codex skill-creator. For general Codex skills, use the repo-local
+> `skill-creator` skill in `agentic-uber-skills`.
 >
-> **Subagent spawning**: Use `sessions_spawn` with `mode: "run"` instead of Claude Code's
-> native subagent system. Example:
+> This skill is adapted from public skill-creator methodology for the OpenClaw
+> runtime. Keep provenance visible, but do not copy proprietary or leaked code.
+>
+> When running from Codex, translate the workflow into Codex terms. Do not run
+> `claude -p`, `sessions_spawn`, Claude.ai, Cowork, or `present_files` steps
+> unless the current runtime explicitly provides them and the user has approved
+> that execution path.
+>
+> ## OpenClaw Runtime Notes
+>
+> **OpenClaw executor**: In OpenClaw runtimes that expose `sessions_spawn`, use it with `mode: "run"` instead of assuming another runtime's native subagent system. Example:
 > ```
 > sessions_spawn(task="Execute this task with skill at <path>...",
 >   mode="run", runTimeoutSeconds=300)
 > ```
 >
-> **Description optimization (`claude -p`)**: The `run_loop.py` and `run_eval.py` scripts
-> call `claude -p` (Claude Code CLI). If Claude Code is installed on the host, they work
-> as-is. Otherwise, test trigger phrases manually via `sessions_spawn` or skip automated
-> description optimization.
+> **Legacy description optimization scripts**: The bundled `run_loop.py` and `run_eval.py`
+> scripts originated in Claude Code trigger testing. In Codex or plain OpenClaw sessions,
+> do not run them as-is. Use manual held-out trigger evals, a runtime-native executor, or
+> adapt the scripts before use.
 >
 > **Eval viewer (headless)**: OpenClaw typically runs headless. Always use `--static`:
 > ```bash
@@ -2336,9 +2274,8 @@ description: Create new skills, modify and improve existing skills, and measure 
 > ```
 > Then send the HTML file to the user via `message(action=send, filePath=...)`.
 >
-> **Claude.ai / Cowork sections**: These sections at the bottom of this file are for
-> Claude.ai and Cowork environments. OpenClaw users should follow the main workflow
-> with the adaptations noted above.
+> **Runtime-specific notes**: Runtime-specific automation is optional. The portable
+> contract is intent capture, draft, eval, review, improve, and package.
 >
 > ## Local agent-affordance extensions
 >
@@ -2346,13 +2283,13 @@ description: Create new skills, modify and improve existing skills, and measure 
 >
 > If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `design-agent-tool` before implementation and include the resulting tool contract or a summary of it in the skill/eval package.
 
-A skill for creating new skills and iteratively improving them.
+A skill for creating new OpenClaw skills and iteratively improving them.
 
 At a high level, the process of creating a skill goes like this:
 
 - Decide what you want the skill to do and roughly how it should do it
 - Write a draft of the skill
-- Create a few test prompts and run claude-with-access-to-the-skill on them
+- Create a few test prompts and run a fresh agent or runtime-supported executor with access to the skill
 - Help the user evaluate the results both qualitatively and quantitatively
   - While the runs happen in the background, draft some quantitative evals if there aren't any (if there are some, you can either use as is or modify if you feel something needs to change about them). Then explain them to the user (or if they already existed, explain the ones that already exist)
   - Use the `eval-viewer/generate_review.py` script to show the user the results for them to look at, and also let them look at the quantitative metrics
@@ -2389,7 +2326,7 @@ It's OK to briefly explain terms if you're in doubt, and feel free to clarify te
 
 Start by understanding the user's intent. The current conversation might already contain a workflow the user wants to capture (e.g., they say "turn this into a skill"). If so, extract answers from the conversation history first — the tools used, the sequence of steps, corrections the user made, input/output formats observed. The user may need to fill the gaps, and should confirm before proceeding to the next step.
 
-1. What should this skill enable Claude to do?
+1. What should this skill enable an OpenClaw agent to do?
 2. When should this skill trigger? (what user phrases/contexts)
 3. What's the expected output format?
 4. Should we set up test cases to verify the skill works? Skills with objectively verifiable outputs (file transforms, data extraction, code generation, fixed workflow steps) benefit from test cases. Skills with subjective outputs (writing style, art) often don't need them. Suggest the appropriate default based on the skill type, but let the user decide.
@@ -2405,7 +2342,7 @@ Check available MCPs - if useful for research (searching docs, finding similar s
 Based on the user interview, fill in these components:
 
 - **name**: Skill identifier
-- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific contexts for when to use it. All "when to use" info goes here, not in the body. Note: currently Claude has a tendency to "undertrigger" skills -- to not use them when they'd be useful. To combat this, please make the skill descriptions a little bit "pushy". So for instance, instead of "How to build a simple fast dashboard to display internal Anthropic data.", you might write "How to build a simple fast dashboard to display internal Anthropic data. Make sure to use this skill whenever the user mentions dashboards, data visualization, internal metrics, or wants to display any kind of company data, even if they don't explicitly ask for a 'dashboard.'"
+- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic Codex skill-authoring tasks that belong to the general `skill-creator`.
 - **compatibility**: Required tools, dependencies (optional, rarely needed)
 - **the rest of the skill :)**
 
@@ -2585,7 +2522,7 @@ Put each with_skill version before its baseline counterpart.
    ```
    For iteration 2+, also pass `--previous-workspace <workspace>/iteration-<N-1>`.
 
-   **Cowork / headless environments:** If `webbrowser.open()` is not available or the environment has no display, use `--static <output_path>` to write a standalone HTML file instead of starting a server. Feedback will be downloaded as a `feedback.json` file when the user clicks "Submit All Reviews". After download, copy `feedback.json` into the workspace directory for the next iteration to pick up.
+   **Headless environments:** If `webbrowser.open()` is not available or the environment has no display, use `--static <output_path>` to write a standalone HTML file instead of starting a server. If the viewer writes feedback to a file, copy that feedback file into the workspace directory for the next iteration to pick up.
 
 Note: please use generate_review.py to create the viewer; there's no need to write custom HTML.
 
@@ -2673,7 +2610,7 @@ This is optional, requires subagents, and most users won't need it. The human re
 
 ## Description Optimization
 
-The description field in SKILL.md frontmatter is the primary mechanism that determines whether Claude invokes a skill. After creating or improving a skill, offer to optimize the description for better triggering accuracy.
+The description field in SKILL.md frontmatter is the primary mechanism that determines whether an agent invokes a skill. After creating or improving an OpenClaw skill, offer to optimize the description for better triggering accuracy.
 
 ### Step 1: Generate trigger eval queries
 
@@ -2686,7 +2623,7 @@ Create 20 eval queries — a mix of should-trigger and should-not-trigger. Save 
 ]
 ```
 
-The queries must be realistic and something a Claude Code or Claude.ai user would actually type. Not abstract requests, but requests that are concrete and specific and have a good amount of detail. For instance, file paths, personal context about the user's job or situation, column names and values, company names, URLs. A little bit of backstory. Some might be in lowercase or contain abbreviations or typos or casual speech. Use a mix of different lengths, and focus on edge cases rather than making them clear-cut (the user will get a chance to sign off on them).
+The queries must be realistic and something an OpenClaw, Gaia, Type0, Soho, or agentic-media operator would actually type. Not abstract requests, but requests that are concrete and specific and have a good amount of detail. For instance, file paths, local project context, channel names, source-lane names, workflow names, company names, URLs, tool names, or messy user shorthand. Some might be lowercase or contain abbreviations, typos, or casual speech. Use a mix of different lengths, and focus on edge cases rather than making them clear-cut.
 
 Bad: `"Format this data"`, `"Extract text from PDF"`, `"Create a chart"`
 
@@ -2715,28 +2652,15 @@ This step matters — bad eval queries lead to bad descriptions.
 
 ### Step 3: Run the optimization loop
 
-Tell the user: "This will take some time — I'll run the optimization loop in the background and check on it periodically."
+Tell the user: "This will take some time — I'll run or simulate the optimization loop and check on it periodically."
 
-Save the eval set to the workspace, then run in the background:
+Save the eval set to the workspace. If the current runtime has an approved trigger-eval executor, use it. If it does not, run the held-out trigger/non-trigger cases manually in a fresh context or with runtime-supported subagents, then record the observed trigger behavior and revise the description from that evidence.
 
-```bash
-python -m scripts.run_loop \
-  --eval-set <path-to-trigger-eval.json> \
-  --skill-path <path-to-skill> \
-  --model <model-id-powering-this-session> \
-  --max-iterations 5 \
-  --verbose
-```
-
-Use the model ID from your system prompt (the one powering the current session) so the triggering test matches what the user actually experiences.
-
-While it runs, periodically tail the output to give the user updates on which iteration it's on and what the scores look like.
-
-This handles the full optimization loop automatically. It splits the eval set into 60% train and 40% held-out test, evaluates the current description (running each query 3 times to get a reliable trigger rate), then calls Claude to propose improvements based on what failed. It re-evaluates each new description on both train and test, iterating up to 5 times. When it's done, it opens an HTML report in the browser showing the results per iteration and returns JSON with `best_description` — selected by test score rather than train score to avoid overfitting.
+This handles the full optimization loop automatically only in runtimes where its executor is available. It splits the eval set into 60% train and 40% held-out test, evaluates the current description, proposes improvements based on what failed, and re-evaluates each new description on both train and test. When the automatic executor is not available, run the eval set manually with a fresh Codex/OpenClaw context and generate a static HTML report from the recorded results.
 
 ### How skill triggering works
 
-Understanding the triggering mechanism helps design better eval queries. Skills appear in Claude's `available_skills` list with their name + description, and Claude decides whether to consult a skill based on that description. The important thing to know is that Claude only consults skills for tasks it can't easily handle on its own — simple, one-step queries like "read this PDF" may not trigger a skill even if the description matches perfectly, because Claude can handle them directly with basic tools. Complex, multi-step, or specialized queries reliably trigger skills when the description matches.
+Understanding the triggering mechanism helps design better eval queries. Skills appear to an agent with their name and description, and the agent decides whether to consult a skill based on that description plus runtime policy. Simple one-step queries may not need a skill even if the description matches. Complex, multi-step, or specialized OpenClaw queries should trigger when the description matches.
 
 This means your eval queries should be substantive enough that Claude would actually benefit from consulting a skill. Simple queries like "read file X" are poor test cases — they won't trigger skills regardless of description quality.
 
@@ -2746,54 +2670,15 @@ Take `best_description` from the JSON output and update the skill's SKILL.md fro
 
 ---
 
-### Package and Present (only if `present_files` tool is available)
+### Package and Present
 
-Check whether you have access to the `present_files` tool. If you don't, skip this step. If you do, package the skill and present the .skill file to the user:
+Package only when the current runtime and user actually need a portable `.skill` artifact. Otherwise, leave the skill in the repo and report the path.
 
 ```bash
 python -m scripts.package_skill <path/to/skill-folder>
 ```
 
-After packaging, direct the user to the resulting `.skill` file path so they can install it.
-
----
-
-## Claude.ai-specific instructions
-
-In Claude.ai, the core workflow is the same (draft → test → review → improve → repeat), but because Claude.ai doesn't have subagents, some mechanics change. Here's what to adapt:
-
-**Running test cases**: No subagents means no parallel execution. For each test case, read the skill's SKILL.md, then follow its instructions to accomplish the test prompt yourself. Do them one at a time. This is less rigorous than independent subagents (you wrote the skill and you're also running it, so you have full context), but it's a useful sanity check — and the human review step compensates. Skip the baseline runs — just use the skill to complete the task as requested.
-
-**Reviewing results**: If you can't open a browser (e.g., Claude.ai's VM has no display, or you're on a remote server), skip the browser reviewer entirely. Instead, present results directly in the conversation. For each test case, show the prompt and the output. If the output is a file the user needs to see (like a .docx or .xlsx), save it to the filesystem and tell them where it is so they can download and inspect it. Ask for feedback inline: "How does this look? Anything you'd change?"
-
-**Benchmarking**: Skip the quantitative benchmarking — it relies on baseline comparisons which aren't meaningful without subagents. Focus on qualitative feedback from the user.
-
-**The iteration loop**: Same as before — improve the skill, rerun the test cases, ask for feedback — just without the browser reviewer in the middle. You can still organize results into iteration directories on the filesystem if you have one.
-
-**Description optimization**: This section requires the `claude` CLI tool (specifically `claude -p`) which is only available in Claude Code. Skip it if you're on Claude.ai.
-
-**Blind comparison**: Requires subagents. Skip it.
-
-**Packaging**: The `package_skill.py` script works anywhere with Python and a filesystem. On Claude.ai, you can run it and the user can download the resulting `.skill` file.
-
-**Updating an existing skill**: The user might be asking you to update an existing skill, not create a new one. In this case:
-- **Preserve the original name.** Note the skill's directory name and `name` frontmatter field -- use them unchanged. E.g., if the installed skill is `research-helper`, output `research-helper.skill` (not `research-helper-v2`).
-- **Copy to a writeable location before editing.** The installed skill path may be read-only. Copy to `/tmp/skill-name/`, edit there, and package from the copy.
-- **If packaging manually, stage in `/tmp/` first**, then copy to the output directory -- direct writes may fail due to permissions.
-
----
-
-## Cowork-Specific Instructions
-
-If you're in Cowork, the main things to know are:
-
-- You have subagents, so the main workflow (spawn test cases in parallel, run baselines, grade, etc.) all works. (However, if you run into severe problems with timeouts, it's OK to run the test prompts in series rather than parallel.)
-- You don't have a browser or display, so when generating the eval viewer, use `--static <output_path>` to write a standalone HTML file instead of starting a server. Then proffer a link that the user can click to open the HTML in their browser.
-- For whatever reason, the Cowork setup seems to disincline Claude from generating the eval viewer after running the tests, so just to reiterate: whether you're in Cowork or in Claude Code, after running tests, you should always generate the eval viewer for the human to look at examples before revising the skill yourself and trying to make corrections, using `generate_review.py` (not writing your own boutique html code). Sorry in advance but I'm gonna go all caps here: GENERATE THE EVAL VIEWER *BEFORE* evaluating inputs yourself. You want to get them in front of the human ASAP!
-- Feedback works differently: since there's no running server, the viewer's "Submit All Reviews" button will download `feedback.json` as a file. You can then read it from there (you may have to request access first).
-- Packaging works — `package_skill.py` just needs Python and a filesystem.
-- Description optimization (`run_loop.py` / `run_eval.py`) should work in Cowork just fine since it uses `claude -p` via subprocess, not a browser, but please save it until you've fully finished making the skill and the user agrees it's in good shape.
-- **Updating an existing skill**: The user might be asking you to update an existing skill, not create a new one. Follow the update guidance in the claude.ai section above.
+After packaging, report the resulting `.skill` file path.
 
 ---
 
@@ -2814,18 +2699,47 @@ Repeating one more time the core loop here for emphasis:
 
 - Figure out what the skill is about
 - Draft or edit the skill
-- Run claude-with-access-to-the-skill on test prompts
+- Run a fresh agent or runtime-supported executor with access to the skill on test prompts
 - With the user, evaluate the outputs:
   - Create benchmark.json and run `eval-viewer/generate_review.py` to help the user review them
   - Run quantitative evals
 - Repeat until you and the user are satisfied
 - Package the final skill and return it to the user.
 
-Please add steps to your TodoList, if you have such a thing, to make sure you don't forget. If you're in Cowork, please specifically put "Create evals JSON and run `eval-viewer/generate_review.py` so human can review test cases" in your TodoList to make sure it happens.
+Please add steps to your task list, if you have such a thing, to make sure you don't forget. Specifically include "Create evals JSON and run `eval-viewer/generate_review.py` or an equivalent static report so the human can review test cases" before revising the skill from your own judgment.
 
 Good luck!
 ````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/skill-creator-pro/SKILL.md" -->
+<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/openclaw-skill-creator/SKILL.md" -->
+
+### File: `.codex/skills/review-agentic-architecture/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/review-agentic-architecture/SKILL.md" sha256="16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164" bytes="812" trailing_newline="true" -->
+````````
+---
+name: review-agentic-architecture
+description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
+---
+
+# Review Agentic Architecture
+
+## Checklist
+
+- Is the component correctly classified?
+- Are model-owned decisions separated from harness-owned responsibilities?
+- Are ambiguous decisions handled by adaptive policy rather than brittle regex or keyword routing?
+- Are tools typed, permissioned, observable, and tested?
+- Is memory scoped, evidenced, and contradiction-aware?
+- Is context assembled by policy rather than dumping everything?
+- Are risky side effects gated by approval and idempotency?
+- Are checkpoints and replay behavior safe?
+- Are evals included for positive and negative cases?
+
+## Output
+
+Return pass/fail with required changes.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/review-agentic-architecture/SKILL.md" -->
 
 ### File: `.github/pull_request_template.md`
 
@@ -2912,7 +2826,7 @@ agentic_architecture_pack/
 
 ### File: `AGENTS.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="44706e535a34a5f0769347ff00578436bf1cb0183c009075c28cc02f092e9448" bytes="9060" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="ee9748fabd6e59c9939d12e2b0579994120b8b7b5964204da9d48c93477af830" bytes="9151" trailing_newline="true" -->
 ````````
 # AGENTS.md
 
@@ -2961,7 +2875,7 @@ Core rule: deterministic harness, adaptive policy.
 
 High-agent-affordance default: architect OpenClaw, Type0, Gaia/Gaia Brain, Soho House, and shared agentic-media work so capable agents can inspect sources, use clear tools, apply concise skills, and exercise judgment. Before adding hard gates, hidden automation, routing layers, reviewer loops, or deterministic substitutes for judgment, first ask whether a better skill, typed tool, source lane, context packet, or feedback loop would preserve more agency with less machinery. If a coding agent chooses a lower-affordance design, it must explain why and get explicit approval.
 
-Skill/tool creation rule: use `skills/skill-creator-pro` when creating or improving skills. Use `skills/design-agent-tool` before implementing or reviewing OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
+Skill/tool creation rule: use `skills/openclaw-skill-creator` when creating or improving OpenClaw-targeted skills. Use a runtime-native general skill creator for non-OpenClaw skills. Use `skills/design-agent-tool` before implementing or reviewing OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
 
 Second rule: simplicity/deletion before machinery. Complexity has hidden downstream cost. Before adding an agent, schema, router, policy layer, eval harness, guardrail, workflow, dependency, or automation, run the deletion-first order:
 
@@ -9594,7 +9508,7 @@ Both are required. Neither replaces the other.
 
 ### File: `docs/skills.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/skills.md" sha256="d756d1c8336229a03f1ad858ed0fce188dc3740fc67d5d9994a3422298738d42" bytes="2867" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/skills.md" sha256="07f650856bf8dc496d52ede585191d876579b8f874f579b87db92c31c05d461a" bytes="2984" trailing_newline="true" -->
 ````````
 # Skills for Agentic Systems
 
@@ -9649,7 +9563,7 @@ Keep root instructions short. Put detailed procedures in skills so they load onl
 
 ## Initial skills in this pack
 
-- `skill-creator-pro`
+- `openclaw-skill-creator`
 - `design-agent-tool`
 - `design-agent-memory`
 - `design-source-lane`
@@ -9663,7 +9577,7 @@ Skills should package procedures that prevent architectural drift: designing sou
 
 Prefer a skill when the repo needs a repeatable way to do a class of work. Prefer a deterministic script or eval when consistency matters more than judgment. Prefer deleting or simplifying the process when the skill would only preserve unnecessary complexity.
 
-When creating or improving skills, use `skill-creator-pro` as the lifecycle: capture intent, draft, test with realistic prompts, compare against a baseline when possible, collect human feedback, and iterate. If the skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, use `design-agent-tool` before implementation so the resulting affordance is agent-usable, typed, recoverable, and traceable.
+When creating or improving OpenClaw-targeted skills, use `openclaw-skill-creator` as the lifecycle: capture intent, draft, test with realistic prompts, compare against a baseline when possible, collect human feedback, and iterate. For general Codex skills, use the runtime-native general skill creator instead. If the OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, use `design-agent-tool` before implementation so the resulting affordance is agent-usable, typed, recoverable, and traceable.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/skills.md" -->
 
@@ -10688,7 +10602,7 @@ Return memory schema changes, memory tool changes, and eval cases.
 
 ### File: `skills/design-agent-tool/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/design-agent-tool/SKILL.md" sha256="e7222dc5e5d95920ab4e46bc198a3e56d53ac7d952204e1b5ef8b63c4be299ce" bytes="6183" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/design-agent-tool/SKILL.md" sha256="b79f9f100cb642cdefc7555c2b34f5c33ce185d8a7e9e2f6f5cc8bd2845c318c" bytes="6206" trailing_newline="true" -->
 ````````
 ---
 name: design-agent-tool
@@ -10795,7 +10709,7 @@ Return:
 
 ## When composing with Skill Creator
 
-If a new or changed skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the skill itself, use `skill-creator-pro` for the draft → eval → improve lifecycle.
+If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-skill-creator` for the draft → eval → improve lifecycle.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="skills/design-agent-tool/SKILL.md" -->
 
@@ -10856,62 +10770,43 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="skills/design-source-lane/SKILL.md" -->
 
-### File: `skills/review-agentic-architecture/SKILL.md`
+### File: `skills/openclaw-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/review-agentic-architecture/SKILL.md" sha256="16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164" bytes="812" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-skill-creator/SKILL.md" sha256="beba7771b5837060ae7354502b0cb530eac6b2fc0c4f589471c8c23d9502d2b4" bytes="30304" trailing_newline="true" -->
 ````````
 ---
-name: review-agentic-architecture
-description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
+name: openclaw-skill-creator
+description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general Codex skill-creator; use the repo-local Codex `skill-creator` for general Codex skills.
 ---
 
-# Review Agentic Architecture
+# OpenClaw Skill Creator
 
-## Checklist
-
-- Is the component correctly classified?
-- Are model-owned decisions separated from harness-owned responsibilities?
-- Are ambiguous decisions handled by adaptive policy rather than brittle regex or keyword routing?
-- Are tools typed, permissioned, observable, and tested?
-- Is memory scoped, evidenced, and contradiction-aware?
-- Is context assembled by policy rather than dumping everything?
-- Are risky side effects gated by approval and idempotency?
-- Are checkpoints and replay behavior safe?
-- Are evals included for positive and negative cases?
-
-## Output
-
-Return pass/fail with required changes.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path="skills/review-agentic-architecture/SKILL.md" -->
-
-### File: `skills/skill-creator-pro/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/skill-creator-pro/SKILL.md" sha256="cd9bb5102f71b32766eca597b8c105e96a14f194afe695781cd2bc36c7471475" bytes="35440" trailing_newline="true" -->
-````````
----
-name: skill-creator-pro
-description: Create new skills, modify and improve existing skills, and measure skill performance with eval-driven iteration. Use when users want to create a skill from scratch, edit or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy. Also use when someone says 'turn this into a skill', 'make a skill for X', 'improve this skill', 'test this skill', 'run evals on this skill', or mentions skill descriptions, skill triggering, or skill quality.
----
-
-# Skill Creator
-
-> ## OpenClaw Adaptations
+> ## Scope Boundary
 >
-> This skill is adapted from [Anthropic's official skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)
-> for the OpenClaw runtime. Key differences from Claude Code:
+> This skill creates and improves **OpenClaw-targeted skills**. It is not the
+> general Codex skill-creator. For general Codex skills, use the repo-local
+> `skill-creator` skill in `agentic-uber-skills`.
 >
-> **Subagent spawning**: Use `sessions_spawn` with `mode: "run"` instead of Claude Code's
-> native subagent system. Example:
+> This skill is adapted from public skill-creator methodology for the OpenClaw
+> runtime. Keep provenance visible, but do not copy proprietary or leaked code.
+>
+> When running from Codex, translate the workflow into Codex terms. Do not run
+> `claude -p`, `sessions_spawn`, Claude.ai, Cowork, or `present_files` steps
+> unless the current runtime explicitly provides them and the user has approved
+> that execution path.
+>
+> ## OpenClaw Runtime Notes
+>
+> **OpenClaw executor**: In OpenClaw runtimes that expose `sessions_spawn`, use it with `mode: "run"` instead of assuming another runtime's native subagent system. Example:
 > ```
 > sessions_spawn(task="Execute this task with skill at <path>...",
 >   mode="run", runTimeoutSeconds=300)
 > ```
 >
-> **Description optimization (`claude -p`)**: The `run_loop.py` and `run_eval.py` scripts
-> call `claude -p` (Claude Code CLI). If Claude Code is installed on the host, they work
-> as-is. Otherwise, test trigger phrases manually via `sessions_spawn` or skip automated
-> description optimization.
+> **Legacy description optimization scripts**: The bundled `run_loop.py` and `run_eval.py`
+> scripts originated in Claude Code trigger testing. In Codex or plain OpenClaw sessions,
+> do not run them as-is. Use manual held-out trigger evals, a runtime-native executor, or
+> adapt the scripts before use.
 >
 > **Eval viewer (headless)**: OpenClaw typically runs headless. Always use `--static`:
 > ```bash
@@ -10922,9 +10817,8 @@ description: Create new skills, modify and improve existing skills, and measure 
 > ```
 > Then send the HTML file to the user via `message(action=send, filePath=...)`.
 >
-> **Claude.ai / Cowork sections**: These sections at the bottom of this file are for
-> Claude.ai and Cowork environments. OpenClaw users should follow the main workflow
-> with the adaptations noted above.
+> **Runtime-specific notes**: Runtime-specific automation is optional. The portable
+> contract is intent capture, draft, eval, review, improve, and package.
 >
 > ## Local agent-affordance extensions
 >
@@ -10932,13 +10826,13 @@ description: Create new skills, modify and improve existing skills, and measure 
 >
 > If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `design-agent-tool` before implementation and include the resulting tool contract or a summary of it in the skill/eval package.
 
-A skill for creating new skills and iteratively improving them.
+A skill for creating new OpenClaw skills and iteratively improving them.
 
 At a high level, the process of creating a skill goes like this:
 
 - Decide what you want the skill to do and roughly how it should do it
 - Write a draft of the skill
-- Create a few test prompts and run claude-with-access-to-the-skill on them
+- Create a few test prompts and run a fresh agent or runtime-supported executor with access to the skill
 - Help the user evaluate the results both qualitatively and quantitatively
   - While the runs happen in the background, draft some quantitative evals if there aren't any (if there are some, you can either use as is or modify if you feel something needs to change about them). Then explain them to the user (or if they already existed, explain the ones that already exist)
   - Use the `eval-viewer/generate_review.py` script to show the user the results for them to look at, and also let them look at the quantitative metrics
@@ -10975,7 +10869,7 @@ It's OK to briefly explain terms if you're in doubt, and feel free to clarify te
 
 Start by understanding the user's intent. The current conversation might already contain a workflow the user wants to capture (e.g., they say "turn this into a skill"). If so, extract answers from the conversation history first — the tools used, the sequence of steps, corrections the user made, input/output formats observed. The user may need to fill the gaps, and should confirm before proceeding to the next step.
 
-1. What should this skill enable Claude to do?
+1. What should this skill enable an OpenClaw agent to do?
 2. When should this skill trigger? (what user phrases/contexts)
 3. What's the expected output format?
 4. Should we set up test cases to verify the skill works? Skills with objectively verifiable outputs (file transforms, data extraction, code generation, fixed workflow steps) benefit from test cases. Skills with subjective outputs (writing style, art) often don't need them. Suggest the appropriate default based on the skill type, but let the user decide.
@@ -10991,7 +10885,7 @@ Check available MCPs - if useful for research (searching docs, finding similar s
 Based on the user interview, fill in these components:
 
 - **name**: Skill identifier
-- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific contexts for when to use it. All "when to use" info goes here, not in the body. Note: currently Claude has a tendency to "undertrigger" skills -- to not use them when they'd be useful. To combat this, please make the skill descriptions a little bit "pushy". So for instance, instead of "How to build a simple fast dashboard to display internal Anthropic data.", you might write "How to build a simple fast dashboard to display internal Anthropic data. Make sure to use this skill whenever the user mentions dashboards, data visualization, internal metrics, or wants to display any kind of company data, even if they don't explicitly ask for a 'dashboard.'"
+- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic Codex skill-authoring tasks that belong to the general `skill-creator`.
 - **compatibility**: Required tools, dependencies (optional, rarely needed)
 - **the rest of the skill :)**
 
@@ -11171,7 +11065,7 @@ Put each with_skill version before its baseline counterpart.
    ```
    For iteration 2+, also pass `--previous-workspace <workspace>/iteration-<N-1>`.
 
-   **Cowork / headless environments:** If `webbrowser.open()` is not available or the environment has no display, use `--static <output_path>` to write a standalone HTML file instead of starting a server. Feedback will be downloaded as a `feedback.json` file when the user clicks "Submit All Reviews". After download, copy `feedback.json` into the workspace directory for the next iteration to pick up.
+   **Headless environments:** If `webbrowser.open()` is not available or the environment has no display, use `--static <output_path>` to write a standalone HTML file instead of starting a server. If the viewer writes feedback to a file, copy that feedback file into the workspace directory for the next iteration to pick up.
 
 Note: please use generate_review.py to create the viewer; there's no need to write custom HTML.
 
@@ -11259,7 +11153,7 @@ This is optional, requires subagents, and most users won't need it. The human re
 
 ## Description Optimization
 
-The description field in SKILL.md frontmatter is the primary mechanism that determines whether Claude invokes a skill. After creating or improving a skill, offer to optimize the description for better triggering accuracy.
+The description field in SKILL.md frontmatter is the primary mechanism that determines whether an agent invokes a skill. After creating or improving an OpenClaw skill, offer to optimize the description for better triggering accuracy.
 
 ### Step 1: Generate trigger eval queries
 
@@ -11272,7 +11166,7 @@ Create 20 eval queries — a mix of should-trigger and should-not-trigger. Save 
 ]
 ```
 
-The queries must be realistic and something a Claude Code or Claude.ai user would actually type. Not abstract requests, but requests that are concrete and specific and have a good amount of detail. For instance, file paths, personal context about the user's job or situation, column names and values, company names, URLs. A little bit of backstory. Some might be in lowercase or contain abbreviations or typos or casual speech. Use a mix of different lengths, and focus on edge cases rather than making them clear-cut (the user will get a chance to sign off on them).
+The queries must be realistic and something an OpenClaw, Gaia, Type0, Soho, or agentic-media operator would actually type. Not abstract requests, but requests that are concrete and specific and have a good amount of detail. For instance, file paths, local project context, channel names, source-lane names, workflow names, company names, URLs, tool names, or messy user shorthand. Some might be lowercase or contain abbreviations, typos, or casual speech. Use a mix of different lengths, and focus on edge cases rather than making them clear-cut.
 
 Bad: `"Format this data"`, `"Extract text from PDF"`, `"Create a chart"`
 
@@ -11301,28 +11195,15 @@ This step matters — bad eval queries lead to bad descriptions.
 
 ### Step 3: Run the optimization loop
 
-Tell the user: "This will take some time — I'll run the optimization loop in the background and check on it periodically."
+Tell the user: "This will take some time — I'll run or simulate the optimization loop and check on it periodically."
 
-Save the eval set to the workspace, then run in the background:
+Save the eval set to the workspace. If the current runtime has an approved trigger-eval executor, use it. If it does not, run the held-out trigger/non-trigger cases manually in a fresh context or with runtime-supported subagents, then record the observed trigger behavior and revise the description from that evidence.
 
-```bash
-python -m scripts.run_loop \
-  --eval-set <path-to-trigger-eval.json> \
-  --skill-path <path-to-skill> \
-  --model <model-id-powering-this-session> \
-  --max-iterations 5 \
-  --verbose
-```
-
-Use the model ID from your system prompt (the one powering the current session) so the triggering test matches what the user actually experiences.
-
-While it runs, periodically tail the output to give the user updates on which iteration it's on and what the scores look like.
-
-This handles the full optimization loop automatically. It splits the eval set into 60% train and 40% held-out test, evaluates the current description (running each query 3 times to get a reliable trigger rate), then calls Claude to propose improvements based on what failed. It re-evaluates each new description on both train and test, iterating up to 5 times. When it's done, it opens an HTML report in the browser showing the results per iteration and returns JSON with `best_description` — selected by test score rather than train score to avoid overfitting.
+This handles the full optimization loop automatically only in runtimes where its executor is available. It splits the eval set into 60% train and 40% held-out test, evaluates the current description, proposes improvements based on what failed, and re-evaluates each new description on both train and test. When the automatic executor is not available, run the eval set manually with a fresh Codex/OpenClaw context and generate a static HTML report from the recorded results.
 
 ### How skill triggering works
 
-Understanding the triggering mechanism helps design better eval queries. Skills appear in Claude's `available_skills` list with their name + description, and Claude decides whether to consult a skill based on that description. The important thing to know is that Claude only consults skills for tasks it can't easily handle on its own — simple, one-step queries like "read this PDF" may not trigger a skill even if the description matches perfectly, because Claude can handle them directly with basic tools. Complex, multi-step, or specialized queries reliably trigger skills when the description matches.
+Understanding the triggering mechanism helps design better eval queries. Skills appear to an agent with their name and description, and the agent decides whether to consult a skill based on that description plus runtime policy. Simple one-step queries may not need a skill even if the description matches. Complex, multi-step, or specialized OpenClaw queries should trigger when the description matches.
 
 This means your eval queries should be substantive enough that Claude would actually benefit from consulting a skill. Simple queries like "read file X" are poor test cases — they won't trigger skills regardless of description quality.
 
@@ -11332,54 +11213,15 @@ Take `best_description` from the JSON output and update the skill's SKILL.md fro
 
 ---
 
-### Package and Present (only if `present_files` tool is available)
+### Package and Present
 
-Check whether you have access to the `present_files` tool. If you don't, skip this step. If you do, package the skill and present the .skill file to the user:
+Package only when the current runtime and user actually need a portable `.skill` artifact. Otherwise, leave the skill in the repo and report the path.
 
 ```bash
 python -m scripts.package_skill <path/to/skill-folder>
 ```
 
-After packaging, direct the user to the resulting `.skill` file path so they can install it.
-
----
-
-## Claude.ai-specific instructions
-
-In Claude.ai, the core workflow is the same (draft → test → review → improve → repeat), but because Claude.ai doesn't have subagents, some mechanics change. Here's what to adapt:
-
-**Running test cases**: No subagents means no parallel execution. For each test case, read the skill's SKILL.md, then follow its instructions to accomplish the test prompt yourself. Do them one at a time. This is less rigorous than independent subagents (you wrote the skill and you're also running it, so you have full context), but it's a useful sanity check — and the human review step compensates. Skip the baseline runs — just use the skill to complete the task as requested.
-
-**Reviewing results**: If you can't open a browser (e.g., Claude.ai's VM has no display, or you're on a remote server), skip the browser reviewer entirely. Instead, present results directly in the conversation. For each test case, show the prompt and the output. If the output is a file the user needs to see (like a .docx or .xlsx), save it to the filesystem and tell them where it is so they can download and inspect it. Ask for feedback inline: "How does this look? Anything you'd change?"
-
-**Benchmarking**: Skip the quantitative benchmarking — it relies on baseline comparisons which aren't meaningful without subagents. Focus on qualitative feedback from the user.
-
-**The iteration loop**: Same as before — improve the skill, rerun the test cases, ask for feedback — just without the browser reviewer in the middle. You can still organize results into iteration directories on the filesystem if you have one.
-
-**Description optimization**: This section requires the `claude` CLI tool (specifically `claude -p`) which is only available in Claude Code. Skip it if you're on Claude.ai.
-
-**Blind comparison**: Requires subagents. Skip it.
-
-**Packaging**: The `package_skill.py` script works anywhere with Python and a filesystem. On Claude.ai, you can run it and the user can download the resulting `.skill` file.
-
-**Updating an existing skill**: The user might be asking you to update an existing skill, not create a new one. In this case:
-- **Preserve the original name.** Note the skill's directory name and `name` frontmatter field -- use them unchanged. E.g., if the installed skill is `research-helper`, output `research-helper.skill` (not `research-helper-v2`).
-- **Copy to a writeable location before editing.** The installed skill path may be read-only. Copy to `/tmp/skill-name/`, edit there, and package from the copy.
-- **If packaging manually, stage in `/tmp/` first**, then copy to the output directory -- direct writes may fail due to permissions.
-
----
-
-## Cowork-Specific Instructions
-
-If you're in Cowork, the main things to know are:
-
-- You have subagents, so the main workflow (spawn test cases in parallel, run baselines, grade, etc.) all works. (However, if you run into severe problems with timeouts, it's OK to run the test prompts in series rather than parallel.)
-- You don't have a browser or display, so when generating the eval viewer, use `--static <output_path>` to write a standalone HTML file instead of starting a server. Then proffer a link that the user can click to open the HTML in their browser.
-- For whatever reason, the Cowork setup seems to disincline Claude from generating the eval viewer after running the tests, so just to reiterate: whether you're in Cowork or in Claude Code, after running tests, you should always generate the eval viewer for the human to look at examples before revising the skill yourself and trying to make corrections, using `generate_review.py` (not writing your own boutique html code). Sorry in advance but I'm gonna go all caps here: GENERATE THE EVAL VIEWER *BEFORE* evaluating inputs yourself. You want to get them in front of the human ASAP!
-- Feedback works differently: since there's no running server, the viewer's "Submit All Reviews" button will download `feedback.json` as a file. You can then read it from there (you may have to request access first).
-- Packaging works — `package_skill.py` just needs Python and a filesystem.
-- Description optimization (`run_loop.py` / `run_eval.py`) should work in Cowork just fine since it uses `claude -p` via subprocess, not a browser, but please save it until you've fully finished making the skill and the user agrees it's in good shape.
-- **Updating an existing skill**: The user might be asking you to update an existing skill, not create a new one. Follow the update guidance in the claude.ai section above.
+After packaging, report the resulting `.skill` file path.
 
 ---
 
@@ -11400,18 +11242,47 @@ Repeating one more time the core loop here for emphasis:
 
 - Figure out what the skill is about
 - Draft or edit the skill
-- Run claude-with-access-to-the-skill on test prompts
+- Run a fresh agent or runtime-supported executor with access to the skill on test prompts
 - With the user, evaluate the outputs:
   - Create benchmark.json and run `eval-viewer/generate_review.py` to help the user review them
   - Run quantitative evals
 - Repeat until you and the user are satisfied
 - Package the final skill and return it to the user.
 
-Please add steps to your TodoList, if you have such a thing, to make sure you don't forget. If you're in Cowork, please specifically put "Create evals JSON and run `eval-viewer/generate_review.py` so human can review test cases" in your TodoList to make sure it happens.
+Please add steps to your task list, if you have such a thing, to make sure you don't forget. Specifically include "Create evals JSON and run `eval-viewer/generate_review.py` or an equivalent static report so the human can review test cases" before revising the skill from your own judgment.
 
 Good luck!
 ````````
-<!-- AGENTIC_BUNDLE_FILE_END path="skills/skill-creator-pro/SKILL.md" -->
+<!-- AGENTIC_BUNDLE_FILE_END path="skills/openclaw-skill-creator/SKILL.md" -->
+
+### File: `skills/review-agentic-architecture/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/review-agentic-architecture/SKILL.md" sha256="16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164" bytes="812" trailing_newline="true" -->
+````````
+---
+name: review-agentic-architecture
+description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
+---
+
+# Review Agentic Architecture
+
+## Checklist
+
+- Is the component correctly classified?
+- Are model-owned decisions separated from harness-owned responsibilities?
+- Are ambiguous decisions handled by adaptive policy rather than brittle regex or keyword routing?
+- Are tools typed, permissioned, observable, and tested?
+- Is memory scoped, evidenced, and contradiction-aware?
+- Is context assembled by policy rather than dumping everything?
+- Are risky side effects gated by approval and idempotency?
+- Are checkpoints and replay behavior safe?
+- Are evals included for positive and negative cases?
+
+## Output
+
+Return pass/fail with required changes.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="skills/review-agentic-architecture/SKILL.md" -->
 
 ### File: `tests/__init__.py`
 
