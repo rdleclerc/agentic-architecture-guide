@@ -45,6 +45,29 @@ Core rule: deterministic harness, adaptive policy.
 
 High-agent-affordance default: architect OpenClaw, Type0, Gaia/Gaia Brain, Soho House, and shared agentic-media work so capable agents can inspect sources, use clear tools, apply concise skills, and exercise judgment. Before adding hard gates, hidden automation, routing layers, reviewer loops, or deterministic substitutes for judgment, first ask whether a better skill, typed tool, source lane, context packet, or feedback loop would preserve more agency with less machinery. If a coding agent chooses a lower-affordance design, it must explain why and get explicit approval.
 
+## Agentic affordance before harness
+
+When building or changing an agentic system, behavior, or workflow, default to **skills, typed tools, source lanes, context packets, and OpenClaw agent/subagent affordances** rather than building a thick harness, custom orchestration layer, hidden semantic judge, retry mesh, or deterministic substitute for agent judgment.
+
+For any new behavior that is supposed to be performed by agents, the coding agent — Claude or Codex — must prove the agentic workflow works before implementing it or claiming readiness.
+
+### Required proof
+
+1. **Self-subagent proof first.**
+   Run the proposed workflow with one of your own fresh subagents using the intended class of context: task brief, source artifacts, available tools, relevant skills, recovery instructions, and no extra hidden rationale. Deliberately constrain this subagent to the target OpenClaw agent's expected tool/skill/source profile.
+2. **Iterate on affordance, not harness.**
+   If the subagent fails, improve the affordances: context packet, skill wording, tool descriptions, source access, task framing, recovery instructions, or audit trail. Do **not** solve the failure by adding private harness state, hidden reviewer loops, bespoke orchestration, deterministic truth/judgment code, or extra capabilities the eventual OpenClaw agent will not have.
+3. **OpenClaw parity proof.**
+   After the self-subagent succeeds, run the same workflow with a real OpenClaw agent using no additional task/domain-specific code, schemas, skills, tools, or context beyond what the successful self-subagent had, except for OpenClaw's normal runtime scaffold, system prompt, tool schemas, sandbox/tool-policy enforcement, and transcript machinery.
+4. **Qualitative parity required.**
+   The OpenClaw agent must produce a qualitatively similar result. If it does not, explain the difference with source evidence or identify the missing affordance. Fix the missing affordance before adding machinery.
+5. **Receipts required.**
+   Preserve receipts for both runs: the self-subagent result and the OpenClaw run/session reference, such as `sessionKey`, `sessionId`, transcript path, `sessions_history` output, tool outputs, and source artifacts. Receipts may be summarized or redacted when needed for privacy/security, but the evidence trail must remain inspectable.
+
+Unit tests, schema validation, static checks, local deterministic simulations, and contract tests do **not** replace this proof for behavior that is supposed to be performed by agents. They remain required for deterministic code, tool contracts, safety gates, side effects, and regressions.
+
+Deterministic code may enforce invariants, permissions, idempotency, schemas, source-authority labels, budgets, sandbox/tool policy, runtime status, request-level retries, audit logs, and side-effect gates. It must not become the agent's private reasoning loop.
+
 Skill/tool creation rule: use `skills/openclaw-skill-creator` when creating or improving OpenClaw-targeted skills. Use `uber-skill-creator` for general portable SKILL.md skills when it is installed; otherwise use the current runtime's general skill creator. Use `skills/design-agent-tool` before implementing or reviewing OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
 
 Second rule: simplicity/deletion before machinery. Complexity has hidden downstream cost. Before adding an agent, schema, router, policy layer, eval harness, guardrail, workflow, dependency, or automation, run the deletion-first order:
