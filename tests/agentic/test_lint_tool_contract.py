@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-LINTER = ROOT / "skills" / "design-agent-tool" / "scripts" / "lint_tool_contract.py"
+LINTER = ROOT / "skills" / "openclaw-agentic-tool-designer" / "scripts" / "lint_tool_contract.py"
 
 
 def valid_contract() -> dict:

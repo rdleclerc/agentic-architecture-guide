@@ -48,7 +48,7 @@ description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and 
 >
 > For OpenClaw, Type0, Gaia/Gaia Brain, agentic-media, and Soho House, skills should preserve high agent affordance: help agents inspect sources, use clear tools, apply judgment, and leave traces. Do not encode brittle gates or deterministic substitutes for judgment into a skill unless the user explicitly approves that lower-affordance design.
 >
-> If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `design-agent-tool` before implementation and include the resulting tool contract or a summary of it in the skill/eval package.
+> If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or a summary of it in the skill/eval package.
 
 A skill for creating new OpenClaw skills and iteratively improving them.
 

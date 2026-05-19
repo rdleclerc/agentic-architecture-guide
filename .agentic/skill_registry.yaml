@@ -13,12 +13,12 @@ skills:
     adapter_paths:
       claude: .claude/skills/openclaw-skill-creator/SKILL.md
       codex: .codex/skills/openclaw-skill-creator/SKILL.md
-  - name: design-agent-tool
+  - name: openclaw-agentic-tool-designer
     description: Use when adding, modifying, reviewing, or debugging any tool exposed to an agent, including OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or workflow commands.
-    path: skills/design-agent-tool/SKILL.md
+    path: skills/openclaw-agentic-tool-designer/SKILL.md
     adapter_paths:
-      claude: .claude/skills/design-agent-tool/SKILL.md
-      codex: .codex/skills/design-agent-tool/SKILL.md
+      claude: .claude/skills/openclaw-agentic-tool-designer/SKILL.md
+      codex: .codex/skills/openclaw-agentic-tool-designer/SKILL.md
   - name: design-agent-memory
     description: Use when adding or reviewing memory search, memory writes, promotion, contradiction, or recall behavior.
     path: skills/design-agent-memory/SKILL.md

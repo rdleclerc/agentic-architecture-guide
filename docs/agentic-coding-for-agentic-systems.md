@@ -328,7 +328,7 @@ references/
 Skills are for “how this kind of task is done here.” Examples:
 
 ```text
-design-agent-tool
+openclaw-agentic-tool-designer
 write-memory-schema
 build-context-policy
 create-eval-dataset
@@ -339,7 +339,7 @@ run-investment-memo-workflow
 A skill should have a small metadata surface that is visible before loading the full skill:
 
 ```yaml
-name: design-agent-tool
+name: openclaw-agentic-tool-designer
 description: Use when adding or modifying a tool exposed to an agent.
 triggers:
   - tool contract
@@ -653,7 +653,7 @@ docs/
   eval_matrix.yaml
 .claude/
   skills/
-    design-agent-tool/SKILL.md
+    openclaw-agentic-tool-designer/SKILL.md
     design-agent-memory/SKILL.md
     design-context-engine/SKILL.md
     build-agent-eval/SKILL.md
@@ -1061,7 +1061,7 @@ Deliverables:
 
 ```text
 .agentic/skill_registry.yaml
-skills/design-agent-tool/SKILL.md
+skills/openclaw-agentic-tool-designer/SKILL.md
 skills/design-agent-memory/SKILL.md
 skills/design-source-lane/SKILL.md
 skills/design-context-engine/SKILL.md
@@ -1087,11 +1087,11 @@ skill-name/
 
 ```md
 ---
-name: design-agent-tool
+name: openclaw-agentic-tool-designer
 description: Use when adding, modifying, or reviewing a tool exposed to an agent.
 ---
 
-# Design Agent Tool
+# OpenClaw Agentic Tool Designer
 
 ## When to use
 

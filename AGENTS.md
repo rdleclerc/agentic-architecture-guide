@@ -68,7 +68,7 @@ Unit tests, schema validation, static checks, local deterministic simulations, a
 
 Deterministic code may enforce invariants, permissions, idempotency, schemas, source-authority labels, budgets, sandbox/tool policy, runtime status, request-level retries, audit logs, and side-effect gates. It must not become the agent's private reasoning loop.
 
-Skill/tool creation rule: use `skills/openclaw-skill-creator` when creating or improving OpenClaw-targeted skills. Use `uber-skill-creator` for general portable SKILL.md skills when it is installed; otherwise use the current runtime's general skill creator. Use `skills/design-agent-tool` before implementing or reviewing OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
+Skill/tool creation rule: use `skills/openclaw-skill-creator` when creating or improving OpenClaw-targeted skills. Use `uber-skill-creator` for general portable SKILL.md skills when it is installed; otherwise use the current runtime's general skill creator. Use `skills/openclaw-agentic-tool-designer` before implementing or reviewing OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
 
 Second rule: simplicity/deletion before machinery. Complexity has hidden downstream cost. Before adding an agent, schema, router, policy layer, eval harness, guardrail, workflow, dependency, or automation, run the deletion-first order:
 
