@@ -1,6 +1,6 @@
 ---
 name: openclaw-skill-creator
-description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general Codex skill-creator; use the repo-local Codex `skill-creator` for general Codex skills.
+description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
 ---
 
 # OpenClaw Skill Creator
@@ -8,13 +8,13 @@ description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and 
 > ## Scope Boundary
 >
 > This skill creates and improves **OpenClaw-targeted skills**. It is not the
-> general Codex skill-creator. For general Codex skills, use the repo-local
-> `skill-creator` skill in `agentic-uber-skills`.
+> general portable skill creator. For general SKILL.md skills, use
+> `uber-skill-creator` from `agentic-uber-skills` when it is installed.
 >
 > This skill is adapted from public skill-creator methodology for the OpenClaw
 > runtime. Keep provenance visible, but do not copy proprietary or leaked code.
 >
-> When running from Codex, translate the workflow into Codex terms. Do not run
+> When running from Codex, Claude, or another runtime, translate the workflow into that runtime's terms. Do not run
 > `claude -p`, `sessions_spawn`, Claude.ai, Cowork, or `present_files` steps
 > unless the current runtime explicitly provides them and the user has approved
 > that execution path.
@@ -109,7 +109,7 @@ Check available MCPs - if useful for research (searching docs, finding similar s
 Based on the user interview, fill in these components:
 
 - **name**: Skill identifier
-- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic Codex skill-authoring tasks that belong to the general `skill-creator`.
+- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic portable skill-authoring tasks that belong to `uber-skill-creator`.
 - **compatibility**: Required tools, dependencies (optional, rarely needed)
 - **the rest of the skill :)**
 

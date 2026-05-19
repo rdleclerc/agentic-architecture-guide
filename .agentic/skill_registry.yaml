@@ -8,7 +8,7 @@ policy:
   adapter_contract: Adapter skill paths mirror the canonical skill directories for runtime compatibility. Do not edit adapter paths directly; update the canonical skill and regenerate or refresh adapters.
 skills:
   - name: openclaw-skill-creator
-    description: Use when creating, modifying, improving, evaluating, benchmarking, or packaging an OpenClaw-targeted skill; includes draft/eval/improve lifecycle and trigger-description optimization. Do not use as the general Codex skill creator.
+    description: Use when creating, modifying, improving, evaluating, benchmarking, or packaging an OpenClaw-targeted skill; includes draft/eval/improve lifecycle and trigger-description optimization. Do not use as the general portable skill creator; use uber-skill-creator for general SKILL.md skills when it is installed.
     path: skills/openclaw-skill-creator/SKILL.md
     adapter_paths:
       claude: .claude/skills/openclaw-skill-creator/SKILL.md

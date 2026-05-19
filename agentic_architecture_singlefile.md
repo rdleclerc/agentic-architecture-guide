@@ -600,8 +600,8 @@ files:
     sha256: 7ec7f08c887daf2ee78352d3dd44f9466c5424549cc998201315a9d4191a08f6
     trailing_newline: true
   - path: .agentic/skill_registry.yaml
-    bytes: 2969
-    sha256: 9276aba5c380263e576ca5d0795ad0e3cd99e3c59fce60d9aae4dbef9a0e56af
+    bytes: 3045
+    sha256: ab32a51a5655edc99469ad895cbba7c9ce30fe4715638141221f98a8adcb091e
     trailing_newline: true
   - path: .agentic/source_authority.yaml
     bytes: 1487
@@ -632,8 +632,8 @@ files:
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
   - path: .claude/skills/openclaw-skill-creator/SKILL.md
-    bytes: 30304
-    sha256: beba7771b5837060ae7354502b0cb530eac6b2fc0c4f589471c8c23d9502d2b4
+    bytes: 30370
+    sha256: d55aa2a2f45161cd2a97d099e243778b961ec2ed4b12cb021e8e6c3e42b7c393
     trailing_newline: true
   - path: .claude/skills/review-agentic-architecture/SKILL.md
     bytes: 812
@@ -660,8 +660,8 @@ files:
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
   - path: .codex/skills/openclaw-skill-creator/SKILL.md
-    bytes: 30304
-    sha256: beba7771b5837060ae7354502b0cb530eac6b2fc0c4f589471c8c23d9502d2b4
+    bytes: 30370
+    sha256: d55aa2a2f45161cd2a97d099e243778b961ec2ed4b12cb021e8e6c3e42b7c393
     trailing_newline: true
   - path: .codex/skills/review-agentic-architecture/SKILL.md
     bytes: 812
@@ -676,8 +676,8 @@ files:
     sha256: 56ad3185f6dc57e0053b17879f412e81f15e5a19f70d04d8fdd58ba17e9b6ab1
     trailing_newline: true
   - path: AGENTS.md
-    bytes: 9151
-    sha256: ee9748fabd6e59c9939d12e2b0579994120b8b7b5964204da9d48c93477af830
+    bytes: 9226
+    sha256: daf50621f4cc65300c75cb0fc7f4107c82f089e86b54c260cfb15aced5789b51
     trailing_newline: true
   - path: CLAUDE.md
     bytes: 371
@@ -764,8 +764,8 @@ files:
     sha256: f79134a08564df1494da4bdc30a4149801e71f0597c506895e4c348279a55eb5
     trailing_newline: true
   - path: docs/skills.md
-    bytes: 2984
-    sha256: 07f650856bf8dc496d52ede585191d876579b8f874f579b87db92c31c05d461a
+    bytes: 3048
+    sha256: fbe4e7251b1adcb00be84119247b76f5e2817fa662bab22e50fc47907e292d3f
     trailing_newline: true
   - path: docs/source-authority-and-truth-lanes.md
     bytes: 3286
@@ -816,8 +816,8 @@ files:
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
   - path: skills/openclaw-skill-creator/SKILL.md
-    bytes: 30304
-    sha256: beba7771b5837060ae7354502b0cb530eac6b2fc0c4f589471c8c23d9502d2b4
+    bytes: 30370
+    sha256: d55aa2a2f45161cd2a97d099e243778b961ec2ed4b12cb021e8e6c3e42b7c393
     trailing_newline: true
   - path: skills/review-agentic-architecture/SKILL.md
     bytes: 812
@@ -1070,7 +1070,7 @@ memory:
 
 ### File: `.agentic/skill_registry.yaml`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/skill_registry.yaml" sha256="9276aba5c380263e576ca5d0795ad0e3cd99e3c59fce60d9aae4dbef9a0e56af" bytes="2969" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/skill_registry.yaml" sha256="ab32a51a5655edc99469ad895cbba7c9ce30fe4715638141221f98a8adcb091e" bytes="3045" trailing_newline="true" -->
 ````````
 version: 1
 canonical_root: skills
@@ -1082,7 +1082,7 @@ policy:
   adapter_contract: Adapter skill paths mirror the canonical skill directories for runtime compatibility. Do not edit adapter paths directly; update the canonical skill and regenerate or refresh adapters.
 skills:
   - name: openclaw-skill-creator
-    description: Use when creating, modifying, improving, evaluating, benchmarking, or packaging an OpenClaw-targeted skill; includes draft/eval/improve lifecycle and trigger-description optimization. Do not use as the general Codex skill creator.
+    description: Use when creating, modifying, improving, evaluating, benchmarking, or packaging an OpenClaw-targeted skill; includes draft/eval/improve lifecycle and trigger-description optimization. Do not use as the general portable skill creator; use uber-skill-creator for general SKILL.md skills when it is installed.
     path: skills/openclaw-skill-creator/SKILL.md
     adapter_paths:
       claude: .claude/skills/openclaw-skill-creator/SKILL.md
@@ -1492,11 +1492,11 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 
 ### File: `.claude/skills/openclaw-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-skill-creator/SKILL.md" sha256="beba7771b5837060ae7354502b0cb530eac6b2fc0c4f589471c8c23d9502d2b4" bytes="30304" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-skill-creator/SKILL.md" sha256="d55aa2a2f45161cd2a97d099e243778b961ec2ed4b12cb021e8e6c3e42b7c393" bytes="30370" trailing_newline="true" -->
 ````````
 ---
 name: openclaw-skill-creator
-description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general Codex skill-creator; use the repo-local Codex `skill-creator` for general Codex skills.
+description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
 ---
 
 # OpenClaw Skill Creator
@@ -1504,13 +1504,13 @@ description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and 
 > ## Scope Boundary
 >
 > This skill creates and improves **OpenClaw-targeted skills**. It is not the
-> general Codex skill-creator. For general Codex skills, use the repo-local
-> `skill-creator` skill in `agentic-uber-skills`.
+> general portable skill creator. For general SKILL.md skills, use
+> `uber-skill-creator` from `agentic-uber-skills` when it is installed.
 >
 > This skill is adapted from public skill-creator methodology for the OpenClaw
 > runtime. Keep provenance visible, but do not copy proprietary or leaked code.
 >
-> When running from Codex, translate the workflow into Codex terms. Do not run
+> When running from Codex, Claude, or another runtime, translate the workflow into that runtime's terms. Do not run
 > `claude -p`, `sessions_spawn`, Claude.ai, Cowork, or `present_files` steps
 > unless the current runtime explicitly provides them and the user has approved
 > that execution path.
@@ -1605,7 +1605,7 @@ Check available MCPs - if useful for research (searching docs, finding similar s
 Based on the user interview, fill in these components:
 
 - **name**: Skill identifier
-- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic Codex skill-authoring tasks that belong to the general `skill-creator`.
+- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic portable skill-authoring tasks that belong to `uber-skill-creator`.
 - **compatibility**: Required tools, dependencies (optional, rarely needed)
 - **the rest of the skill :)**
 
@@ -2229,11 +2229,11 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 
 ### File: `.codex/skills/openclaw-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-skill-creator/SKILL.md" sha256="beba7771b5837060ae7354502b0cb530eac6b2fc0c4f589471c8c23d9502d2b4" bytes="30304" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-skill-creator/SKILL.md" sha256="d55aa2a2f45161cd2a97d099e243778b961ec2ed4b12cb021e8e6c3e42b7c393" bytes="30370" trailing_newline="true" -->
 ````````
 ---
 name: openclaw-skill-creator
-description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general Codex skill-creator; use the repo-local Codex `skill-creator` for general Codex skills.
+description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
 ---
 
 # OpenClaw Skill Creator
@@ -2241,13 +2241,13 @@ description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and 
 > ## Scope Boundary
 >
 > This skill creates and improves **OpenClaw-targeted skills**. It is not the
-> general Codex skill-creator. For general Codex skills, use the repo-local
-> `skill-creator` skill in `agentic-uber-skills`.
+> general portable skill creator. For general SKILL.md skills, use
+> `uber-skill-creator` from `agentic-uber-skills` when it is installed.
 >
 > This skill is adapted from public skill-creator methodology for the OpenClaw
 > runtime. Keep provenance visible, but do not copy proprietary or leaked code.
 >
-> When running from Codex, translate the workflow into Codex terms. Do not run
+> When running from Codex, Claude, or another runtime, translate the workflow into that runtime's terms. Do not run
 > `claude -p`, `sessions_spawn`, Claude.ai, Cowork, or `present_files` steps
 > unless the current runtime explicitly provides them and the user has approved
 > that execution path.
@@ -2342,7 +2342,7 @@ Check available MCPs - if useful for research (searching docs, finding similar s
 Based on the user interview, fill in these components:
 
 - **name**: Skill identifier
-- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic Codex skill-authoring tasks that belong to the general `skill-creator`.
+- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic portable skill-authoring tasks that belong to `uber-skill-creator`.
 - **compatibility**: Required tools, dependencies (optional, rarely needed)
 - **the rest of the skill :)**
 
@@ -2826,7 +2826,7 @@ agentic_architecture_pack/
 
 ### File: `AGENTS.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="ee9748fabd6e59c9939d12e2b0579994120b8b7b5964204da9d48c93477af830" bytes="9151" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="daf50621f4cc65300c75cb0fc7f4107c82f089e86b54c260cfb15aced5789b51" bytes="9226" trailing_newline="true" -->
 ````````
 # AGENTS.md
 
@@ -2875,7 +2875,7 @@ Core rule: deterministic harness, adaptive policy.
 
 High-agent-affordance default: architect OpenClaw, Type0, Gaia/Gaia Brain, Soho House, and shared agentic-media work so capable agents can inspect sources, use clear tools, apply concise skills, and exercise judgment. Before adding hard gates, hidden automation, routing layers, reviewer loops, or deterministic substitutes for judgment, first ask whether a better skill, typed tool, source lane, context packet, or feedback loop would preserve more agency with less machinery. If a coding agent chooses a lower-affordance design, it must explain why and get explicit approval.
 
-Skill/tool creation rule: use `skills/openclaw-skill-creator` when creating or improving OpenClaw-targeted skills. Use a runtime-native general skill creator for non-OpenClaw skills. Use `skills/design-agent-tool` before implementing or reviewing OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
+Skill/tool creation rule: use `skills/openclaw-skill-creator` when creating or improving OpenClaw-targeted skills. Use `uber-skill-creator` for general portable SKILL.md skills when it is installed; otherwise use the current runtime's general skill creator. Use `skills/design-agent-tool` before implementing or reviewing OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
 
 Second rule: simplicity/deletion before machinery. Complexity has hidden downstream cost. Before adding an agent, schema, router, policy layer, eval harness, guardrail, workflow, dependency, or automation, run the deletion-first order:
 
@@ -9508,7 +9508,7 @@ Both are required. Neither replaces the other.
 
 ### File: `docs/skills.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/skills.md" sha256="07f650856bf8dc496d52ede585191d876579b8f874f579b87db92c31c05d461a" bytes="2984" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/skills.md" sha256="fbe4e7251b1adcb00be84119247b76f5e2817fa662bab22e50fc47907e292d3f" bytes="3048" trailing_newline="true" -->
 ````````
 # Skills for Agentic Systems
 
@@ -9577,7 +9577,7 @@ Skills should package procedures that prevent architectural drift: designing sou
 
 Prefer a skill when the repo needs a repeatable way to do a class of work. Prefer a deterministic script or eval when consistency matters more than judgment. Prefer deleting or simplifying the process when the skill would only preserve unnecessary complexity.
 
-When creating or improving OpenClaw-targeted skills, use `openclaw-skill-creator` as the lifecycle: capture intent, draft, test with realistic prompts, compare against a baseline when possible, collect human feedback, and iterate. For general Codex skills, use the runtime-native general skill creator instead. If the OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, use `design-agent-tool` before implementation so the resulting affordance is agent-usable, typed, recoverable, and traceable.
+When creating or improving OpenClaw-targeted skills, use `openclaw-skill-creator` as the lifecycle: capture intent, draft, test with realistic prompts, compare against a baseline when possible, collect human feedback, and iterate. For general portable SKILL.md skills, use `uber-skill-creator` when it is installed; otherwise use the current runtime's general skill creator. If the OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, use `design-agent-tool` before implementation so the resulting affordance is agent-usable, typed, recoverable, and traceable.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/skills.md" -->
 
@@ -10772,11 +10772,11 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 
 ### File: `skills/openclaw-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-skill-creator/SKILL.md" sha256="beba7771b5837060ae7354502b0cb530eac6b2fc0c4f589471c8c23d9502d2b4" bytes="30304" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-skill-creator/SKILL.md" sha256="d55aa2a2f45161cd2a97d099e243778b961ec2ed4b12cb021e8e6c3e42b7c393" bytes="30370" trailing_newline="true" -->
 ````````
 ---
 name: openclaw-skill-creator
-description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general Codex skill-creator; use the repo-local Codex `skill-creator` for general Codex skills.
+description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
 ---
 
 # OpenClaw Skill Creator
@@ -10784,13 +10784,13 @@ description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and 
 > ## Scope Boundary
 >
 > This skill creates and improves **OpenClaw-targeted skills**. It is not the
-> general Codex skill-creator. For general Codex skills, use the repo-local
-> `skill-creator` skill in `agentic-uber-skills`.
+> general portable skill creator. For general SKILL.md skills, use
+> `uber-skill-creator` from `agentic-uber-skills` when it is installed.
 >
 > This skill is adapted from public skill-creator methodology for the OpenClaw
 > runtime. Keep provenance visible, but do not copy proprietary or leaked code.
 >
-> When running from Codex, translate the workflow into Codex terms. Do not run
+> When running from Codex, Claude, or another runtime, translate the workflow into that runtime's terms. Do not run
 > `claude -p`, `sessions_spawn`, Claude.ai, Cowork, or `present_files` steps
 > unless the current runtime explicitly provides them and the user has approved
 > that execution path.
@@ -10885,7 +10885,7 @@ Check available MCPs - if useful for research (searching docs, finding similar s
 Based on the user interview, fill in these components:
 
 - **name**: Skill identifier
-- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic Codex skill-authoring tasks that belong to the general `skill-creator`.
+- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic portable skill-authoring tasks that belong to `uber-skill-creator`.
 - **compatibility**: Required tools, dependencies (optional, rarely needed)
 - **the rest of the skill :)**
 
