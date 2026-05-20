@@ -521,7 +521,6 @@ The rebuild parser checks each file payload against the SHA-256 and byte count i
 ├── .agentic/tool_catalog.yaml
 ├── .claude/skills/build-agent-eval/SKILL.md
 ├── .claude/skills/design-agent-memory/SKILL.md
-├── .claude/skills/design-agent-tool/SKILL.md
 ├── .claude/skills/design-context-engine/SKILL.md
 ├── .claude/skills/design-source-lane/SKILL.md
 ├── .claude/skills/openclaw-agentic-tool-designer/SKILL.md
@@ -529,7 +528,6 @@ The rebuild parser checks each file payload against the SHA-256 and byte count i
 ├── .claude/skills/review-agentic-architecture/SKILL.md
 ├── .codex/skills/build-agent-eval/SKILL.md
 ├── .codex/skills/design-agent-memory/SKILL.md
-├── .codex/skills/design-agent-tool/SKILL.md
 ├── .codex/skills/design-context-engine/SKILL.md
 ├── .codex/skills/design-source-lane/SKILL.md
 ├── .codex/skills/openclaw-agentic-tool-designer/SKILL.md
@@ -569,7 +567,6 @@ The rebuild parser checks each file payload against the SHA-256 and byte count i
 ├── scripts/validate_agentic_pack.py
 ├── skills/build-agent-eval/SKILL.md
 ├── skills/design-agent-memory/SKILL.md
-├── skills/design-agent-tool/SKILL.md
 ├── skills/design-context-engine/SKILL.md
 ├── skills/design-source-lane/SKILL.md
 ├── skills/openclaw-agentic-tool-designer/SKILL.md
@@ -622,10 +619,6 @@ files:
     bytes: 692
     sha256: bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1
     trailing_newline: true
-  - path: .claude/skills/design-agent-tool/SKILL.md
-    bytes: 703
-    sha256: 3c437e61091b0c34376757003a6383086a0d8bbb09a23dcab235a9e00a6282fe
-    trailing_newline: true
   - path: .claude/skills/design-context-engine/SKILL.md
     bytes: 624
     sha256: 34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4
@@ -653,10 +646,6 @@ files:
   - path: .codex/skills/design-agent-memory/SKILL.md
     bytes: 692
     sha256: bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1
-    trailing_newline: true
-  - path: .codex/skills/design-agent-tool/SKILL.md
-    bytes: 703
-    sha256: 3c437e61091b0c34376757003a6383086a0d8bbb09a23dcab235a9e00a6282fe
     trailing_newline: true
   - path: .codex/skills/design-context-engine/SKILL.md
     bytes: 624
@@ -813,10 +802,6 @@ files:
   - path: skills/design-agent-memory/SKILL.md
     bytes: 692
     sha256: bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1
-    trailing_newline: true
-  - path: skills/design-agent-tool/SKILL.md
-    bytes: 703
-    sha256: 3c437e61091b0c34376757003a6383086a0d8bbb09a23dcab235a9e00a6282fe
     trailing_newline: true
   - path: skills/design-context-engine/SKILL.md
     bytes: 624
@@ -1334,25 +1319,6 @@ description: Use when adding or reviewing memory search, memory writes, promotio
 Return memory schema changes, memory tool changes, and eval cases.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-agent-memory/SKILL.md" -->
-
-### File: `.claude/skills/design-agent-tool/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-agent-tool/SKILL.md" sha256="3c437e61091b0c34376757003a6383086a0d8bbb09a23dcab235a9e00a6282fe" bytes="703" trailing_newline="true" -->
-````````
----
-name: design-agent-tool
-description: Deprecated compatibility shim. Superseded by openclaw-agentic-tool-designer for OpenClaw-facing agent tool/interface design. Use openclaw-agentic-tool-designer instead.
-metadata:
-  short-description: Deprecated; use openclaw-agentic-tool-designer
----
-
-# Deprecated Design Agent Tool Shim
-
-`design-agent-tool` has been renamed to `openclaw-agentic-tool-designer` to make its OpenClaw scope explicit.
-
-Use `openclaw-agentic-tool-designer` when adding, modifying, reviewing, or debugging OpenClaw-facing agent tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-agent-tool/SKILL.md" -->
 
 ### File: `.claude/skills/design-context-engine/SKILL.md`
 
@@ -2090,25 +2056,6 @@ description: Use when adding or reviewing memory search, memory writes, promotio
 Return memory schema changes, memory tool changes, and eval cases.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/design-agent-memory/SKILL.md" -->
-
-### File: `.codex/skills/design-agent-tool/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/design-agent-tool/SKILL.md" sha256="3c437e61091b0c34376757003a6383086a0d8bbb09a23dcab235a9e00a6282fe" bytes="703" trailing_newline="true" -->
-````````
----
-name: design-agent-tool
-description: Deprecated compatibility shim. Superseded by openclaw-agentic-tool-designer for OpenClaw-facing agent tool/interface design. Use openclaw-agentic-tool-designer instead.
-metadata:
-  short-description: Deprecated; use openclaw-agentic-tool-designer
----
-
-# Deprecated Design Agent Tool Shim
-
-`design-agent-tool` has been renamed to `openclaw-agentic-tool-designer` to make its OpenClaw scope explicit.
-
-Use `openclaw-agentic-tool-designer` when adding, modifying, reviewing, or debugging OpenClaw-facing agent tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/design-agent-tool/SKILL.md" -->
 
 ### File: `.codex/skills/design-context-engine/SKILL.md`
 
@@ -10698,25 +10645,6 @@ description: Use when adding or reviewing memory search, memory writes, promotio
 Return memory schema changes, memory tool changes, and eval cases.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="skills/design-agent-memory/SKILL.md" -->
-
-### File: `skills/design-agent-tool/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/design-agent-tool/SKILL.md" sha256="3c437e61091b0c34376757003a6383086a0d8bbb09a23dcab235a9e00a6282fe" bytes="703" trailing_newline="true" -->
-````````
----
-name: design-agent-tool
-description: Deprecated compatibility shim. Superseded by openclaw-agentic-tool-designer for OpenClaw-facing agent tool/interface design. Use openclaw-agentic-tool-designer instead.
-metadata:
-  short-description: Deprecated; use openclaw-agentic-tool-designer
----
-
-# Deprecated Design Agent Tool Shim
-
-`design-agent-tool` has been renamed to `openclaw-agentic-tool-designer` to make its OpenClaw scope explicit.
-
-Use `openclaw-agentic-tool-designer` when adding, modifying, reviewing, or debugging OpenClaw-facing agent tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path="skills/design-agent-tool/SKILL.md" -->
 
 ### File: `skills/design-context-engine/SKILL.md`
 
