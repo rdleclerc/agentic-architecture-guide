@@ -103,4 +103,4 @@ Return:
 
 ## When composing with Skill Creator
 
-If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-skill-creator` for the draft → eval → improve lifecycle.
+If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-agentic-skill-creator` for the draft → eval → improve lifecycle.

@@ -523,15 +523,15 @@ The rebuild parser checks each file payload against the SHA-256 and byte count i
 ├── .claude/skills/design-agent-memory/SKILL.md
 ├── .claude/skills/design-context-engine/SKILL.md
 ├── .claude/skills/design-source-lane/SKILL.md
+├── .claude/skills/openclaw-agentic-skill-creator/SKILL.md
 ├── .claude/skills/openclaw-agentic-tool-designer/SKILL.md
-├── .claude/skills/openclaw-skill-creator/SKILL.md
 ├── .claude/skills/review-agentic-architecture/SKILL.md
 ├── .codex/skills/build-agent-eval/SKILL.md
 ├── .codex/skills/design-agent-memory/SKILL.md
 ├── .codex/skills/design-context-engine/SKILL.md
 ├── .codex/skills/design-source-lane/SKILL.md
+├── .codex/skills/openclaw-agentic-skill-creator/SKILL.md
 ├── .codex/skills/openclaw-agentic-tool-designer/SKILL.md
-├── .codex/skills/openclaw-skill-creator/SKILL.md
 ├── .codex/skills/review-agentic-architecture/SKILL.md
 ├── .github/pull_request_template.md
 ├── .gitignore
@@ -569,8 +569,8 @@ The rebuild parser checks each file payload against the SHA-256 and byte count i
 ├── skills/design-agent-memory/SKILL.md
 ├── skills/design-context-engine/SKILL.md
 ├── skills/design-source-lane/SKILL.md
+├── skills/openclaw-agentic-skill-creator/SKILL.md
 ├── skills/openclaw-agentic-tool-designer/SKILL.md
-├── skills/openclaw-skill-creator/SKILL.md
 ├── skills/review-agentic-architecture/SKILL.md
 ├── tests/__init__.py
 ├── tests/agentic/__init__.py
@@ -600,8 +600,8 @@ files:
     sha256: 7ec7f08c887daf2ee78352d3dd44f9466c5424549cc998201315a9d4191a08f6
     trailing_newline: true
   - path: .agentic/skill_registry.yaml
-    bytes: 3097
-    sha256: 85ad91859b61a189e6f1beb907c518890055f726c509ac6bb20b2d01f81a0bca
+    bytes: 3129
+    sha256: f9ad40a326b953a8fae73901b9b7ec9588f8b1bd01138edfeb3140cd280b1ff5
     trailing_newline: true
   - path: .agentic/source_authority.yaml
     bytes: 1487
@@ -627,13 +627,13 @@ files:
     bytes: 1208
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
-  - path: .claude/skills/openclaw-agentic-tool-designer/SKILL.md
-    bytes: 6247
-    sha256: 2a01061251aaf56e14f62965fb57cc5c6d9d0f3847fe96cacaca8b9302c127f3
+  - path: .claude/skills/openclaw-agentic-skill-creator/SKILL.md
+    bytes: 30407
+    sha256: 34d7f82acc62f1379fb69a07e6af06c74cb3f8010ac2e6c4145b793685183aaa
     trailing_newline: true
-  - path: .claude/skills/openclaw-skill-creator/SKILL.md
-    bytes: 30383
-    sha256: ea95db4411a0ecb5686a50ff6ba0879c4c3806dc0553cff4721c06676ca3c0bc
+  - path: .claude/skills/openclaw-agentic-tool-designer/SKILL.md
+    bytes: 6255
+    sha256: 8fbe222b7bf2298fd52cb35049dfb23fd36f06f4c825fec1bf650ae1997b1fe5
     trailing_newline: true
   - path: .claude/skills/review-agentic-architecture/SKILL.md
     bytes: 812
@@ -655,13 +655,13 @@ files:
     bytes: 1208
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
-  - path: .codex/skills/openclaw-agentic-tool-designer/SKILL.md
-    bytes: 6247
-    sha256: 2a01061251aaf56e14f62965fb57cc5c6d9d0f3847fe96cacaca8b9302c127f3
+  - path: .codex/skills/openclaw-agentic-skill-creator/SKILL.md
+    bytes: 30407
+    sha256: 34d7f82acc62f1379fb69a07e6af06c74cb3f8010ac2e6c4145b793685183aaa
     trailing_newline: true
-  - path: .codex/skills/openclaw-skill-creator/SKILL.md
-    bytes: 30383
-    sha256: ea95db4411a0ecb5686a50ff6ba0879c4c3806dc0553cff4721c06676ca3c0bc
+  - path: .codex/skills/openclaw-agentic-tool-designer/SKILL.md
+    bytes: 6255
+    sha256: 8fbe222b7bf2298fd52cb35049dfb23fd36f06f4c825fec1bf650ae1997b1fe5
     trailing_newline: true
   - path: .codex/skills/review-agentic-architecture/SKILL.md
     bytes: 812
@@ -676,8 +676,8 @@ files:
     sha256: 56ad3185f6dc57e0053b17879f412e81f15e5a19f70d04d8fdd58ba17e9b6ab1
     trailing_newline: true
   - path: AGENTS.md
-    bytes: 12141
-    sha256: 8f79a05063d253ec955f5a25f3f0e632bebc58e71c825e268036bb023164c93c
+    bytes: 12149
+    sha256: a9298eadb1012b21c7fee649774e71242b27f5667ffb788d59e06ecb93b43131
     trailing_newline: true
   - path: CLAUDE.md
     bytes: 371
@@ -764,8 +764,8 @@ files:
     sha256: f79134a08564df1494da4bdc30a4149801e71f0597c506895e4c348279a55eb5
     trailing_newline: true
   - path: docs/skills.md
-    bytes: 3074
-    sha256: 1ccb146f7b047b9d3ff036564395a9b571f2ccd17dd1dd768782223b8e905b33
+    bytes: 3090
+    sha256: 8be0b43b18dcfc78f8ee1a503a3f46d0b6b6d38567dc3a5f16e453c363a71741
     trailing_newline: true
   - path: docs/source-authority-and-truth-lanes.md
     bytes: 3286
@@ -811,13 +811,13 @@ files:
     bytes: 1208
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
-  - path: skills/openclaw-agentic-tool-designer/SKILL.md
-    bytes: 6247
-    sha256: 2a01061251aaf56e14f62965fb57cc5c6d9d0f3847fe96cacaca8b9302c127f3
+  - path: skills/openclaw-agentic-skill-creator/SKILL.md
+    bytes: 30407
+    sha256: 34d7f82acc62f1379fb69a07e6af06c74cb3f8010ac2e6c4145b793685183aaa
     trailing_newline: true
-  - path: skills/openclaw-skill-creator/SKILL.md
-    bytes: 30383
-    sha256: ea95db4411a0ecb5686a50ff6ba0879c4c3806dc0553cff4721c06676ca3c0bc
+  - path: skills/openclaw-agentic-tool-designer/SKILL.md
+    bytes: 6255
+    sha256: 8fbe222b7bf2298fd52cb35049dfb23fd36f06f4c825fec1bf650ae1997b1fe5
     trailing_newline: true
   - path: skills/review-agentic-architecture/SKILL.md
     bytes: 812
@@ -1070,7 +1070,7 @@ memory:
 
 ### File: `.agentic/skill_registry.yaml`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/skill_registry.yaml" sha256="85ad91859b61a189e6f1beb907c518890055f726c509ac6bb20b2d01f81a0bca" bytes="3097" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/skill_registry.yaml" sha256="f9ad40a326b953a8fae73901b9b7ec9588f8b1bd01138edfeb3140cd280b1ff5" bytes="3129" trailing_newline="true" -->
 ````````
 version: 1
 canonical_root: skills
@@ -1081,12 +1081,12 @@ policy:
   canonical_source: skills/<skill-name>/SKILL.md
   adapter_contract: Adapter skill paths mirror the canonical skill directories for runtime compatibility. Do not edit adapter paths directly; update the canonical skill and regenerate or refresh adapters.
 skills:
-  - name: openclaw-skill-creator
+  - name: openclaw-agentic-skill-creator
     description: Use when creating, modifying, improving, evaluating, benchmarking, or packaging an OpenClaw-targeted skill; includes draft/eval/improve lifecycle and trigger-description optimization. Do not use as the general portable skill creator; use uber-skill-creator for general SKILL.md skills when it is installed.
-    path: skills/openclaw-skill-creator/SKILL.md
+    path: skills/openclaw-agentic-skill-creator/SKILL.md
     adapter_paths:
-      claude: .claude/skills/openclaw-skill-creator/SKILL.md
-      codex: .codex/skills/openclaw-skill-creator/SKILL.md
+      claude: .claude/skills/openclaw-agentic-skill-creator/SKILL.md
+      codex: .codex/skills/openclaw-agentic-skill-creator/SKILL.md
   - name: openclaw-agentic-tool-designer
     description: Use when adding, modifying, reviewing, or debugging any tool exposed to an agent, including OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or workflow commands.
     path: skills/openclaw-agentic-tool-designer/SKILL.md
@@ -1377,129 +1377,16 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-source-lane/SKILL.md" -->
 
-### File: `.claude/skills/openclaw-agentic-tool-designer/SKILL.md`
+### File: `.claude/skills/openclaw-agentic-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-agentic-tool-designer/SKILL.md" sha256="2a01061251aaf56e14f62965fb57cc5c6d9d0f3847fe96cacaca8b9302c127f3" bytes="6247" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-agentic-skill-creator/SKILL.md" sha256="34d7f82acc62f1379fb69a07e6af06c74cb3f8010ac2e6c4145b793685183aaa" bytes="30407" trailing_newline="true" -->
 ````````
 ---
-name: openclaw-agentic-tool-designer
-description: >-
-  Use when adding, modifying, reviewing, or debugging any OpenClaw-facing agent tool or tool-like interface: OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or workflow commands. Use for Type0, Gaia/Gaia Brain, Soho House, OpenClaw, or agentic-media work whenever a tool interface could be ambiguous, contradictory, overbroad, unsafe, hard for agents to call, or when a coding agent proposes deterministic gates instead of better agent affordances.
+name: openclaw-agentic-skill-creator
+description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
 ---
 
-# OpenClaw Agentic Tool Designer
-
-A tool is an **agent affordance**, not merely a helper function. Design it so a capable agent can perceive the right state, choose the tool at the right time, call it correctly, recover from errors, and leave an auditable trace.
-
-## First principle
-
-Prefer high-agent-affordance architecture: better source access, typed tools, concise skills, feedback loops, and raw-evidence lanes before adding brittle orchestration, hidden automation, hard gates, or deterministic substitutes for agent judgment.
-
-If you believe a lower-affordance pattern is correct, explain why and get explicit approval before implementing it.
-
-## Use this procedure
-
-1. **Name the affordance.** State what this lets the agent see, decide, verify, or do that it could not do before.
-2. **Delete first.** Ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill/source lane instead.
-3. **Choose the right primitive.** Use the decision table below before writing code.
-4. **Write a tool contract.** Include purpose, use/non-use, schemas, side effects, idempotency, errors, traces, and evals.
-5. **Design for the model caller.** Tool and parameter descriptions are UX copy for the model. Include examples and misuse examples.
-6. **Separate evidence from synthesis.** Raw source output, memory recall, model synthesis, candidate signal, and outbound artifact must be labeled differently.
-7. **Make failure recoverable.** Return structured error codes, human-readable cause, and the next safe action. Do not swallow failures.
-8. **Test tool choice and misuse.** Add evals where the agent should call the tool, should not call it, passes bad args, lacks permission, or faces conflicting tools.
-
-## Choose skill vs tool vs source lane vs harness
-
-| Need | Prefer | Why |
-|---|---|---|
-| Repeatable judgment/process with flexible execution | Skill | Teaches the agent how to work without reducing agency. |
-| Model-callable read/write/action with stable schema | Tool | Gives the agent a typed affordance and traceable side effects. |
-| Evidence capture/retrieval/truth boundary | Source lane | Keeps raw evidence, freshness, and authority explicit. |
-| Prevent invalid state, enforce permissions, validate writes | Deterministic harness | Machines should own invariants, idempotency, authz, and side-effect gates. |
-| Editorial/taste judgment, source chasing, synthesis | Agent with skills/tools | Do not bury ambiguous judgment in deterministic gates by default. |
-
-## Required tool contract
-
-Before implementation, produce a contract. Use `references/tool-contract-template.md` for the expanded template.
-
-Minimum fields:
-
-- `name`
-- `model_description`
-- `purpose`
-- `affordance_bought`
-- `when_to_use`
-- `when_not_to_use`
-- `input_schema`
-- `output_schema`
-- `side_effect_class`: `none`, `read`, `write`, `external_write`, or `destructive`
-- `permission_level`
-- `idempotency_policy`
-- `source_authority_role`
-- `error_codes`
-- `trace_fields`
-- `examples`
-- `misuse_examples`
-- `eval_cases`
-
-Run `scripts/lint_tool_contract.py <contract.json>` when you have a JSON contract.
-
-## Agent-facing CLI requirements
-
-If the tool is a CLI command agents will call:
-
-- Non-interactive by default or provide `--no-input`/`--yes` with safe behavior.
-- Stable `--json` output for data; diagnostics on stderr.
-- Documented exit codes and structured errors.
-- Bounded reads: `--limit`, filters, cursors, truncation metadata.
-- Safe writes: `--dry-run`, idempotency key/natural key, explicit target, undo/rollback note.
-- Target clarity: local vs prod, tenant/project, and actor/principal visible in output.
-- Introspection: `--help` plus an agent-readable command/tool manifest when broad.
-
-## Common failure patterns
-
-See `references/interface-failure-patterns.md` for examples. Watch especially for:
-
-- contradictory flags or defaults;
-- one mega-tool with mode strings instead of orthogonal tools;
-- tool names that describe implementation, not user/model intent;
-- write tools without idempotency;
-- errors that say what failed but not how the agent should recover;
-- raw evidence mixed with model summaries;
-- tools that quietly make editorial decisions while pretending to be validators.
-
-## Type0 / Gaia / Soho examples
-
-- **Type0 source chase:** a tweet/article/media reader should return raw artifacts, source role, freshness, receipt IDs, and gaps. It should not decide whether Sonny accepts the story.
-- **Gaia / Gaia Brain memory:** a memory tool should distinguish raw source, remembered claim, synthesis, contradiction, and confidence. Writes need provenance and idempotency.
-- **Soho House bookmarks:** a bookmark-intake tool should expose original URL/text/media, classification candidate, and source gaps. It should not bury the trail behind a single score.
-
-## Output format
-
-Return:
-
-1. `Tool or non-tool decision` — keep/delete/skill/tool/source-lane/harness.
-2. `Tool contract` — with the required fields above.
-3. `Implementation notes` — smallest viable surface and where validation lives.
-4. `Tests/evals` — tool-choice, schema, permission, side-effect, source-authority, and misuse cases.
-5. `Approval needed` — any lower-affordance design, external write, destructive action, or live side effect.
-
-## When composing with Skill Creator
-
-If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-skill-creator` for the draft → eval → improve lifecycle.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/openclaw-agentic-tool-designer/SKILL.md" -->
-
-### File: `.claude/skills/openclaw-skill-creator/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-skill-creator/SKILL.md" sha256="ea95db4411a0ecb5686a50ff6ba0879c4c3806dc0553cff4721c06676ca3c0bc" bytes="30383" trailing_newline="true" -->
-````````
----
-name: openclaw-skill-creator
-description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
----
-
-# OpenClaw Skill Creator
+# OpenClaw Agentic Skill Creator
 
 > ## Scope Boundary
 >
@@ -1973,7 +1860,120 @@ Please add steps to your task list, if you have such a thing, to make sure you d
 
 Good luck!
 ````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/openclaw-skill-creator/SKILL.md" -->
+<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/openclaw-agentic-skill-creator/SKILL.md" -->
+
+### File: `.claude/skills/openclaw-agentic-tool-designer/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-agentic-tool-designer/SKILL.md" sha256="8fbe222b7bf2298fd52cb35049dfb23fd36f06f4c825fec1bf650ae1997b1fe5" bytes="6255" trailing_newline="true" -->
+````````
+---
+name: openclaw-agentic-tool-designer
+description: >-
+  Use when adding, modifying, reviewing, or debugging any OpenClaw-facing agent tool or tool-like interface: OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or workflow commands. Use for Type0, Gaia/Gaia Brain, Soho House, OpenClaw, or agentic-media work whenever a tool interface could be ambiguous, contradictory, overbroad, unsafe, hard for agents to call, or when a coding agent proposes deterministic gates instead of better agent affordances.
+---
+
+# OpenClaw Agentic Tool Designer
+
+A tool is an **agent affordance**, not merely a helper function. Design it so a capable agent can perceive the right state, choose the tool at the right time, call it correctly, recover from errors, and leave an auditable trace.
+
+## First principle
+
+Prefer high-agent-affordance architecture: better source access, typed tools, concise skills, feedback loops, and raw-evidence lanes before adding brittle orchestration, hidden automation, hard gates, or deterministic substitutes for agent judgment.
+
+If you believe a lower-affordance pattern is correct, explain why and get explicit approval before implementing it.
+
+## Use this procedure
+
+1. **Name the affordance.** State what this lets the agent see, decide, verify, or do that it could not do before.
+2. **Delete first.** Ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill/source lane instead.
+3. **Choose the right primitive.** Use the decision table below before writing code.
+4. **Write a tool contract.** Include purpose, use/non-use, schemas, side effects, idempotency, errors, traces, and evals.
+5. **Design for the model caller.** Tool and parameter descriptions are UX copy for the model. Include examples and misuse examples.
+6. **Separate evidence from synthesis.** Raw source output, memory recall, model synthesis, candidate signal, and outbound artifact must be labeled differently.
+7. **Make failure recoverable.** Return structured error codes, human-readable cause, and the next safe action. Do not swallow failures.
+8. **Test tool choice and misuse.** Add evals where the agent should call the tool, should not call it, passes bad args, lacks permission, or faces conflicting tools.
+
+## Choose skill vs tool vs source lane vs harness
+
+| Need | Prefer | Why |
+|---|---|---|
+| Repeatable judgment/process with flexible execution | Skill | Teaches the agent how to work without reducing agency. |
+| Model-callable read/write/action with stable schema | Tool | Gives the agent a typed affordance and traceable side effects. |
+| Evidence capture/retrieval/truth boundary | Source lane | Keeps raw evidence, freshness, and authority explicit. |
+| Prevent invalid state, enforce permissions, validate writes | Deterministic harness | Machines should own invariants, idempotency, authz, and side-effect gates. |
+| Editorial/taste judgment, source chasing, synthesis | Agent with skills/tools | Do not bury ambiguous judgment in deterministic gates by default. |
+
+## Required tool contract
+
+Before implementation, produce a contract. Use `references/tool-contract-template.md` for the expanded template.
+
+Minimum fields:
+
+- `name`
+- `model_description`
+- `purpose`
+- `affordance_bought`
+- `when_to_use`
+- `when_not_to_use`
+- `input_schema`
+- `output_schema`
+- `side_effect_class`: `none`, `read`, `write`, `external_write`, or `destructive`
+- `permission_level`
+- `idempotency_policy`
+- `source_authority_role`
+- `error_codes`
+- `trace_fields`
+- `examples`
+- `misuse_examples`
+- `eval_cases`
+
+Run `scripts/lint_tool_contract.py <contract.json>` when you have a JSON contract.
+
+## Agent-facing CLI requirements
+
+If the tool is a CLI command agents will call:
+
+- Non-interactive by default or provide `--no-input`/`--yes` with safe behavior.
+- Stable `--json` output for data; diagnostics on stderr.
+- Documented exit codes and structured errors.
+- Bounded reads: `--limit`, filters, cursors, truncation metadata.
+- Safe writes: `--dry-run`, idempotency key/natural key, explicit target, undo/rollback note.
+- Target clarity: local vs prod, tenant/project, and actor/principal visible in output.
+- Introspection: `--help` plus an agent-readable command/tool manifest when broad.
+
+## Common failure patterns
+
+See `references/interface-failure-patterns.md` for examples. Watch especially for:
+
+- contradictory flags or defaults;
+- one mega-tool with mode strings instead of orthogonal tools;
+- tool names that describe implementation, not user/model intent;
+- write tools without idempotency;
+- errors that say what failed but not how the agent should recover;
+- raw evidence mixed with model summaries;
+- tools that quietly make editorial decisions while pretending to be validators.
+
+## Type0 / Gaia / Soho examples
+
+- **Type0 source chase:** a tweet/article/media reader should return raw artifacts, source role, freshness, receipt IDs, and gaps. It should not decide whether Sonny accepts the story.
+- **Gaia / Gaia Brain memory:** a memory tool should distinguish raw source, remembered claim, synthesis, contradiction, and confidence. Writes need provenance and idempotency.
+- **Soho House bookmarks:** a bookmark-intake tool should expose original URL/text/media, classification candidate, and source gaps. It should not bury the trail behind a single score.
+
+## Output format
+
+Return:
+
+1. `Tool or non-tool decision` — keep/delete/skill/tool/source-lane/harness.
+2. `Tool contract` — with the required fields above.
+3. `Implementation notes` — smallest viable surface and where validation lives.
+4. `Tests/evals` — tool-choice, schema, permission, side-effect, source-authority, and misuse cases.
+5. `Approval needed` — any lower-affordance design, external write, destructive action, or live side effect.
+
+## When composing with Skill Creator
+
+If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-agentic-skill-creator` for the draft → eval → improve lifecycle.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/openclaw-agentic-tool-designer/SKILL.md" -->
 
 ### File: `.claude/skills/review-agentic-architecture/SKILL.md`
 
@@ -2114,129 +2114,16 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/design-source-lane/SKILL.md" -->
 
-### File: `.codex/skills/openclaw-agentic-tool-designer/SKILL.md`
+### File: `.codex/skills/openclaw-agentic-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-agentic-tool-designer/SKILL.md" sha256="2a01061251aaf56e14f62965fb57cc5c6d9d0f3847fe96cacaca8b9302c127f3" bytes="6247" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-agentic-skill-creator/SKILL.md" sha256="34d7f82acc62f1379fb69a07e6af06c74cb3f8010ac2e6c4145b793685183aaa" bytes="30407" trailing_newline="true" -->
 ````````
 ---
-name: openclaw-agentic-tool-designer
-description: >-
-  Use when adding, modifying, reviewing, or debugging any OpenClaw-facing agent tool or tool-like interface: OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or workflow commands. Use for Type0, Gaia/Gaia Brain, Soho House, OpenClaw, or agentic-media work whenever a tool interface could be ambiguous, contradictory, overbroad, unsafe, hard for agents to call, or when a coding agent proposes deterministic gates instead of better agent affordances.
+name: openclaw-agentic-skill-creator
+description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
 ---
 
-# OpenClaw Agentic Tool Designer
-
-A tool is an **agent affordance**, not merely a helper function. Design it so a capable agent can perceive the right state, choose the tool at the right time, call it correctly, recover from errors, and leave an auditable trace.
-
-## First principle
-
-Prefer high-agent-affordance architecture: better source access, typed tools, concise skills, feedback loops, and raw-evidence lanes before adding brittle orchestration, hidden automation, hard gates, or deterministic substitutes for agent judgment.
-
-If you believe a lower-affordance pattern is correct, explain why and get explicit approval before implementing it.
-
-## Use this procedure
-
-1. **Name the affordance.** State what this lets the agent see, decide, verify, or do that it could not do before.
-2. **Delete first.** Ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill/source lane instead.
-3. **Choose the right primitive.** Use the decision table below before writing code.
-4. **Write a tool contract.** Include purpose, use/non-use, schemas, side effects, idempotency, errors, traces, and evals.
-5. **Design for the model caller.** Tool and parameter descriptions are UX copy for the model. Include examples and misuse examples.
-6. **Separate evidence from synthesis.** Raw source output, memory recall, model synthesis, candidate signal, and outbound artifact must be labeled differently.
-7. **Make failure recoverable.** Return structured error codes, human-readable cause, and the next safe action. Do not swallow failures.
-8. **Test tool choice and misuse.** Add evals where the agent should call the tool, should not call it, passes bad args, lacks permission, or faces conflicting tools.
-
-## Choose skill vs tool vs source lane vs harness
-
-| Need | Prefer | Why |
-|---|---|---|
-| Repeatable judgment/process with flexible execution | Skill | Teaches the agent how to work without reducing agency. |
-| Model-callable read/write/action with stable schema | Tool | Gives the agent a typed affordance and traceable side effects. |
-| Evidence capture/retrieval/truth boundary | Source lane | Keeps raw evidence, freshness, and authority explicit. |
-| Prevent invalid state, enforce permissions, validate writes | Deterministic harness | Machines should own invariants, idempotency, authz, and side-effect gates. |
-| Editorial/taste judgment, source chasing, synthesis | Agent with skills/tools | Do not bury ambiguous judgment in deterministic gates by default. |
-
-## Required tool contract
-
-Before implementation, produce a contract. Use `references/tool-contract-template.md` for the expanded template.
-
-Minimum fields:
-
-- `name`
-- `model_description`
-- `purpose`
-- `affordance_bought`
-- `when_to_use`
-- `when_not_to_use`
-- `input_schema`
-- `output_schema`
-- `side_effect_class`: `none`, `read`, `write`, `external_write`, or `destructive`
-- `permission_level`
-- `idempotency_policy`
-- `source_authority_role`
-- `error_codes`
-- `trace_fields`
-- `examples`
-- `misuse_examples`
-- `eval_cases`
-
-Run `scripts/lint_tool_contract.py <contract.json>` when you have a JSON contract.
-
-## Agent-facing CLI requirements
-
-If the tool is a CLI command agents will call:
-
-- Non-interactive by default or provide `--no-input`/`--yes` with safe behavior.
-- Stable `--json` output for data; diagnostics on stderr.
-- Documented exit codes and structured errors.
-- Bounded reads: `--limit`, filters, cursors, truncation metadata.
-- Safe writes: `--dry-run`, idempotency key/natural key, explicit target, undo/rollback note.
-- Target clarity: local vs prod, tenant/project, and actor/principal visible in output.
-- Introspection: `--help` plus an agent-readable command/tool manifest when broad.
-
-## Common failure patterns
-
-See `references/interface-failure-patterns.md` for examples. Watch especially for:
-
-- contradictory flags or defaults;
-- one mega-tool with mode strings instead of orthogonal tools;
-- tool names that describe implementation, not user/model intent;
-- write tools without idempotency;
-- errors that say what failed but not how the agent should recover;
-- raw evidence mixed with model summaries;
-- tools that quietly make editorial decisions while pretending to be validators.
-
-## Type0 / Gaia / Soho examples
-
-- **Type0 source chase:** a tweet/article/media reader should return raw artifacts, source role, freshness, receipt IDs, and gaps. It should not decide whether Sonny accepts the story.
-- **Gaia / Gaia Brain memory:** a memory tool should distinguish raw source, remembered claim, synthesis, contradiction, and confidence. Writes need provenance and idempotency.
-- **Soho House bookmarks:** a bookmark-intake tool should expose original URL/text/media, classification candidate, and source gaps. It should not bury the trail behind a single score.
-
-## Output format
-
-Return:
-
-1. `Tool or non-tool decision` — keep/delete/skill/tool/source-lane/harness.
-2. `Tool contract` — with the required fields above.
-3. `Implementation notes` — smallest viable surface and where validation lives.
-4. `Tests/evals` — tool-choice, schema, permission, side-effect, source-authority, and misuse cases.
-5. `Approval needed` — any lower-affordance design, external write, destructive action, or live side effect.
-
-## When composing with Skill Creator
-
-If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-skill-creator` for the draft → eval → improve lifecycle.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/openclaw-agentic-tool-designer/SKILL.md" -->
-
-### File: `.codex/skills/openclaw-skill-creator/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-skill-creator/SKILL.md" sha256="ea95db4411a0ecb5686a50ff6ba0879c4c3806dc0553cff4721c06676ca3c0bc" bytes="30383" trailing_newline="true" -->
-````````
----
-name: openclaw-skill-creator
-description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
----
-
-# OpenClaw Skill Creator
+# OpenClaw Agentic Skill Creator
 
 > ## Scope Boundary
 >
@@ -2710,7 +2597,120 @@ Please add steps to your task list, if you have such a thing, to make sure you d
 
 Good luck!
 ````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/openclaw-skill-creator/SKILL.md" -->
+<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/openclaw-agentic-skill-creator/SKILL.md" -->
+
+### File: `.codex/skills/openclaw-agentic-tool-designer/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-agentic-tool-designer/SKILL.md" sha256="8fbe222b7bf2298fd52cb35049dfb23fd36f06f4c825fec1bf650ae1997b1fe5" bytes="6255" trailing_newline="true" -->
+````````
+---
+name: openclaw-agentic-tool-designer
+description: >-
+  Use when adding, modifying, reviewing, or debugging any OpenClaw-facing agent tool or tool-like interface: OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or workflow commands. Use for Type0, Gaia/Gaia Brain, Soho House, OpenClaw, or agentic-media work whenever a tool interface could be ambiguous, contradictory, overbroad, unsafe, hard for agents to call, or when a coding agent proposes deterministic gates instead of better agent affordances.
+---
+
+# OpenClaw Agentic Tool Designer
+
+A tool is an **agent affordance**, not merely a helper function. Design it so a capable agent can perceive the right state, choose the tool at the right time, call it correctly, recover from errors, and leave an auditable trace.
+
+## First principle
+
+Prefer high-agent-affordance architecture: better source access, typed tools, concise skills, feedback loops, and raw-evidence lanes before adding brittle orchestration, hidden automation, hard gates, or deterministic substitutes for agent judgment.
+
+If you believe a lower-affordance pattern is correct, explain why and get explicit approval before implementing it.
+
+## Use this procedure
+
+1. **Name the affordance.** State what this lets the agent see, decide, verify, or do that it could not do before.
+2. **Delete first.** Ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill/source lane instead.
+3. **Choose the right primitive.** Use the decision table below before writing code.
+4. **Write a tool contract.** Include purpose, use/non-use, schemas, side effects, idempotency, errors, traces, and evals.
+5. **Design for the model caller.** Tool and parameter descriptions are UX copy for the model. Include examples and misuse examples.
+6. **Separate evidence from synthesis.** Raw source output, memory recall, model synthesis, candidate signal, and outbound artifact must be labeled differently.
+7. **Make failure recoverable.** Return structured error codes, human-readable cause, and the next safe action. Do not swallow failures.
+8. **Test tool choice and misuse.** Add evals where the agent should call the tool, should not call it, passes bad args, lacks permission, or faces conflicting tools.
+
+## Choose skill vs tool vs source lane vs harness
+
+| Need | Prefer | Why |
+|---|---|---|
+| Repeatable judgment/process with flexible execution | Skill | Teaches the agent how to work without reducing agency. |
+| Model-callable read/write/action with stable schema | Tool | Gives the agent a typed affordance and traceable side effects. |
+| Evidence capture/retrieval/truth boundary | Source lane | Keeps raw evidence, freshness, and authority explicit. |
+| Prevent invalid state, enforce permissions, validate writes | Deterministic harness | Machines should own invariants, idempotency, authz, and side-effect gates. |
+| Editorial/taste judgment, source chasing, synthesis | Agent with skills/tools | Do not bury ambiguous judgment in deterministic gates by default. |
+
+## Required tool contract
+
+Before implementation, produce a contract. Use `references/tool-contract-template.md` for the expanded template.
+
+Minimum fields:
+
+- `name`
+- `model_description`
+- `purpose`
+- `affordance_bought`
+- `when_to_use`
+- `when_not_to_use`
+- `input_schema`
+- `output_schema`
+- `side_effect_class`: `none`, `read`, `write`, `external_write`, or `destructive`
+- `permission_level`
+- `idempotency_policy`
+- `source_authority_role`
+- `error_codes`
+- `trace_fields`
+- `examples`
+- `misuse_examples`
+- `eval_cases`
+
+Run `scripts/lint_tool_contract.py <contract.json>` when you have a JSON contract.
+
+## Agent-facing CLI requirements
+
+If the tool is a CLI command agents will call:
+
+- Non-interactive by default or provide `--no-input`/`--yes` with safe behavior.
+- Stable `--json` output for data; diagnostics on stderr.
+- Documented exit codes and structured errors.
+- Bounded reads: `--limit`, filters, cursors, truncation metadata.
+- Safe writes: `--dry-run`, idempotency key/natural key, explicit target, undo/rollback note.
+- Target clarity: local vs prod, tenant/project, and actor/principal visible in output.
+- Introspection: `--help` plus an agent-readable command/tool manifest when broad.
+
+## Common failure patterns
+
+See `references/interface-failure-patterns.md` for examples. Watch especially for:
+
+- contradictory flags or defaults;
+- one mega-tool with mode strings instead of orthogonal tools;
+- tool names that describe implementation, not user/model intent;
+- write tools without idempotency;
+- errors that say what failed but not how the agent should recover;
+- raw evidence mixed with model summaries;
+- tools that quietly make editorial decisions while pretending to be validators.
+
+## Type0 / Gaia / Soho examples
+
+- **Type0 source chase:** a tweet/article/media reader should return raw artifacts, source role, freshness, receipt IDs, and gaps. It should not decide whether Sonny accepts the story.
+- **Gaia / Gaia Brain memory:** a memory tool should distinguish raw source, remembered claim, synthesis, contradiction, and confidence. Writes need provenance and idempotency.
+- **Soho House bookmarks:** a bookmark-intake tool should expose original URL/text/media, classification candidate, and source gaps. It should not bury the trail behind a single score.
+
+## Output format
+
+Return:
+
+1. `Tool or non-tool decision` — keep/delete/skill/tool/source-lane/harness.
+2. `Tool contract` — with the required fields above.
+3. `Implementation notes` — smallest viable surface and where validation lives.
+4. `Tests/evals` — tool-choice, schema, permission, side-effect, source-authority, and misuse cases.
+5. `Approval needed` — any lower-affordance design, external write, destructive action, or live side effect.
+
+## When composing with Skill Creator
+
+If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-agentic-skill-creator` for the draft → eval → improve lifecycle.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/openclaw-agentic-tool-designer/SKILL.md" -->
 
 ### File: `.codex/skills/review-agentic-architecture/SKILL.md`
 
@@ -2826,7 +2826,7 @@ agentic_architecture_pack/
 
 ### File: `AGENTS.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="8f79a05063d253ec955f5a25f3f0e632bebc58e71c825e268036bb023164c93c" bytes="12141" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="a9298eadb1012b21c7fee649774e71242b27f5667ffb788d59e06ecb93b43131" bytes="12149" trailing_newline="true" -->
 ````````
 # AGENTS.md
 
@@ -2898,7 +2898,7 @@ Unit tests, schema validation, static checks, local deterministic simulations, a
 
 Deterministic code may enforce invariants, permissions, idempotency, schemas, source-authority labels, budgets, sandbox/tool policy, runtime status, request-level retries, audit logs, and side-effect gates. It must not become the agent's private reasoning loop.
 
-Skill/tool creation rule: use `skills/openclaw-skill-creator` when creating or improving OpenClaw-targeted skills. Use `uber-skill-creator` for general portable SKILL.md skills when it is installed; otherwise use the current runtime's general skill creator. Use `skills/openclaw-agentic-tool-designer` before implementing or reviewing OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
+Skill/tool creation rule: use `skills/openclaw-agentic-skill-creator` when creating or improving OpenClaw-targeted skills. Use `uber-skill-creator` for general portable SKILL.md skills when it is installed; otherwise use the current runtime's general skill creator. Use `skills/openclaw-agentic-tool-designer` before implementing or reviewing OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
 
 Second rule: simplicity/deletion before machinery. Complexity has hidden downstream cost. Before adding an agent, schema, router, policy layer, eval harness, guardrail, workflow, dependency, or automation, run the deletion-first order:
 
@@ -9554,7 +9554,7 @@ Both are required. Neither replaces the other.
 
 ### File: `docs/skills.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/skills.md" sha256="1ccb146f7b047b9d3ff036564395a9b571f2ccd17dd1dd768782223b8e905b33" bytes="3074" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/skills.md" sha256="8be0b43b18dcfc78f8ee1a503a3f46d0b6b6d38567dc3a5f16e453c363a71741" bytes="3090" trailing_newline="true" -->
 ````````
 # Skills for Agentic Systems
 
@@ -9609,7 +9609,7 @@ Keep root instructions short. Put detailed procedures in skills so they load onl
 
 ## Initial skills in this pack
 
-- `openclaw-skill-creator`
+- `openclaw-agentic-skill-creator`
 - `openclaw-agentic-tool-designer`
 - `design-agent-memory`
 - `design-source-lane`
@@ -9623,7 +9623,7 @@ Skills should package procedures that prevent architectural drift: designing sou
 
 Prefer a skill when the repo needs a repeatable way to do a class of work. Prefer a deterministic script or eval when consistency matters more than judgment. Prefer deleting or simplifying the process when the skill would only preserve unnecessary complexity.
 
-When creating or improving OpenClaw-targeted skills, use `openclaw-skill-creator` as the lifecycle: capture intent, draft, test with realistic prompts, compare against a baseline when possible, collect human feedback, and iterate. For general portable SKILL.md skills, use `uber-skill-creator` when it is installed; otherwise use the current runtime's general skill creator. If the OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, use `openclaw-agentic-tool-designer` before implementation so the resulting affordance is agent-usable, typed, recoverable, and traceable.
+When creating or improving OpenClaw-targeted skills, use `openclaw-agentic-skill-creator` as the lifecycle: capture intent, draft, test with realistic prompts, compare against a baseline when possible, collect human feedback, and iterate. For general portable SKILL.md skills, use `uber-skill-creator` when it is installed; otherwise use the current runtime's general skill creator. If the OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, use `openclaw-agentic-tool-designer` before implementation so the resulting affordance is agent-usable, typed, recoverable, and traceable.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/skills.md" -->
 
@@ -10703,129 +10703,16 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="skills/design-source-lane/SKILL.md" -->
 
-### File: `skills/openclaw-agentic-tool-designer/SKILL.md`
+### File: `skills/openclaw-agentic-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-agentic-tool-designer/SKILL.md" sha256="2a01061251aaf56e14f62965fb57cc5c6d9d0f3847fe96cacaca8b9302c127f3" bytes="6247" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-agentic-skill-creator/SKILL.md" sha256="34d7f82acc62f1379fb69a07e6af06c74cb3f8010ac2e6c4145b793685183aaa" bytes="30407" trailing_newline="true" -->
 ````````
 ---
-name: openclaw-agentic-tool-designer
-description: >-
-  Use when adding, modifying, reviewing, or debugging any OpenClaw-facing agent tool or tool-like interface: OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or workflow commands. Use for Type0, Gaia/Gaia Brain, Soho House, OpenClaw, or agentic-media work whenever a tool interface could be ambiguous, contradictory, overbroad, unsafe, hard for agents to call, or when a coding agent proposes deterministic gates instead of better agent affordances.
+name: openclaw-agentic-skill-creator
+description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
 ---
 
-# OpenClaw Agentic Tool Designer
-
-A tool is an **agent affordance**, not merely a helper function. Design it so a capable agent can perceive the right state, choose the tool at the right time, call it correctly, recover from errors, and leave an auditable trace.
-
-## First principle
-
-Prefer high-agent-affordance architecture: better source access, typed tools, concise skills, feedback loops, and raw-evidence lanes before adding brittle orchestration, hidden automation, hard gates, or deterministic substitutes for agent judgment.
-
-If you believe a lower-affordance pattern is correct, explain why and get explicit approval before implementing it.
-
-## Use this procedure
-
-1. **Name the affordance.** State what this lets the agent see, decide, verify, or do that it could not do before.
-2. **Delete first.** Ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill/source lane instead.
-3. **Choose the right primitive.** Use the decision table below before writing code.
-4. **Write a tool contract.** Include purpose, use/non-use, schemas, side effects, idempotency, errors, traces, and evals.
-5. **Design for the model caller.** Tool and parameter descriptions are UX copy for the model. Include examples and misuse examples.
-6. **Separate evidence from synthesis.** Raw source output, memory recall, model synthesis, candidate signal, and outbound artifact must be labeled differently.
-7. **Make failure recoverable.** Return structured error codes, human-readable cause, and the next safe action. Do not swallow failures.
-8. **Test tool choice and misuse.** Add evals where the agent should call the tool, should not call it, passes bad args, lacks permission, or faces conflicting tools.
-
-## Choose skill vs tool vs source lane vs harness
-
-| Need | Prefer | Why |
-|---|---|---|
-| Repeatable judgment/process with flexible execution | Skill | Teaches the agent how to work without reducing agency. |
-| Model-callable read/write/action with stable schema | Tool | Gives the agent a typed affordance and traceable side effects. |
-| Evidence capture/retrieval/truth boundary | Source lane | Keeps raw evidence, freshness, and authority explicit. |
-| Prevent invalid state, enforce permissions, validate writes | Deterministic harness | Machines should own invariants, idempotency, authz, and side-effect gates. |
-| Editorial/taste judgment, source chasing, synthesis | Agent with skills/tools | Do not bury ambiguous judgment in deterministic gates by default. |
-
-## Required tool contract
-
-Before implementation, produce a contract. Use `references/tool-contract-template.md` for the expanded template.
-
-Minimum fields:
-
-- `name`
-- `model_description`
-- `purpose`
-- `affordance_bought`
-- `when_to_use`
-- `when_not_to_use`
-- `input_schema`
-- `output_schema`
-- `side_effect_class`: `none`, `read`, `write`, `external_write`, or `destructive`
-- `permission_level`
-- `idempotency_policy`
-- `source_authority_role`
-- `error_codes`
-- `trace_fields`
-- `examples`
-- `misuse_examples`
-- `eval_cases`
-
-Run `scripts/lint_tool_contract.py <contract.json>` when you have a JSON contract.
-
-## Agent-facing CLI requirements
-
-If the tool is a CLI command agents will call:
-
-- Non-interactive by default or provide `--no-input`/`--yes` with safe behavior.
-- Stable `--json` output for data; diagnostics on stderr.
-- Documented exit codes and structured errors.
-- Bounded reads: `--limit`, filters, cursors, truncation metadata.
-- Safe writes: `--dry-run`, idempotency key/natural key, explicit target, undo/rollback note.
-- Target clarity: local vs prod, tenant/project, and actor/principal visible in output.
-- Introspection: `--help` plus an agent-readable command/tool manifest when broad.
-
-## Common failure patterns
-
-See `references/interface-failure-patterns.md` for examples. Watch especially for:
-
-- contradictory flags or defaults;
-- one mega-tool with mode strings instead of orthogonal tools;
-- tool names that describe implementation, not user/model intent;
-- write tools without idempotency;
-- errors that say what failed but not how the agent should recover;
-- raw evidence mixed with model summaries;
-- tools that quietly make editorial decisions while pretending to be validators.
-
-## Type0 / Gaia / Soho examples
-
-- **Type0 source chase:** a tweet/article/media reader should return raw artifacts, source role, freshness, receipt IDs, and gaps. It should not decide whether Sonny accepts the story.
-- **Gaia / Gaia Brain memory:** a memory tool should distinguish raw source, remembered claim, synthesis, contradiction, and confidence. Writes need provenance and idempotency.
-- **Soho House bookmarks:** a bookmark-intake tool should expose original URL/text/media, classification candidate, and source gaps. It should not bury the trail behind a single score.
-
-## Output format
-
-Return:
-
-1. `Tool or non-tool decision` — keep/delete/skill/tool/source-lane/harness.
-2. `Tool contract` — with the required fields above.
-3. `Implementation notes` — smallest viable surface and where validation lives.
-4. `Tests/evals` — tool-choice, schema, permission, side-effect, source-authority, and misuse cases.
-5. `Approval needed` — any lower-affordance design, external write, destructive action, or live side effect.
-
-## When composing with Skill Creator
-
-If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-skill-creator` for the draft → eval → improve lifecycle.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path="skills/openclaw-agentic-tool-designer/SKILL.md" -->
-
-### File: `skills/openclaw-skill-creator/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-skill-creator/SKILL.md" sha256="ea95db4411a0ecb5686a50ff6ba0879c4c3806dc0553cff4721c06676ca3c0bc" bytes="30383" trailing_newline="true" -->
-````````
----
-name: openclaw-skill-creator
-description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
----
-
-# OpenClaw Skill Creator
+# OpenClaw Agentic Skill Creator
 
 > ## Scope Boundary
 >
@@ -11299,7 +11186,120 @@ Please add steps to your task list, if you have such a thing, to make sure you d
 
 Good luck!
 ````````
-<!-- AGENTIC_BUNDLE_FILE_END path="skills/openclaw-skill-creator/SKILL.md" -->
+<!-- AGENTIC_BUNDLE_FILE_END path="skills/openclaw-agentic-skill-creator/SKILL.md" -->
+
+### File: `skills/openclaw-agentic-tool-designer/SKILL.md`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-agentic-tool-designer/SKILL.md" sha256="8fbe222b7bf2298fd52cb35049dfb23fd36f06f4c825fec1bf650ae1997b1fe5" bytes="6255" trailing_newline="true" -->
+````````
+---
+name: openclaw-agentic-tool-designer
+description: >-
+  Use when adding, modifying, reviewing, or debugging any OpenClaw-facing agent tool or tool-like interface: OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or workflow commands. Use for Type0, Gaia/Gaia Brain, Soho House, OpenClaw, or agentic-media work whenever a tool interface could be ambiguous, contradictory, overbroad, unsafe, hard for agents to call, or when a coding agent proposes deterministic gates instead of better agent affordances.
+---
+
+# OpenClaw Agentic Tool Designer
+
+A tool is an **agent affordance**, not merely a helper function. Design it so a capable agent can perceive the right state, choose the tool at the right time, call it correctly, recover from errors, and leave an auditable trace.
+
+## First principle
+
+Prefer high-agent-affordance architecture: better source access, typed tools, concise skills, feedback loops, and raw-evidence lanes before adding brittle orchestration, hidden automation, hard gates, or deterministic substitutes for agent judgment.
+
+If you believe a lower-affordance pattern is correct, explain why and get explicit approval before implementing it.
+
+## Use this procedure
+
+1. **Name the affordance.** State what this lets the agent see, decide, verify, or do that it could not do before.
+2. **Delete first.** Ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill/source lane instead.
+3. **Choose the right primitive.** Use the decision table below before writing code.
+4. **Write a tool contract.** Include purpose, use/non-use, schemas, side effects, idempotency, errors, traces, and evals.
+5. **Design for the model caller.** Tool and parameter descriptions are UX copy for the model. Include examples and misuse examples.
+6. **Separate evidence from synthesis.** Raw source output, memory recall, model synthesis, candidate signal, and outbound artifact must be labeled differently.
+7. **Make failure recoverable.** Return structured error codes, human-readable cause, and the next safe action. Do not swallow failures.
+8. **Test tool choice and misuse.** Add evals where the agent should call the tool, should not call it, passes bad args, lacks permission, or faces conflicting tools.
+
+## Choose skill vs tool vs source lane vs harness
+
+| Need | Prefer | Why |
+|---|---|---|
+| Repeatable judgment/process with flexible execution | Skill | Teaches the agent how to work without reducing agency. |
+| Model-callable read/write/action with stable schema | Tool | Gives the agent a typed affordance and traceable side effects. |
+| Evidence capture/retrieval/truth boundary | Source lane | Keeps raw evidence, freshness, and authority explicit. |
+| Prevent invalid state, enforce permissions, validate writes | Deterministic harness | Machines should own invariants, idempotency, authz, and side-effect gates. |
+| Editorial/taste judgment, source chasing, synthesis | Agent with skills/tools | Do not bury ambiguous judgment in deterministic gates by default. |
+
+## Required tool contract
+
+Before implementation, produce a contract. Use `references/tool-contract-template.md` for the expanded template.
+
+Minimum fields:
+
+- `name`
+- `model_description`
+- `purpose`
+- `affordance_bought`
+- `when_to_use`
+- `when_not_to_use`
+- `input_schema`
+- `output_schema`
+- `side_effect_class`: `none`, `read`, `write`, `external_write`, or `destructive`
+- `permission_level`
+- `idempotency_policy`
+- `source_authority_role`
+- `error_codes`
+- `trace_fields`
+- `examples`
+- `misuse_examples`
+- `eval_cases`
+
+Run `scripts/lint_tool_contract.py <contract.json>` when you have a JSON contract.
+
+## Agent-facing CLI requirements
+
+If the tool is a CLI command agents will call:
+
+- Non-interactive by default or provide `--no-input`/`--yes` with safe behavior.
+- Stable `--json` output for data; diagnostics on stderr.
+- Documented exit codes and structured errors.
+- Bounded reads: `--limit`, filters, cursors, truncation metadata.
+- Safe writes: `--dry-run`, idempotency key/natural key, explicit target, undo/rollback note.
+- Target clarity: local vs prod, tenant/project, and actor/principal visible in output.
+- Introspection: `--help` plus an agent-readable command/tool manifest when broad.
+
+## Common failure patterns
+
+See `references/interface-failure-patterns.md` for examples. Watch especially for:
+
+- contradictory flags or defaults;
+- one mega-tool with mode strings instead of orthogonal tools;
+- tool names that describe implementation, not user/model intent;
+- write tools without idempotency;
+- errors that say what failed but not how the agent should recover;
+- raw evidence mixed with model summaries;
+- tools that quietly make editorial decisions while pretending to be validators.
+
+## Type0 / Gaia / Soho examples
+
+- **Type0 source chase:** a tweet/article/media reader should return raw artifacts, source role, freshness, receipt IDs, and gaps. It should not decide whether Sonny accepts the story.
+- **Gaia / Gaia Brain memory:** a memory tool should distinguish raw source, remembered claim, synthesis, contradiction, and confidence. Writes need provenance and idempotency.
+- **Soho House bookmarks:** a bookmark-intake tool should expose original URL/text/media, classification candidate, and source gaps. It should not bury the trail behind a single score.
+
+## Output format
+
+Return:
+
+1. `Tool or non-tool decision` — keep/delete/skill/tool/source-lane/harness.
+2. `Tool contract` — with the required fields above.
+3. `Implementation notes` — smallest viable surface and where validation lives.
+4. `Tests/evals` — tool-choice, schema, permission, side-effect, source-authority, and misuse cases.
+5. `Approval needed` — any lower-affordance design, external write, destructive action, or live side effect.
+
+## When composing with Skill Creator
+
+If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-agentic-skill-creator` for the draft → eval → improve lifecycle.
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="skills/openclaw-agentic-tool-designer/SKILL.md" -->
 
 ### File: `skills/review-agentic-architecture/SKILL.md`
 

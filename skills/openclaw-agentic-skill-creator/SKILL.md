@@ -1,9 +1,9 @@
 ---
-name: openclaw-skill-creator
-description: Create, modify, evaluate, or optimize OpenClaw-targeted skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
+name: openclaw-agentic-skill-creator
+description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
 ---
 
-# OpenClaw Skill Creator
+# OpenClaw Agentic Skill Creator
 
 > ## Scope Boundary
 >

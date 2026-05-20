@@ -1,1 +1,0 @@
-../../../skills/openclaw-skill-creator/SKILL.md
