@@ -89,6 +89,14 @@ When handing work to a coding agent, require it to classify every change as one 
 
 The practical anti-pattern is not determinism. The anti-pattern is using deterministic branch logic where the system was supposed to rely on adaptive policy plus the right tools, memories, and skills.
 
+Examples are fixtures, not routing rules. If a user tests the system with
+Germany, Korea, Sentera, Rarebird, or a named Slack channel, that example proves
+the class of behavior to support; it does not justify a one-off `if Germany`
+or `if Sentera` branch. Deterministic helpers may use closed sets only when the
+set comes from a source-authority registry, schema, dataset, or tool response.
+If no source authority exists, the correct deterministic behavior is to report
+the missing source or create the registry, not to hardcode the latest example.
+
 For operating systems that serve an organization or long-lived project, add one more anti-pattern: collapsing every artifact into memory. Raw sources, structured truth, retrieval indexes, human-readable synthesis, sidecar helpers, candidate signals, and outbound reports have different authority. Treating them as the same thing eventually makes the agent confidently wrong.
 
 ---
@@ -708,8 +716,8 @@ files:
     sha256: eda4be3295f831a9e67a9c938f4422ee9ff9ecfa8b8d9491e0888cc938a4e5c0
     trailing_newline: true
   - path: docs/agentic-coding-for-agentic-systems.md
-    bytes: 69551
-    sha256: 6cff6a2197fc2a419f1950c140d1365632406658464d2547ec923fcaf0966644
+    bytes: 70101
+    sha256: 715c70bf603f5468cebb046ed6c499ac435d69ad3455072962e8634d158a56b7
     trailing_newline: true
   - path: docs/agentic-pattern-catalog.md
     bytes: 16566
@@ -3869,7 +3877,7 @@ Do not patch only the visible symptom. If the RCA cannot name the missing invari
 
 ### File: `docs/agentic-coding-for-agentic-systems.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-coding-for-agentic-systems.md" sha256="6cff6a2197fc2a419f1950c140d1365632406658464d2547ec923fcaf0966644" bytes="69551" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/agentic-coding-for-agentic-systems.md" sha256="715c70bf603f5468cebb046ed6c499ac435d69ad3455072962e8634d158a56b7" bytes="70101" trailing_newline="true" -->
 ````````
 # Agentic Coding for Agentic Systems
 
@@ -3904,6 +3912,8 @@ Deterministic harness. Adaptive policy.
 ```
 
 Use deterministic code for schemas, permissions, budgets, checkpoints, idempotency, state, logs, tests, evals, human approval, and tool execution. Use model-owned adaptive behavior for ambiguous interpretation, context selection, tool choice, memory retrieval, task decomposition, plan revision, and synthesis.
+
+Examples are fixtures, not routing rules. If a user tests the system with Germany, Korea, Sentera, Rarebird, or a named Slack channel, that example proves the class of behavior to support; it does not justify a one-off `if Germany` or `if Sentera` branch. Deterministic helpers may use closed sets only when the set comes from a source-authority registry, schema, dataset, or tool response. If no source authority exists, the correct deterministic behavior is to report the missing source or create the registry, not to hardcode the latest example.
 
 A serious agentic system needs more than model calls. It needs a harness: context engine, tool registry, skill system, memory subsystem, source authority, identity resolution, durable execution, hooks, guardrails, traces, evals, and subagent boundaries. Coding agents must have that architecture in their context before they start editing. Otherwise they will fill the missing architecture with the idioms they know: conventional von Neumann control flow.
 

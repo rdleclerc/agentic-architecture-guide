@@ -32,6 +32,8 @@ Deterministic harness. Adaptive policy.
 
 Use deterministic code for schemas, permissions, budgets, checkpoints, idempotency, state, logs, tests, evals, human approval, and tool execution. Use model-owned adaptive behavior for ambiguous interpretation, context selection, tool choice, memory retrieval, task decomposition, plan revision, and synthesis.
 
+Examples are fixtures, not routing rules. If a user tests the system with Germany, Korea, Sentera, Rarebird, or a named Slack channel, that example proves the class of behavior to support; it does not justify a one-off `if Germany` or `if Sentera` branch. Deterministic helpers may use closed sets only when the set comes from a source-authority registry, schema, dataset, or tool response. If no source authority exists, the correct deterministic behavior is to report the missing source or create the registry, not to hardcode the latest example.
+
 A serious agentic system needs more than model calls. It needs a harness: context engine, tool registry, skill system, memory subsystem, source authority, identity resolution, durable execution, hooks, guardrails, traces, evals, and subagent boundaries. Coding agents must have that architecture in their context before they start editing. Otherwise they will fill the missing architecture with the idioms they know: conventional von Neumann control flow.
 
 For systems that serve a real organization, project, or long-lived workflow, the harness also needs an operating model. The agent must know which sources are raw evidence, which stores are authoritative, which pages are synthesis, which indexes are retrieval-only, which helpers are sidecars, which workflows are experimental, and when human attention is too valuable to spend.
