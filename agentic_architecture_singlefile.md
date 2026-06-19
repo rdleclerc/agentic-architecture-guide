@@ -584,6 +584,7 @@ The rebuild parser checks each file payload against the SHA-256 and byte count i
 ├── tests/agentic/__init__.py
 ├── tests/agentic/behavior_fixtures.json
 ├── tests/agentic/test_lint_tool_contract.py
+├── tests/agentic/test_openclaw_skill_creator_contract.py
 ├── tests/agentic/test_validate_agentic_pack.py
 ```
 
@@ -636,8 +637,8 @@ files:
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
   - path: .claude/skills/openclaw-agentic-skill-creator/SKILL.md
-    bytes: 30407
-    sha256: 34d7f82acc62f1379fb69a07e6af06c74cb3f8010ac2e6c4145b793685183aaa
+    bytes: 32794
+    sha256: 4ecca4ec6a903ca30381d7e2d495522f2eca1efb0e2239b1445c63c35506bcfa
     trailing_newline: true
   - path: .claude/skills/openclaw-agentic-tool-designer/SKILL.md
     bytes: 6255
@@ -664,8 +665,8 @@ files:
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
   - path: .codex/skills/openclaw-agentic-skill-creator/SKILL.md
-    bytes: 30407
-    sha256: 34d7f82acc62f1379fb69a07e6af06c74cb3f8010ac2e6c4145b793685183aaa
+    bytes: 32794
+    sha256: 4ecca4ec6a903ca30381d7e2d495522f2eca1efb0e2239b1445c63c35506bcfa
     trailing_newline: true
   - path: .codex/skills/openclaw-agentic-tool-designer/SKILL.md
     bytes: 6255
@@ -820,8 +821,8 @@ files:
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
   - path: skills/openclaw-agentic-skill-creator/SKILL.md
-    bytes: 30407
-    sha256: 34d7f82acc62f1379fb69a07e6af06c74cb3f8010ac2e6c4145b793685183aaa
+    bytes: 32794
+    sha256: 4ecca4ec6a903ca30381d7e2d495522f2eca1efb0e2239b1445c63c35506bcfa
     trailing_newline: true
   - path: skills/openclaw-agentic-tool-designer/SKILL.md
     bytes: 6255
@@ -846,6 +847,10 @@ files:
   - path: tests/agentic/test_lint_tool_contract.py
     bytes: 3336
     sha256: 1f2f12c089e703c38af6a54568e2ac086d3ed1212b150697689974444c2e9d10
+    trailing_newline: true
+  - path: tests/agentic/test_openclaw_skill_creator_contract.py
+    bytes: 1911
+    sha256: bf954addbcffbcbb9fdcc25a89026ae4bfc548780dd7ade6a519b2ab6d3704da
     trailing_newline: true
   - path: tests/agentic/test_validate_agentic_pack.py
     bytes: 5771
@@ -1387,7 +1392,7 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 
 ### File: `.claude/skills/openclaw-agentic-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-agentic-skill-creator/SKILL.md" sha256="34d7f82acc62f1379fb69a07e6af06c74cb3f8010ac2e6c4145b793685183aaa" bytes="30407" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-agentic-skill-creator/SKILL.md" sha256="4ecca4ec6a903ca30381d7e2d495522f2eca1efb0e2239b1445c63c35506bcfa" bytes="32794" trailing_newline="true" -->
 ````````
 ---
 name: openclaw-agentic-skill-creator
@@ -1440,6 +1445,48 @@ description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic ski
 > For OpenClaw, Type0, Gaia/Gaia Brain, agentic-media, and Soho House, skills should preserve high agent affordance: help agents inspect sources, use clear tools, apply judgment, and leave traces. Do not encode brittle gates or deterministic substitutes for judgment into a skill unless the user explicitly approves that lower-affordance design.
 >
 > If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or a summary of it in the skill/eval package.
+
+> ## OpenClaw production contract
+>
+> Keep this contract inline because it is short, safety-critical active context
+> for OpenClaw skills that may touch live sources, Slack, tools, memory, or side
+> effects. Put longer examples and runtime-specific recipes in references.
+>
+> Before creating or expanding an OpenClaw skill, run the smallest useful
+> non-skill check: direct answer, source note, deterministic script, typed tool,
+> or workflow affordance may be the better artifact. Promote to a skill only when
+> discoverability, repeated agent behavior, source-lane use, or reusable
+> judgment guidance is the actual need.
+>
+> For production, library, governed, Slack-visible, side-effecting, or
+> cross-agent OpenClaw skills, capture a compact contract before adding release
+> machinery:
+> - owned recurring job and expected OpenClaw agent behavior
+> - should-trigger, should-not-trigger, and near-neighbor prompts
+> - required source lanes, tools, memory/context packets, and permissions
+> - scripts/assets/references that carry real behavior
+> - trigger evals, output evals, and OpenClaw parity proof receipts
+> - source-authority boundary, side-effect boundary, rollback/idempotency rule,
+>   owner, review cadence, and maturity tier
+>
+> Use maturity tiers to select gates, not to add ceremony: `Scaffold` gets
+> quick validation; `Production` adds trigger/output evals; `Library` adds
+> packaging/runtime checks and route-confusion coverage; `Governed` adds owner
+> review, regression history, live-safe proof, and explicit acceptance evidence.
+>
+> Review findings should be actionable. For every warning or blocker, record the
+> failed gate, why it matters in plain language, the smallest source fix, the
+> evidence artifact, and the verification command or OpenClaw session receipt.
+> Waivers can document warning-level risk, but they do not turn blockers into
+> passes.
+>
+> Any usage or drift loop must be metadata-only and local-first by default:
+> skill name/version, event type, source/client, command name without arguments,
+> outcome, failure type, and timestamp are acceptable. Do not store raw prompts,
+> Slack messages, transcripts, private files, model outputs, command arguments,
+> or reviewer notes as telemetry. Convert missed triggers into trigger evals,
+> bad outputs into output eval assertions, and script/tool errors into smoke
+> tests or tool-contract fixes.
 
 A skill for creating new OpenClaw skills and iteratively improving them.
 
@@ -2124,7 +2171,7 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 
 ### File: `.codex/skills/openclaw-agentic-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-agentic-skill-creator/SKILL.md" sha256="34d7f82acc62f1379fb69a07e6af06c74cb3f8010ac2e6c4145b793685183aaa" bytes="30407" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-agentic-skill-creator/SKILL.md" sha256="4ecca4ec6a903ca30381d7e2d495522f2eca1efb0e2239b1445c63c35506bcfa" bytes="32794" trailing_newline="true" -->
 ````````
 ---
 name: openclaw-agentic-skill-creator
@@ -2177,6 +2224,48 @@ description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic ski
 > For OpenClaw, Type0, Gaia/Gaia Brain, agentic-media, and Soho House, skills should preserve high agent affordance: help agents inspect sources, use clear tools, apply judgment, and leave traces. Do not encode brittle gates or deterministic substitutes for judgment into a skill unless the user explicitly approves that lower-affordance design.
 >
 > If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or a summary of it in the skill/eval package.
+
+> ## OpenClaw production contract
+>
+> Keep this contract inline because it is short, safety-critical active context
+> for OpenClaw skills that may touch live sources, Slack, tools, memory, or side
+> effects. Put longer examples and runtime-specific recipes in references.
+>
+> Before creating or expanding an OpenClaw skill, run the smallest useful
+> non-skill check: direct answer, source note, deterministic script, typed tool,
+> or workflow affordance may be the better artifact. Promote to a skill only when
+> discoverability, repeated agent behavior, source-lane use, or reusable
+> judgment guidance is the actual need.
+>
+> For production, library, governed, Slack-visible, side-effecting, or
+> cross-agent OpenClaw skills, capture a compact contract before adding release
+> machinery:
+> - owned recurring job and expected OpenClaw agent behavior
+> - should-trigger, should-not-trigger, and near-neighbor prompts
+> - required source lanes, tools, memory/context packets, and permissions
+> - scripts/assets/references that carry real behavior
+> - trigger evals, output evals, and OpenClaw parity proof receipts
+> - source-authority boundary, side-effect boundary, rollback/idempotency rule,
+>   owner, review cadence, and maturity tier
+>
+> Use maturity tiers to select gates, not to add ceremony: `Scaffold` gets
+> quick validation; `Production` adds trigger/output evals; `Library` adds
+> packaging/runtime checks and route-confusion coverage; `Governed` adds owner
+> review, regression history, live-safe proof, and explicit acceptance evidence.
+>
+> Review findings should be actionable. For every warning or blocker, record the
+> failed gate, why it matters in plain language, the smallest source fix, the
+> evidence artifact, and the verification command or OpenClaw session receipt.
+> Waivers can document warning-level risk, but they do not turn blockers into
+> passes.
+>
+> Any usage or drift loop must be metadata-only and local-first by default:
+> skill name/version, event type, source/client, command name without arguments,
+> outcome, failure type, and timestamp are acceptable. Do not store raw prompts,
+> Slack messages, transcripts, private files, model outputs, command arguments,
+> or reviewer notes as telemetry. Convert missed triggers into trigger evals,
+> bad outputs into output eval assertions, and script/tool errors into smoke
+> tests or tool-contract fixes.
 
 A skill for creating new OpenClaw skills and iteratively improving them.
 
@@ -10715,7 +10804,7 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 
 ### File: `skills/openclaw-agentic-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-agentic-skill-creator/SKILL.md" sha256="34d7f82acc62f1379fb69a07e6af06c74cb3f8010ac2e6c4145b793685183aaa" bytes="30407" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-agentic-skill-creator/SKILL.md" sha256="4ecca4ec6a903ca30381d7e2d495522f2eca1efb0e2239b1445c63c35506bcfa" bytes="32794" trailing_newline="true" -->
 ````````
 ---
 name: openclaw-agentic-skill-creator
@@ -10768,6 +10857,48 @@ description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic ski
 > For OpenClaw, Type0, Gaia/Gaia Brain, agentic-media, and Soho House, skills should preserve high agent affordance: help agents inspect sources, use clear tools, apply judgment, and leave traces. Do not encode brittle gates or deterministic substitutes for judgment into a skill unless the user explicitly approves that lower-affordance design.
 >
 > If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or a summary of it in the skill/eval package.
+
+> ## OpenClaw production contract
+>
+> Keep this contract inline because it is short, safety-critical active context
+> for OpenClaw skills that may touch live sources, Slack, tools, memory, or side
+> effects. Put longer examples and runtime-specific recipes in references.
+>
+> Before creating or expanding an OpenClaw skill, run the smallest useful
+> non-skill check: direct answer, source note, deterministic script, typed tool,
+> or workflow affordance may be the better artifact. Promote to a skill only when
+> discoverability, repeated agent behavior, source-lane use, or reusable
+> judgment guidance is the actual need.
+>
+> For production, library, governed, Slack-visible, side-effecting, or
+> cross-agent OpenClaw skills, capture a compact contract before adding release
+> machinery:
+> - owned recurring job and expected OpenClaw agent behavior
+> - should-trigger, should-not-trigger, and near-neighbor prompts
+> - required source lanes, tools, memory/context packets, and permissions
+> - scripts/assets/references that carry real behavior
+> - trigger evals, output evals, and OpenClaw parity proof receipts
+> - source-authority boundary, side-effect boundary, rollback/idempotency rule,
+>   owner, review cadence, and maturity tier
+>
+> Use maturity tiers to select gates, not to add ceremony: `Scaffold` gets
+> quick validation; `Production` adds trigger/output evals; `Library` adds
+> packaging/runtime checks and route-confusion coverage; `Governed` adds owner
+> review, regression history, live-safe proof, and explicit acceptance evidence.
+>
+> Review findings should be actionable. For every warning or blocker, record the
+> failed gate, why it matters in plain language, the smallest source fix, the
+> evidence artifact, and the verification command or OpenClaw session receipt.
+> Waivers can document warning-level risk, but they do not turn blockers into
+> passes.
+>
+> Any usage or drift loop must be metadata-only and local-first by default:
+> skill name/version, event type, source/client, command name without arguments,
+> outcome, failure type, and timestamp are acceptable. Do not store raw prompts,
+> Slack messages, transcripts, private files, model outputs, command arguments,
+> or reviewer notes as telemetry. Convert missed triggers into trigger evals,
+> bad outputs into output eval assertions, and script/tool errors into smoke
+> tests or tool-contract fixes.
 
 A skill for creating new OpenClaw skills and iteratively improving them.
 
@@ -11517,6 +11648,55 @@ def test_lint_tool_contract_rejects_unhelpful_error_codes(tmp_path: Path) -> Non
     assert "error_codes[0]_missing_agent_next_action" in payload["errors"]
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="tests/agentic/test_lint_tool_contract.py" -->
+
+### File: `tests/agentic/test_openclaw_skill_creator_contract.py`
+
+<!-- AGENTIC_BUNDLE_FILE_START path="tests/agentic/test_openclaw_skill_creator_contract.py" sha256="bf954addbcffbcbb9fdcc25a89026ae4bfc548780dd7ade6a519b2ab6d3704da" bytes="1911" trailing_newline="true" -->
+````````
+from pathlib import Path
+import unittest
+
+
+ROOT = Path(__file__).resolve().parents[2]
+SKILL = ROOT / "skills" / "openclaw-agentic-skill-creator" / "SKILL.md"
+
+
+class OpenClawSkillCreatorContractTests(unittest.TestCase):
+    def test_keeps_production_contract_and_privacy_boundary(self) -> None:
+        body = SKILL.read_text(encoding="utf-8")
+
+        self.assertIn("OpenClaw production contract", body)
+        self.assertIn("Keep this contract inline because it is short, safety-critical active context", body)
+        self.assertIn("non-skill check", body)
+        self.assertIn("direct answer, source note, deterministic script, typed tool", body)
+        self.assertIn("should-trigger, should-not-trigger, and near-neighbor prompts", body)
+        self.assertIn("required source lanes, tools, memory/context packets, and permissions", body)
+        self.assertIn("OpenClaw parity proof receipts", body)
+        self.assertIn("source-authority boundary, side-effect boundary, rollback/idempotency rule", body)
+        self.assertIn("Scaffold", body)
+        self.assertIn("Production", body)
+        self.assertIn("Library", body)
+        self.assertIn("Governed", body)
+        self.assertIn("verification command or OpenClaw session receipt", body)
+        self.assertIn("metadata-only and local-first", body)
+        self.assertIn("Do not store raw prompts", body)
+
+        section = body.split("> ## OpenClaw production contract", 1)[1].split(
+            "A skill for creating new OpenClaw skills", 1
+        )[0]
+        self.assertLess(len(section.encode("utf-8")), 3000)
+        self.assertNotIn("```python", section)
+        self.assertNotIn("```sh", section)
+        self.assertNotIn("```bash", section)
+        self.assertNotIn("```js", section)
+        self.assertNotIn("subprocess", section)
+        self.assertNotIn("sqlite", section.lower())
+
+
+if __name__ == "__main__":
+    unittest.main()
+````````
+<!-- AGENTIC_BUNDLE_FILE_END path="tests/agentic/test_openclaw_skill_creator_contract.py" -->
 
 ### File: `tests/agentic/test_validate_agentic_pack.py`
 

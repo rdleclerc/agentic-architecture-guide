@@ -50,6 +50,48 @@ description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic ski
 >
 > If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or a summary of it in the skill/eval package.
 
+> ## OpenClaw production contract
+>
+> Keep this contract inline because it is short, safety-critical active context
+> for OpenClaw skills that may touch live sources, Slack, tools, memory, or side
+> effects. Put longer examples and runtime-specific recipes in references.
+>
+> Before creating or expanding an OpenClaw skill, run the smallest useful
+> non-skill check: direct answer, source note, deterministic script, typed tool,
+> or workflow affordance may be the better artifact. Promote to a skill only when
+> discoverability, repeated agent behavior, source-lane use, or reusable
+> judgment guidance is the actual need.
+>
+> For production, library, governed, Slack-visible, side-effecting, or
+> cross-agent OpenClaw skills, capture a compact contract before adding release
+> machinery:
+> - owned recurring job and expected OpenClaw agent behavior
+> - should-trigger, should-not-trigger, and near-neighbor prompts
+> - required source lanes, tools, memory/context packets, and permissions
+> - scripts/assets/references that carry real behavior
+> - trigger evals, output evals, and OpenClaw parity proof receipts
+> - source-authority boundary, side-effect boundary, rollback/idempotency rule,
+>   owner, review cadence, and maturity tier
+>
+> Use maturity tiers to select gates, not to add ceremony: `Scaffold` gets
+> quick validation; `Production` adds trigger/output evals; `Library` adds
+> packaging/runtime checks and route-confusion coverage; `Governed` adds owner
+> review, regression history, live-safe proof, and explicit acceptance evidence.
+>
+> Review findings should be actionable. For every warning or blocker, record the
+> failed gate, why it matters in plain language, the smallest source fix, the
+> evidence artifact, and the verification command or OpenClaw session receipt.
+> Waivers can document warning-level risk, but they do not turn blockers into
+> passes.
+>
+> Any usage or drift loop must be metadata-only and local-first by default:
+> skill name/version, event type, source/client, command name without arguments,
+> outcome, failure type, and timestamp are acceptable. Do not store raw prompts,
+> Slack messages, transcripts, private files, model outputs, command arguments,
+> or reviewer notes as telemetry. Convert missed triggers into trigger evals,
+> bad outputs into output eval assertions, and script/tool errors into smoke
+> tests or tool-contract fixes.
+
 A skill for creating new OpenClaw skills and iteratively improving them.
 
 At a high level, the process of creating a skill goes like this:
