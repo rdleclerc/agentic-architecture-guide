@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Legacy Claude Code trigger-eval helper; adapt before running in Codex or plain OpenClaw.
 """Run trigger evaluation for a skill description.
 
 Tests whether a skill's description causes Claude to trigger (read the skill)

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Legacy Claude Code trigger-eval helper; adapt before running in Codex or plain OpenClaw.
 """Run the eval + improve loop until all pass or max iterations reached.
 
 Combines run_eval.py and improve_description.py in a loop, tracking history
