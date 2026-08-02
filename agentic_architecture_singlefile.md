@@ -637,8 +637,8 @@ files:
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
   - path: .claude/skills/openclaw-agentic-skill-creator/SKILL.md
-    bytes: 32794
-    sha256: 4ecca4ec6a903ca30381d7e2d495522f2eca1efb0e2239b1445c63c35506bcfa
+    bytes: 10220
+    sha256: dbca080ae4edef4054c43b56b44ff624cb3a5ce513ae243057abb2502eb20620
     trailing_newline: true
   - path: .claude/skills/openclaw-agentic-tool-designer/SKILL.md
     bytes: 6255
@@ -665,8 +665,8 @@ files:
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
   - path: .codex/skills/openclaw-agentic-skill-creator/SKILL.md
-    bytes: 32794
-    sha256: 4ecca4ec6a903ca30381d7e2d495522f2eca1efb0e2239b1445c63c35506bcfa
+    bytes: 10220
+    sha256: dbca080ae4edef4054c43b56b44ff624cb3a5ce513ae243057abb2502eb20620
     trailing_newline: true
   - path: .codex/skills/openclaw-agentic-tool-designer/SKILL.md
     bytes: 6255
@@ -821,8 +821,8 @@ files:
     sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
     trailing_newline: true
   - path: skills/openclaw-agentic-skill-creator/SKILL.md
-    bytes: 32794
-    sha256: 4ecca4ec6a903ca30381d7e2d495522f2eca1efb0e2239b1445c63c35506bcfa
+    bytes: 10220
+    sha256: dbca080ae4edef4054c43b56b44ff624cb3a5ce513ae243057abb2502eb20620
     trailing_newline: true
   - path: skills/openclaw-agentic-tool-designer/SKILL.md
     bytes: 6255
@@ -849,8 +849,8 @@ files:
     sha256: 1f2f12c089e703c38af6a54568e2ac086d3ed1212b150697689974444c2e9d10
     trailing_newline: true
   - path: tests/agentic/test_openclaw_skill_creator_contract.py
-    bytes: 1911
-    sha256: bf954addbcffbcbb9fdcc25a89026ae4bfc548780dd7ade6a519b2ab6d3704da
+    bytes: 1844
+    sha256: 07259f8eb141cf3b269f4e77564d72401135bb28a6e243d42c9516c0c455ce19
     trailing_newline: true
   - path: tests/agentic/test_validate_agentic_pack.py
     bytes: 5771
@@ -1392,7 +1392,7 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 
 ### File: `.claude/skills/openclaw-agentic-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-agentic-skill-creator/SKILL.md" sha256="4ecca4ec6a903ca30381d7e2d495522f2eca1efb0e2239b1445c63c35506bcfa" bytes="32794" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-agentic-skill-creator/SKILL.md" sha256="dbca080ae4edef4054c43b56b44ff624cb3a5ce513ae243057abb2502eb20620" bytes="10220" trailing_newline="true" -->
 ````````
 ---
 name: openclaw-agentic-skill-creator
@@ -1401,519 +1401,92 @@ description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic ski
 
 # OpenClaw Agentic Skill Creator
 
-> ## Scope Boundary
->
-> This skill creates and improves **OpenClaw-targeted skills**. It is not the
-> general portable skill creator. For general SKILL.md skills, use
-> `uber-skill-creator` from `agentic-uber-skills` when it is installed.
->
-> This skill is adapted from public skill-creator methodology for the OpenClaw
-> runtime. Keep provenance visible, but do not copy proprietary or leaked code.
->
-> When running from Codex, Claude, or another runtime, translate the workflow into that runtime's terms. Do not run
-> `claude -p`, `sessions_spawn`, Claude.ai, Cowork, or `present_files` steps
-> unless the current runtime explicitly provides them and the user has approved
-> that execution path.
->
-> ## OpenClaw Runtime Notes
->
-> **OpenClaw executor**: In OpenClaw runtimes that expose `sessions_spawn`, use it with `mode: "run"` instead of assuming another runtime's native subagent system. Example:
-> ```
-> sessions_spawn(task="Execute this task with skill at <path>...",
->   mode="run", runTimeoutSeconds=300)
-> ```
->
-> **Legacy description optimization scripts**: The bundled `run_loop.py` and `run_eval.py`
-> scripts originated in Claude Code trigger testing. In Codex or plain OpenClaw sessions,
-> do not run them as-is. Use manual held-out trigger evals, a runtime-native executor, or
-> adapt the scripts before use.
->
-> **Eval viewer (headless)**: OpenClaw typically runs headless. Always use `--static`:
-> ```bash
-> python eval-viewer/generate_review.py <workspace>/iteration-N \
->   --skill-name "my-skill" \
->   --benchmark <workspace>/iteration-N/benchmark.json \
->   --static /tmp/skill-review.html
-> ```
-> Then send the HTML file to the user via `message(action=send, filePath=...)`.
->
-> **Runtime-specific notes**: Runtime-specific automation is optional. The portable
-> contract is intent capture, draft, eval, review, improve, and package.
->
-> ## Local agent-affordance extensions
->
-> For OpenClaw, Type0, Gaia/Gaia Brain, agentic-media, and Soho House, skills should preserve high agent affordance: help agents inspect sources, use clear tools, apply judgment, and leave traces. Do not encode brittle gates or deterministic substitutes for judgment into a skill unless the user explicitly approves that lower-affordance design.
->
-> If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or a summary of it in the skill/eval package.
-
-> ## OpenClaw production contract
->
-> Keep this contract inline because it is short, safety-critical active context
-> for OpenClaw skills that may touch live sources, Slack, tools, memory, or side
-> effects. Put longer examples and runtime-specific recipes in references.
->
-> Before creating or expanding an OpenClaw skill, run the smallest useful
-> non-skill check: direct answer, source note, deterministic script, typed tool,
-> or workflow affordance may be the better artifact. Promote to a skill only when
-> discoverability, repeated agent behavior, source-lane use, or reusable
-> judgment guidance is the actual need.
->
-> For production, library, governed, Slack-visible, side-effecting, or
-> cross-agent OpenClaw skills, capture a compact contract before adding release
-> machinery:
-> - owned recurring job and expected OpenClaw agent behavior
-> - should-trigger, should-not-trigger, and near-neighbor prompts
-> - required source lanes, tools, memory/context packets, and permissions
-> - scripts/assets/references that carry real behavior
-> - trigger evals, output evals, and OpenClaw parity proof receipts
-> - source-authority boundary, side-effect boundary, rollback/idempotency rule,
->   owner, review cadence, and maturity tier
->
-> Use maturity tiers to select gates, not to add ceremony: `Scaffold` gets
-> quick validation; `Production` adds trigger/output evals; `Library` adds
-> packaging/runtime checks and route-confusion coverage; `Governed` adds owner
-> review, regression history, live-safe proof, and explicit acceptance evidence.
->
-> Review findings should be actionable. For every warning or blocker, record the
-> failed gate, why it matters in plain language, the smallest source fix, the
-> evidence artifact, and the verification command or OpenClaw session receipt.
-> Waivers can document warning-level risk, but they do not turn blockers into
-> passes.
->
-> Any usage or drift loop must be metadata-only and local-first by default:
-> skill name/version, event type, source/client, command name without arguments,
-> outcome, failure type, and timestamp are acceptable. Do not store raw prompts,
-> Slack messages, transcripts, private files, model outputs, command arguments,
-> or reviewer notes as telemetry. Convert missed triggers into trigger evals,
-> bad outputs into output eval assertions, and script/tool errors into smoke
-> tests or tool-contract fixes.
-
-A skill for creating new OpenClaw skills and iteratively improving them.
-
-At a high level, the process of creating a skill goes like this:
-
-- Decide what you want the skill to do and roughly how it should do it
-- Write a draft of the skill
-- Create a few test prompts and run a fresh agent or runtime-supported executor with access to the skill
-- Help the user evaluate the results both qualitatively and quantitatively
-  - While the runs happen in the background, draft some quantitative evals if there aren't any (if there are some, you can either use as is or modify if you feel something needs to change about them). Then explain them to the user (or if they already existed, explain the ones that already exist)
-  - Use the `eval-viewer/generate_review.py` script to show the user the results for them to look at, and also let them look at the quantitative metrics
-- Rewrite the skill based on feedback from the user's evaluation of the results (and also if there are any glaring flaws that become apparent from the quantitative benchmarks)
-- Repeat until you're satisfied
-- Expand the test set and try again at larger scale
-
-Your job when using this skill is to figure out where the user is in this process and then jump in and help them progress through these stages. So for instance, maybe they're like "I want to make a skill for X". You can help narrow down what they mean, write a draft, write the test cases, figure out how they want to evaluate, run all the prompts, and repeat.
+Create and improve skills for OpenClaw, Gaia/Gaia Brain, Type0, Soho House, and shared agentic-media work. This skill is the OpenClaw-specific counterpart to `uber-skill-creator`: use this when the skill depends on OpenClaw runtime behavior, tenant/workspace policy, live source lanes, agent affordance, local proof conventions, or live-safe OpenClaw parity receipts. Use `uber-skill-creator` for portable SKILL.md work that should run across Codex, Claude, and compatible agents without OpenClaw-specific assumptions.
 
-On the other hand, maybe they already have a draft of the skill. In this case you can go straight to the eval/iterate part of the loop.
+Keep provenance visible when adapting public skill-creator methods, but do not copy proprietary or leaked code. Translate runtime examples into the current executor; do not assume Claude-specific subprocesses, slash commands, browser viewers, or OpenClaw tools unless this runtime exposes them and the user approved that path.
 
-Of course, you should always be flexible and if the user is like "I don't need to run a bunch of evaluations, just vibe with me", you can do that instead.
+## OpenClaw Production Contract
 
-Then after the skill is done (but again, the order is flexible), you can also run the skill description improver, which we have a whole separate script for, to optimize the triggering of the skill.
+Before creating or expanding a skill, run the smallest useful non-skill check. A direct answer, source note, typed tool, source-lane contract, deterministic script, or workflow affordance may be better. Promote to a skill only when repeated agent behavior, discovery, source-lane use, or reusable judgment guidance is the real need.
 
-Cool? Cool.
+For production, library, governed, Slack-visible, side-effecting, tenant-sensitive, or cross-agent skills, capture the compact contract before adding release machinery:
 
-## Communicating with the user
+- owned recurring job and expected OpenClaw agent behavior;
+- should-trigger, should-not-trigger, and near-neighbor prompts;
+- tenant, workspace, channel, account, project, and actor boundaries;
+- required source lanes, tools, memory/context packets, permissions, and live-data access;
+- scripts, assets, references, and deterministic checks that carry real behavior;
+- trigger evals, output evals, live-safe OpenClaw proof receipts, owner, review cadence, maturity tier, and rollback/idempotency rule;
+- source-authority boundary, identity-resolution behavior, synthesis boundary, side-effect boundary, budget/fallback policy, and attention/notification behavior.
 
-The skill creator is liable to be used by people across a wide range of familiarity with coding jargon. If you haven't heard (and how could you, it's only very recently that it started), there's a trend now where the power of Claude is inspiring plumbers to open up their terminals, parents and grandparents to google "how to install npm". On the other hand, the bulk of users are probably fairly computer-literate.
+Use maturity tiers to select gates, not ceremony: `Scaffold` gets quick validation; `Production` adds trigger/output evals; `Library` adds packaging/runtime checks and route-confusion coverage; `Governed` adds owner review, regression history, live-safe proof, and explicit acceptance evidence.
 
-So please pay attention to context cues to understand how to phrase your communication! In the default case, just to give you some idea:
+Any usage or drift loop must be metadata-only and local-first by default. Acceptable telemetry is skill name/version, event type, source/client, command name without arguments, outcome, failure type, and timestamp. Do not store raw prompts, Slack messages, transcripts, private files, model outputs, command arguments, or reviewer notes as telemetry.
 
-- "evaluation" and "benchmark" are borderline, but OK
-- for "JSON" and "assertion" you want to see serious cues from the user that they know what those things are before using them without explaining them
+## Affordance And Proof Rules
 
-It's OK to briefly explain terms if you're in doubt, and feel free to clarify terms with a short definition if you're unsure if the user will get it.
+Preserve high agent affordance. Help agents inspect sources, choose clear tools, apply judgment, recover from gaps, and leave traces. Do not encode brittle gates, hidden routing layers, semantic judges, or deterministic substitutes for judgment unless the user explicitly approves the lower-affordance design.
 
----
+If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or summary in the skill/eval package.
 
-## Creating a skill
+For behavior that an OpenClaw agent is supposed to perform, prove the workflow before readiness claims:
 
-### Capture Intent
+1. Run a fresh self-subagent or runtime-native executor with the intended context, tools, source lanes, skills, recovery instructions, and no hidden rationale.
+2. If it fails, improve affordances: context packet, skill wording, tool descriptions, source access, task frame, recovery instructions, or audit trail. Do not patch with private harness state.
+3. Run the same workflow with a real OpenClaw agent using only normal OpenClaw scaffold plus the successful context/skill/tool profile.
+4. Preserve receipts: self-subagent result, OpenClaw `sessionKey`/`sessionId` or transcript path, tool outputs, source artifacts, eval outputs, and any redactions.
 
-Start by understanding the user's intent. The current conversation might already contain a workflow the user wants to capture (e.g., they say "turn this into a skill"). If so, extract answers from the conversation history first — the tools used, the sequence of steps, corrections the user made, input/output formats observed. The user may need to fill the gaps, and should confirm before proceeding to the next step.
+If live proof is unsafe or unavailable, label the gap. Do not present local validation or synthetic evals as OpenClaw parity proof.
 
-1. What should this skill enable an OpenClaw agent to do?
-2. When should this skill trigger? (what user phrases/contexts)
-3. What's the expected output format?
-4. Should we set up test cases to verify the skill works? Skills with objectively verifiable outputs (file transforms, data extraction, code generation, fixed workflow steps) benefit from test cases. Skills with subjective outputs (writing style, art) often don't need them. Suggest the appropriate default based on the skill type, but let the user decide.
+## Creation Workflow
 
-### Interview and Research
+1. **Classify and route.** If the request is portable, redirect to `uber-skill-creator`. If it is OpenClaw-specific, continue here.
+2. **Capture intent from evidence first.** Mine the conversation, files, transcripts, source lanes, operator corrections, and observed tools before asking questions.
+3. **Ask only material gaps.** Clarify trigger/non-trigger contexts, expected outputs, tenant/source/tool permissions, side effects, success criteria, and proof requirements.
+4. **Draft the skill.** Keep trigger information in the frontmatter `description`. Keep the body procedural, concise, and OpenClaw-specific. Use imperative instructions, short rationale where it improves behavior, and references/scripts/assets only when they reduce active-context load or repeated work.
+5. **Use progressive disclosure.** `SKILL.md` is active context; larger examples, schemas, and recipes belong in `references/`; deterministic repeatable work belongs in `scripts/`; reusable output inputs belong in `assets/`. For multi-variant skills, route to only the relevant reference.
+6. **Validate shape.** Run the available quick validator and any package-specific lint/tests. Validation checks package integrity; it does not replace agentic proof.
 
-Proactively ask questions about edge cases, input/output formats, example files, success criteria, and dependencies. Wait to write test prompts until you've got this part ironed out.
+## Eval-Driven Iteration
 
-Check available MCPs - if useful for research (searching docs, finding similar skills, looking up best practices), research in parallel via subagents if available, otherwise inline. Come prepared with context to reduce burden on the user.
+Use eval-driven iteration for production/library/governed skills, broadly installed skills, behavior-changing skills, or any skill whose correctness is not obvious from inspection.
 
-### Write the SKILL.md
+1. **Draft realistic eval prompts.** Use real operator-style OpenClaw/Gaia/Type0/Soho/agentic-media tasks. Include should-trigger, should-not-trigger, near-neighbor, source-lane, side-effect, and tenant-boundary cases as relevant.
+2. **Run with-skill and baseline together.** For a new skill, baseline is no skill. For an existing skill, baseline is the previous or snapshotted version. Use the current runtime's fresh subagent/executor; in OpenClaw, use the exposed session runner when available.
+3. **Capture artifacts.** Store prompts, input files, outputs, transcripts, timing/token data when available, tool receipts, source handles, and eval metadata under an iteration workspace.
+4. **Draft assertions while runs execute.** Objective checks should cover observable outputs, source-authority labels, forbidden side effects, receipt presence, and tenant/source boundaries. Keep subjective judgment for human review.
+5. **Grade and aggregate.** Use scripts where checks are deterministic. Produce a benchmark summary and preserve qualitative notes; read transcripts, not only final outputs.
+6. **Show the human the results.** Prefer the bundled `eval-viewer/generate_review.py` with `--static` in headless OpenClaw environments, or an equivalent static report when the viewer is unavailable.
+7. **Iterate on affordance.** Improve context, wording, resources, examples, tool descriptions, or source-lane guidance. Avoid overfitting to a tiny prompt set or adding coercive rules where clearer affordances would work.
+8. **Repeat until acceptable.** Expand the eval set before claiming broad coverage.
 
-Based on the user interview, fill in these components:
-
-- **name**: Skill identifier
-- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic portable skill-authoring tasks that belong to `uber-skill-creator`.
-- **compatibility**: Required tools, dependencies (optional, rarely needed)
-- **the rest of the skill :)**
-
-### Skill Writing Guide
-
-#### Anatomy of a Skill
-
-```
-skill-name/
-├── SKILL.md (required)
-│   ├── YAML frontmatter (name, description required)
-│   └── Markdown instructions
-└── Bundled Resources (optional)
-    ├── scripts/    - Executable code for deterministic/repetitive tasks
-    ├── references/ - Docs loaded into context as needed
-    └── assets/     - Files used in output (templates, icons, fonts)
-```
-
-#### Progressive Disclosure
-
-Skills use a three-level loading system:
-1. **Metadata** (name + description) - Always in context (~100 words)
-2. **SKILL.md body** - In context whenever skill triggers (<500 lines ideal)
-3. **Bundled resources** - As needed (unlimited, scripts can execute without loading)
-
-These word counts are approximate and you can feel free to go longer if needed.
-
-**Key patterns:**
-- Keep SKILL.md under 500 lines; if you're approaching this limit, add an additional layer of hierarchy along with clear pointers about where the model using the skill should go next to follow up.
-- Reference files clearly from SKILL.md with guidance on when to read them
-- For large reference files (>300 lines), include a table of contents
-
-**Domain organization**: When a skill supports multiple domains/frameworks, organize by variant:
-```
-cloud-deploy/
-├── SKILL.md (workflow + selection)
-└── references/
-    ├── aws.md
-    ├── gcp.md
-    └── azure.md
-```
-Claude reads only the relevant reference file.
-
-#### Principle of Lack of Surprise
-
-This goes without saying, but skills must not contain malware, exploit code, or any content that could compromise system security. A skill's contents should not surprise the user in their intent if described. Don't go along with requests to create misleading skills or skills designed to facilitate unauthorized access, data exfiltration, or other malicious activities. Things like a "roleplay as an XYZ" are OK though.
-
-#### Writing Patterns
-
-Prefer using the imperative form in instructions.
-
-**Defining output formats** - You can do it like this:
-```markdown
-## Report structure
-ALWAYS use this exact template:
-# [Title]
-## Executive summary
-## Key findings
-## Recommendations
-```
-
-**Examples pattern** - It's useful to include examples. You can format them like this (but if "Input" and "Output" are in the examples you might want to deviate a little):
-```markdown
-## Commit message format
-**Example 1:**
-Input: Added user authentication with JWT tokens
-Output: feat(auth): implement JWT-based authentication
-```
-
-### Writing Style
-
-Try to explain to the model why things are important in lieu of heavy-handed musty MUSTs. Use theory of mind and try to make the skill general and not super-narrow to specific examples. Start by writing a draft and then look at it with fresh eyes and improve it.
-
-### Test Cases
-
-After writing the skill draft, come up with 2-3 realistic test prompts — the kind of thing a real user would actually say. Share them with the user: [you don't have to use this exact language] "Here are a few test cases I'd like to try. Do these look right, or do you want to add more?" Then run them.
-
-Save test cases to `evals/evals.json`. Don't write assertions yet — just the prompts. You'll draft assertions in the next step while the runs are in progress.
-
-```json
-{
-  "skill_name": "example-skill",
-  "evals": [
-    {
-      "id": 1,
-      "prompt": "User's task prompt",
-      "expected_output": "Description of expected result",
-      "files": []
-    }
-  ]
-}
-```
-
-See `references/schemas.md` for the full schema (including the `assertions` field, which you'll add later).
-
-## Running and evaluating test cases
-
-This section is one continuous sequence — don't stop partway through. Do NOT use `/skill-test` or any other testing skill.
-
-Put results in `<skill-name>-workspace/` as a sibling to the skill directory. Within the workspace, organize results by iteration (`iteration-1/`, `iteration-2/`, etc.) and within that, each test case gets a directory (`eval-0/`, `eval-1/`, etc.). Don't create all of this upfront — just create directories as you go.
-
-### Step 1: Spawn all runs (with-skill AND baseline) in the same turn
-
-For each test case, spawn two subagents in the same turn — one with the skill, one without. This is important: don't spawn the with-skill runs first and then come back for baselines later. Launch everything at once so it all finishes around the same time.
-
-**With-skill run:**
-
-```
-Execute this task:
-- Skill path: <path-to-skill>
-- Task: <eval prompt>
-- Input files: <eval files if any, or "none">
-- Save outputs to: <workspace>/iteration-<N>/eval-<ID>/with_skill/outputs/
-- Outputs to save: <what the user cares about — e.g., "the .docx file", "the final CSV">
-```
-
-**Baseline run** (same prompt, but the baseline depends on context):
-- **Creating a new skill**: no skill at all. Same prompt, no skill path, save to `without_skill/outputs/`.
-- **Improving an existing skill**: the old version. Before editing, snapshot the skill (`cp -r <skill-path> <workspace>/skill-snapshot/`), then point the baseline subagent at the snapshot. Save to `old_skill/outputs/`.
-
-Write an `eval_metadata.json` for each test case (assertions can be empty for now). Give each eval a descriptive name based on what it's testing — not just "eval-0". Use this name for the directory too. If this iteration uses new or modified eval prompts, create these files for each new eval directory — don't assume they carry over from previous iterations.
-
-```json
-{
-  "eval_id": 0,
-  "eval_name": "descriptive-name-here",
-  "prompt": "The user's task prompt",
-  "assertions": []
-}
-```
-
-### Step 2: While runs are in progress, draft assertions
-
-Don't just wait for the runs to finish — you can use this time productively. Draft quantitative assertions for each test case and explain them to the user. If assertions already exist in `evals/evals.json`, review them and explain what they check.
-
-Good assertions are objectively verifiable and have descriptive names — they should read clearly in the benchmark viewer so someone glancing at the results immediately understands what each one checks. Subjective skills (writing style, design quality) are better evaluated qualitatively — don't force assertions onto things that need human judgment.
-
-Update the `eval_metadata.json` files and `evals/evals.json` with the assertions once drafted. Also explain to the user what they'll see in the viewer — both the qualitative outputs and the quantitative benchmark.
-
-### Step 3: As runs complete, capture timing data
-
-When each subagent task completes, you receive a notification containing `total_tokens` and `duration_ms`. Save this data immediately to `timing.json` in the run directory:
-
-```json
-{
-  "total_tokens": 84852,
-  "duration_ms": 23332,
-  "total_duration_seconds": 23.3
-}
-```
-
-This is the only opportunity to capture this data — it comes through the task notification and isn't persisted elsewhere. Process each notification as it arrives rather than trying to batch them.
-
-### Step 4: Grade, aggregate, and launch the viewer
-
-Once all runs are done:
-
-1. **Grade each run** — spawn a grader subagent (or grade inline) that reads `agents/grader.md` and evaluates each assertion against the outputs. Save results to `grading.json` in each run directory. The grading.json expectations array must use the fields `text`, `passed`, and `evidence` (not `name`/`met`/`details` or other variants) — the viewer depends on these exact field names. For assertions that can be checked programmatically, write and run a script rather than eyeballing it — scripts are faster, more reliable, and can be reused across iterations.
-
-2. **Aggregate into benchmark** — run the aggregation script from the skill-creator directory:
-   ```bash
-   python -m scripts.aggregate_benchmark <workspace>/iteration-N --skill-name <name>
-   ```
-   This produces `benchmark.json` and `benchmark.md` with pass_rate, time, and tokens for each configuration, with mean ± stddev and the delta. If generating benchmark.json manually, see `references/schemas.md` for the exact schema the viewer expects.
-Put each with_skill version before its baseline counterpart.
-
-3. **Do an analyst pass** — read the benchmark data and surface patterns the aggregate stats might hide. See `agents/analyzer.md` (the "Analyzing Benchmark Results" section) for what to look for — things like assertions that always pass regardless of skill (non-discriminating), high-variance evals (possibly flaky), and time/token tradeoffs.
-
-4. **Launch the viewer** with both qualitative outputs and quantitative data:
-   ```bash
-   nohup python <skill-creator-path>/eval-viewer/generate_review.py \
-     <workspace>/iteration-N \
-     --skill-name "my-skill" \
-     --benchmark <workspace>/iteration-N/benchmark.json \
-     > /dev/null 2>&1 &
-   VIEWER_PID=$!
-   ```
-   For iteration 2+, also pass `--previous-workspace <workspace>/iteration-<N-1>`.
-
-   **Headless environments:** If `webbrowser.open()` is not available or the environment has no display, use `--static <output_path>` to write a standalone HTML file instead of starting a server. If the viewer writes feedback to a file, copy that feedback file into the workspace directory for the next iteration to pick up.
-
-Note: please use generate_review.py to create the viewer; there's no need to write custom HTML.
-
-5. **Tell the user** something like: "I've opened the results in your browser. There are two tabs — 'Outputs' lets you click through each test case and leave feedback, 'Benchmark' shows the quantitative comparison. When you're done, come back here and let me know."
-
-### What the user sees in the viewer
-
-The "Outputs" tab shows one test case at a time:
-- **Prompt**: the task that was given
-- **Output**: the files the skill produced, rendered inline where possible
-- **Previous Output** (iteration 2+): collapsed section showing last iteration's output
-- **Formal Grades** (if grading was run): collapsed section showing assertion pass/fail
-- **Feedback**: a textbox that auto-saves as they type
-- **Previous Feedback** (iteration 2+): their comments from last time, shown below the textbox
-
-The "Benchmark" tab shows the stats summary: pass rates, timing, and token usage for each configuration, with per-eval breakdowns and analyst observations.
-
-Navigation is via prev/next buttons or arrow keys. When done, they click "Submit All Reviews" which saves all feedback to `feedback.json`.
-
-### Step 5: Read the feedback
-
-When the user tells you they're done, read `feedback.json`:
-
-```json
-{
-  "reviews": [
-    {"run_id": "eval-0-with_skill", "feedback": "the chart is missing axis labels", "timestamp": "..."},
-    {"run_id": "eval-1-with_skill", "feedback": "", "timestamp": "..."},
-    {"run_id": "eval-2-with_skill", "feedback": "perfect, love this", "timestamp": "..."}
-  ],
-  "status": "complete"
-}
-```
-
-Empty feedback means the user thought it was fine. Focus your improvements on the test cases where the user had specific complaints.
-
-Kill the viewer server when you're done with it:
-
-```bash
-kill $VIEWER_PID 2>/dev/null
-```
-
----
-
-## Improving the skill
-
-This is the heart of the loop. You've run the test cases, the user has reviewed the results, and now you need to make the skill better based on their feedback.
-
-### How to think about improvements
-
-1. **Generalize from the feedback.** The big picture thing that's happening here is that we're trying to create skills that can be used a million times (maybe literally, maybe even more who knows) across many different prompts. Here you and the user are iterating on only a few examples over and over again because it helps move faster. The user knows these examples in and out and it's quick for them to assess new outputs. But if the skill you and the user are codeveloping works only for those examples, it's useless. Rather than put in fiddly overfitty changes, or oppressively constrictive MUSTs, if there's some stubborn issue, you might try branching out and using different metaphors, or recommending different patterns of working. It's relatively cheap to try and maybe you'll land on something great.
-
-2. **Keep the prompt lean.** Remove things that aren't pulling their weight. Make sure to read the transcripts, not just the final outputs — if it looks like the skill is making the model waste a bunch of time doing things that are unproductive, you can try getting rid of the parts of the skill that are making it do that and seeing what happens.
-
-3. **Explain the why.** Try hard to explain the **why** behind everything you're asking the model to do. Today's LLMs are *smart*. They have good theory of mind and when given a good harness can go beyond rote instructions and really make things happen. Even if the feedback from the user is terse or frustrated, try to actually understand the task and why the user is writing what they wrote, and what they actually wrote, and then transmit this understanding into the instructions. If you find yourself writing ALWAYS or NEVER in all caps, or using super rigid structures, that's a yellow flag — if possible, reframe and explain the reasoning so that the model understands why the thing you're asking for is important. That's a more humane, powerful, and effective approach.
-
-4. **Look for repeated work across test cases.** Read the transcripts from the test runs and notice if the subagents all independently wrote similar helper scripts or took the same multi-step approach to something. If all 3 test cases resulted in the subagent writing a `create_docx.py` or a `build_chart.py`, that's a strong signal the skill should bundle that script. Write it once, put it in `scripts/`, and tell the skill to use it. This saves every future invocation from reinventing the wheel.
-
-This task is pretty important (we are trying to create billions a year in economic value here!) and your thinking time is not the blocker; take your time and really mull things over. I'd suggest writing a draft revision and then looking at it anew and making improvements. Really do your best to get into the head of the user and understand what they want and need.
-
-### The iteration loop
-
-After improving the skill:
-
-1. Apply your improvements to the skill
-2. Rerun all test cases into a new `iteration-<N+1>/` directory, including baseline runs. If you're creating a new skill, the baseline is always `without_skill` (no skill) — that stays the same across iterations. If you're improving an existing skill, use your judgment on what makes sense as the baseline: the original version the user came in with, or the previous iteration.
-3. Launch the reviewer with `--previous-workspace` pointing at the previous iteration
-4. Wait for the user to review and tell you they're done
-5. Read the new feedback, improve again, repeat
-
-Keep going until:
-- The user says they're happy
-- The feedback is all empty (everything looks good)
-- You're not making meaningful progress
-
----
-
-## Advanced: Blind comparison
-
-For situations where you want a more rigorous comparison between two versions of a skill (e.g., the user asks "is the new version actually better?"), there's a blind comparison system. Read `agents/comparator.md` and `agents/analyzer.md` for the details. The basic idea is: give two outputs to an independent agent without telling it which is which, and let it judge quality. Then analyze why the winner won.
-
-This is optional, requires subagents, and most users won't need it. The human review loop is usually sufficient.
-
----
+Convert missed triggers into trigger evals, bad outputs into output assertions, and script/tool errors into smoke tests or tool-contract fixes.
 
 ## Description Optimization
 
-The description field in SKILL.md frontmatter is the primary mechanism that determines whether an agent invokes a skill. After creating or improving an OpenClaw skill, offer to optimize the description for better triggering accuracy.
+The frontmatter `description` is the primary trigger surface. After creating or materially changing a skill, tune it with held-out trigger evals:
 
-### Step 1: Generate trigger eval queries
+1. Create 20 realistic queries: roughly half should trigger and half should not. Include messy operator phrasing, local project names, channel/source-lane/tool names, abbreviations, adjacent portable-skill requests, and near misses.
+2. Review the eval set with the user when practical; weak trigger evals produce weak descriptions.
+3. Keep a champion and challenger. Score the current description, revise from failures, then retest on held-out examples. Promote only when the challenger improves trigger precision/recall without weakening must-pass cases or stealing portable work from `uber-skill-creator`.
+4. Report before/after descriptions, scores, failure modes, and remaining ambiguity.
 
-Create 20 eval queries — a mix of should-trigger and should-not-trigger. Save as JSON:
+If the current runtime has no approved trigger-eval executor, run the held-out cases manually with fresh context or runtime-supported subagents and record the observed trigger behavior.
 
-```json
-[
-  {"query": "the user prompt", "should_trigger": true},
-  {"query": "another prompt", "should_trigger": false}
-]
-```
+## Packaging And Reporting
 
-The queries must be realistic and something an OpenClaw, Gaia, Type0, Soho, or agentic-media operator would actually type. Not abstract requests, but requests that are concrete and specific and have a good amount of detail. For instance, file paths, local project context, channel names, source-lane names, workflow names, company names, URLs, tool names, or messy user shorthand. Some might be lowercase or contain abbreviations, typos, or casual speech. Use a mix of different lengths, and focus on edge cases rather than making them clear-cut.
+Package only when the current runtime and user need a `.skill` artifact. Otherwise, leave the skill in the repo and report the path, validation commands, proof receipts, and gaps.
 
-Bad: `"Format this data"`, `"Extract text from PDF"`, `"Create a chart"`
+Final reports for OpenClaw skills should state: component classification, model-owned decisions, deterministic harness responsibilities, tools available/missing, memory behavior, source-authority and truth/synthesis boundaries, identity behavior, context behavior, skills used or added, guardrails/approvals, ownership/adoption state, attention behavior, backpressure/budget/fallback behavior, deletion/simplification result, cost/complexity tradeoff, RCA/human-counterfactual if relevant, rollback plan, acceptance proof, manual-proof gaps, and tests/evals added.
 
-Good: `"ok so my boss just sent me this xlsx file (its in my downloads, called something like 'Q4 sales final FINAL v2.xlsx') and she wants me to add a column that shows the profit margin as a percentage. The revenue is in column C and costs are in column D i think"`
+## Reference Files
 
-For the **should-trigger** queries (8-10), think about coverage. You want different phrasings of the same intent — some formal, some casual. Include cases where the user doesn't explicitly name the skill or file type but clearly needs it. Throw in some uncommon use cases and cases where this skill competes with another but should win.
+Read only what the task needs:
 
-For the **should-not-trigger** queries (8-10), the most valuable ones are the near-misses — queries that share keywords or concepts with the skill but actually need something different. Think adjacent domains, ambiguous phrasing where a naive keyword match would trigger but shouldn't, and cases where the query touches on something the skill does but in a context where another tool is more appropriate.
-
-The key thing to avoid: don't make should-not-trigger queries obviously irrelevant. "Write a fibonacci function" as a negative test for a PDF skill is too easy — it doesn't test anything. The negative cases should be genuinely tricky.
-
-### Step 2: Review with user
-
-Present the eval set to the user for review using the HTML template:
-
-1. Read the template from `assets/eval_review.html`
-2. Replace the placeholders:
-   - `__EVAL_DATA_PLACEHOLDER__` → the JSON array of eval items (no quotes around it — it's a JS variable assignment)
-   - `__SKILL_NAME_PLACEHOLDER__` → the skill's name
-   - `__SKILL_DESCRIPTION_PLACEHOLDER__` → the skill's current description
-3. Write to a temp file (e.g., `/tmp/eval_review_<skill-name>.html`) and open it: `open /tmp/eval_review_<skill-name>.html`
-4. The user can edit queries, toggle should-trigger, add/remove entries, then click "Export Eval Set"
-5. The file downloads to `~/Downloads/eval_set.json` — check the Downloads folder for the most recent version in case there are multiple (e.g., `eval_set (1).json`)
-
-This step matters — bad eval queries lead to bad descriptions.
-
-### Step 3: Run the optimization loop
-
-Tell the user: "This will take some time — I'll run or simulate the optimization loop and check on it periodically."
-
-Save the eval set to the workspace. If the current runtime has an approved trigger-eval executor, use it. If it does not, run the held-out trigger/non-trigger cases manually in a fresh context or with runtime-supported subagents, then record the observed trigger behavior and revise the description from that evidence.
-
-This handles the full optimization loop automatically only in runtimes where its executor is available. It splits the eval set into 60% train and 40% held-out test, evaluates the current description, proposes improvements based on what failed, and re-evaluates each new description on both train and test. When the automatic executor is not available, run the eval set manually with a fresh Codex/OpenClaw context and generate a static HTML report from the recorded results.
-
-### How skill triggering works
-
-Understanding the triggering mechanism helps design better eval queries. Skills appear to an agent with their name and description, and the agent decides whether to consult a skill based on that description plus runtime policy. Simple one-step queries may not need a skill even if the description matches. Complex, multi-step, or specialized OpenClaw queries should trigger when the description matches.
-
-This means your eval queries should be substantive enough that Claude would actually benefit from consulting a skill. Simple queries like "read file X" are poor test cases — they won't trigger skills regardless of description quality.
-
-### Step 4: Apply the result
-
-Take `best_description` from the JSON output and update the skill's SKILL.md frontmatter. Show the user before/after and report the scores.
-
----
-
-### Package and Present
-
-Package only when the current runtime and user actually need a portable `.skill` artifact. Otherwise, leave the skill in the repo and report the path.
-
-```bash
-python -m scripts.package_skill <path/to/skill-folder>
-```
-
-After packaging, report the resulting `.skill` file path.
-
----
-
-## Reference files
-
-The agents/ directory contains instructions for specialized subagents. Read them when you need to spawn the relevant subagent.
-
-- `agents/grader.md` — How to evaluate assertions against outputs
-- `agents/comparator.md` — How to do blind A/B comparison between two outputs
-- `agents/analyzer.md` — How to analyze why one version beat another
-
-The references/ directory has additional documentation:
-- `references/schemas.md` — JSON structures for evals.json, grading.json, etc.
-
----
-
-Repeating one more time the core loop here for emphasis:
-
-- Figure out what the skill is about
-- Draft or edit the skill
-- Run a fresh agent or runtime-supported executor with access to the skill on test prompts
-- With the user, evaluate the outputs:
-  - Create benchmark.json and run `eval-viewer/generate_review.py` to help the user review them
-  - Run quantitative evals
-- Repeat until you and the user are satisfied
-- Package the final skill and return it to the user.
-
-Please add steps to your task list, if you have such a thing, to make sure you don't forget. Specifically include "Create evals JSON and run `eval-viewer/generate_review.py` or an equivalent static report so the human can review test cases" before revising the skill from your own judgment.
-
-Good luck!
+- `references/schemas.md` for eval, grading, and benchmark JSON shapes.
+- `agents/grader.md` when grading assertions against outputs.
+- `agents/analyzer.md` when interpreting benchmark patterns and hidden regressions.
+- `agents/comparator.md` for blind A/B comparison when a rigorous version comparison is needed.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/openclaw-agentic-skill-creator/SKILL.md" -->
 
@@ -2171,7 +1744,7 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 
 ### File: `.codex/skills/openclaw-agentic-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-agentic-skill-creator/SKILL.md" sha256="4ecca4ec6a903ca30381d7e2d495522f2eca1efb0e2239b1445c63c35506bcfa" bytes="32794" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-agentic-skill-creator/SKILL.md" sha256="dbca080ae4edef4054c43b56b44ff624cb3a5ce513ae243057abb2502eb20620" bytes="10220" trailing_newline="true" -->
 ````````
 ---
 name: openclaw-agentic-skill-creator
@@ -2180,519 +1753,92 @@ description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic ski
 
 # OpenClaw Agentic Skill Creator
 
-> ## Scope Boundary
->
-> This skill creates and improves **OpenClaw-targeted skills**. It is not the
-> general portable skill creator. For general SKILL.md skills, use
-> `uber-skill-creator` from `agentic-uber-skills` when it is installed.
->
-> This skill is adapted from public skill-creator methodology for the OpenClaw
-> runtime. Keep provenance visible, but do not copy proprietary or leaked code.
->
-> When running from Codex, Claude, or another runtime, translate the workflow into that runtime's terms. Do not run
-> `claude -p`, `sessions_spawn`, Claude.ai, Cowork, or `present_files` steps
-> unless the current runtime explicitly provides them and the user has approved
-> that execution path.
->
-> ## OpenClaw Runtime Notes
->
-> **OpenClaw executor**: In OpenClaw runtimes that expose `sessions_spawn`, use it with `mode: "run"` instead of assuming another runtime's native subagent system. Example:
-> ```
-> sessions_spawn(task="Execute this task with skill at <path>...",
->   mode="run", runTimeoutSeconds=300)
-> ```
->
-> **Legacy description optimization scripts**: The bundled `run_loop.py` and `run_eval.py`
-> scripts originated in Claude Code trigger testing. In Codex or plain OpenClaw sessions,
-> do not run them as-is. Use manual held-out trigger evals, a runtime-native executor, or
-> adapt the scripts before use.
->
-> **Eval viewer (headless)**: OpenClaw typically runs headless. Always use `--static`:
-> ```bash
-> python eval-viewer/generate_review.py <workspace>/iteration-N \
->   --skill-name "my-skill" \
->   --benchmark <workspace>/iteration-N/benchmark.json \
->   --static /tmp/skill-review.html
-> ```
-> Then send the HTML file to the user via `message(action=send, filePath=...)`.
->
-> **Runtime-specific notes**: Runtime-specific automation is optional. The portable
-> contract is intent capture, draft, eval, review, improve, and package.
->
-> ## Local agent-affordance extensions
->
-> For OpenClaw, Type0, Gaia/Gaia Brain, agentic-media, and Soho House, skills should preserve high agent affordance: help agents inspect sources, use clear tools, apply judgment, and leave traces. Do not encode brittle gates or deterministic substitutes for judgment into a skill unless the user explicitly approves that lower-affordance design.
->
-> If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or a summary of it in the skill/eval package.
-
-> ## OpenClaw production contract
->
-> Keep this contract inline because it is short, safety-critical active context
-> for OpenClaw skills that may touch live sources, Slack, tools, memory, or side
-> effects. Put longer examples and runtime-specific recipes in references.
->
-> Before creating or expanding an OpenClaw skill, run the smallest useful
-> non-skill check: direct answer, source note, deterministic script, typed tool,
-> or workflow affordance may be the better artifact. Promote to a skill only when
-> discoverability, repeated agent behavior, source-lane use, or reusable
-> judgment guidance is the actual need.
->
-> For production, library, governed, Slack-visible, side-effecting, or
-> cross-agent OpenClaw skills, capture a compact contract before adding release
-> machinery:
-> - owned recurring job and expected OpenClaw agent behavior
-> - should-trigger, should-not-trigger, and near-neighbor prompts
-> - required source lanes, tools, memory/context packets, and permissions
-> - scripts/assets/references that carry real behavior
-> - trigger evals, output evals, and OpenClaw parity proof receipts
-> - source-authority boundary, side-effect boundary, rollback/idempotency rule,
->   owner, review cadence, and maturity tier
->
-> Use maturity tiers to select gates, not to add ceremony: `Scaffold` gets
-> quick validation; `Production` adds trigger/output evals; `Library` adds
-> packaging/runtime checks and route-confusion coverage; `Governed` adds owner
-> review, regression history, live-safe proof, and explicit acceptance evidence.
->
-> Review findings should be actionable. For every warning or blocker, record the
-> failed gate, why it matters in plain language, the smallest source fix, the
-> evidence artifact, and the verification command or OpenClaw session receipt.
-> Waivers can document warning-level risk, but they do not turn blockers into
-> passes.
->
-> Any usage or drift loop must be metadata-only and local-first by default:
-> skill name/version, event type, source/client, command name without arguments,
-> outcome, failure type, and timestamp are acceptable. Do not store raw prompts,
-> Slack messages, transcripts, private files, model outputs, command arguments,
-> or reviewer notes as telemetry. Convert missed triggers into trigger evals,
-> bad outputs into output eval assertions, and script/tool errors into smoke
-> tests or tool-contract fixes.
-
-A skill for creating new OpenClaw skills and iteratively improving them.
-
-At a high level, the process of creating a skill goes like this:
-
-- Decide what you want the skill to do and roughly how it should do it
-- Write a draft of the skill
-- Create a few test prompts and run a fresh agent or runtime-supported executor with access to the skill
-- Help the user evaluate the results both qualitatively and quantitatively
-  - While the runs happen in the background, draft some quantitative evals if there aren't any (if there are some, you can either use as is or modify if you feel something needs to change about them). Then explain them to the user (or if they already existed, explain the ones that already exist)
-  - Use the `eval-viewer/generate_review.py` script to show the user the results for them to look at, and also let them look at the quantitative metrics
-- Rewrite the skill based on feedback from the user's evaluation of the results (and also if there are any glaring flaws that become apparent from the quantitative benchmarks)
-- Repeat until you're satisfied
-- Expand the test set and try again at larger scale
-
-Your job when using this skill is to figure out where the user is in this process and then jump in and help them progress through these stages. So for instance, maybe they're like "I want to make a skill for X". You can help narrow down what they mean, write a draft, write the test cases, figure out how they want to evaluate, run all the prompts, and repeat.
+Create and improve skills for OpenClaw, Gaia/Gaia Brain, Type0, Soho House, and shared agentic-media work. This skill is the OpenClaw-specific counterpart to `uber-skill-creator`: use this when the skill depends on OpenClaw runtime behavior, tenant/workspace policy, live source lanes, agent affordance, local proof conventions, or live-safe OpenClaw parity receipts. Use `uber-skill-creator` for portable SKILL.md work that should run across Codex, Claude, and compatible agents without OpenClaw-specific assumptions.
 
-On the other hand, maybe they already have a draft of the skill. In this case you can go straight to the eval/iterate part of the loop.
+Keep provenance visible when adapting public skill-creator methods, but do not copy proprietary or leaked code. Translate runtime examples into the current executor; do not assume Claude-specific subprocesses, slash commands, browser viewers, or OpenClaw tools unless this runtime exposes them and the user approved that path.
 
-Of course, you should always be flexible and if the user is like "I don't need to run a bunch of evaluations, just vibe with me", you can do that instead.
+## OpenClaw Production Contract
 
-Then after the skill is done (but again, the order is flexible), you can also run the skill description improver, which we have a whole separate script for, to optimize the triggering of the skill.
+Before creating or expanding a skill, run the smallest useful non-skill check. A direct answer, source note, typed tool, source-lane contract, deterministic script, or workflow affordance may be better. Promote to a skill only when repeated agent behavior, discovery, source-lane use, or reusable judgment guidance is the real need.
 
-Cool? Cool.
+For production, library, governed, Slack-visible, side-effecting, tenant-sensitive, or cross-agent skills, capture the compact contract before adding release machinery:
 
-## Communicating with the user
+- owned recurring job and expected OpenClaw agent behavior;
+- should-trigger, should-not-trigger, and near-neighbor prompts;
+- tenant, workspace, channel, account, project, and actor boundaries;
+- required source lanes, tools, memory/context packets, permissions, and live-data access;
+- scripts, assets, references, and deterministic checks that carry real behavior;
+- trigger evals, output evals, live-safe OpenClaw proof receipts, owner, review cadence, maturity tier, and rollback/idempotency rule;
+- source-authority boundary, identity-resolution behavior, synthesis boundary, side-effect boundary, budget/fallback policy, and attention/notification behavior.
 
-The skill creator is liable to be used by people across a wide range of familiarity with coding jargon. If you haven't heard (and how could you, it's only very recently that it started), there's a trend now where the power of Claude is inspiring plumbers to open up their terminals, parents and grandparents to google "how to install npm". On the other hand, the bulk of users are probably fairly computer-literate.
+Use maturity tiers to select gates, not ceremony: `Scaffold` gets quick validation; `Production` adds trigger/output evals; `Library` adds packaging/runtime checks and route-confusion coverage; `Governed` adds owner review, regression history, live-safe proof, and explicit acceptance evidence.
 
-So please pay attention to context cues to understand how to phrase your communication! In the default case, just to give you some idea:
+Any usage or drift loop must be metadata-only and local-first by default. Acceptable telemetry is skill name/version, event type, source/client, command name without arguments, outcome, failure type, and timestamp. Do not store raw prompts, Slack messages, transcripts, private files, model outputs, command arguments, or reviewer notes as telemetry.
 
-- "evaluation" and "benchmark" are borderline, but OK
-- for "JSON" and "assertion" you want to see serious cues from the user that they know what those things are before using them without explaining them
+## Affordance And Proof Rules
 
-It's OK to briefly explain terms if you're in doubt, and feel free to clarify terms with a short definition if you're unsure if the user will get it.
+Preserve high agent affordance. Help agents inspect sources, choose clear tools, apply judgment, recover from gaps, and leave traces. Do not encode brittle gates, hidden routing layers, semantic judges, or deterministic substitutes for judgment unless the user explicitly approves the lower-affordance design.
 
----
+If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or summary in the skill/eval package.
 
-## Creating a skill
+For behavior that an OpenClaw agent is supposed to perform, prove the workflow before readiness claims:
 
-### Capture Intent
+1. Run a fresh self-subagent or runtime-native executor with the intended context, tools, source lanes, skills, recovery instructions, and no hidden rationale.
+2. If it fails, improve affordances: context packet, skill wording, tool descriptions, source access, task frame, recovery instructions, or audit trail. Do not patch with private harness state.
+3. Run the same workflow with a real OpenClaw agent using only normal OpenClaw scaffold plus the successful context/skill/tool profile.
+4. Preserve receipts: self-subagent result, OpenClaw `sessionKey`/`sessionId` or transcript path, tool outputs, source artifacts, eval outputs, and any redactions.
 
-Start by understanding the user's intent. The current conversation might already contain a workflow the user wants to capture (e.g., they say "turn this into a skill"). If so, extract answers from the conversation history first — the tools used, the sequence of steps, corrections the user made, input/output formats observed. The user may need to fill the gaps, and should confirm before proceeding to the next step.
+If live proof is unsafe or unavailable, label the gap. Do not present local validation or synthetic evals as OpenClaw parity proof.
 
-1. What should this skill enable an OpenClaw agent to do?
-2. When should this skill trigger? (what user phrases/contexts)
-3. What's the expected output format?
-4. Should we set up test cases to verify the skill works? Skills with objectively verifiable outputs (file transforms, data extraction, code generation, fixed workflow steps) benefit from test cases. Skills with subjective outputs (writing style, art) often don't need them. Suggest the appropriate default based on the skill type, but let the user decide.
+## Creation Workflow
 
-### Interview and Research
+1. **Classify and route.** If the request is portable, redirect to `uber-skill-creator`. If it is OpenClaw-specific, continue here.
+2. **Capture intent from evidence first.** Mine the conversation, files, transcripts, source lanes, operator corrections, and observed tools before asking questions.
+3. **Ask only material gaps.** Clarify trigger/non-trigger contexts, expected outputs, tenant/source/tool permissions, side effects, success criteria, and proof requirements.
+4. **Draft the skill.** Keep trigger information in the frontmatter `description`. Keep the body procedural, concise, and OpenClaw-specific. Use imperative instructions, short rationale where it improves behavior, and references/scripts/assets only when they reduce active-context load or repeated work.
+5. **Use progressive disclosure.** `SKILL.md` is active context; larger examples, schemas, and recipes belong in `references/`; deterministic repeatable work belongs in `scripts/`; reusable output inputs belong in `assets/`. For multi-variant skills, route to only the relevant reference.
+6. **Validate shape.** Run the available quick validator and any package-specific lint/tests. Validation checks package integrity; it does not replace agentic proof.
 
-Proactively ask questions about edge cases, input/output formats, example files, success criteria, and dependencies. Wait to write test prompts until you've got this part ironed out.
+## Eval-Driven Iteration
 
-Check available MCPs - if useful for research (searching docs, finding similar skills, looking up best practices), research in parallel via subagents if available, otherwise inline. Come prepared with context to reduce burden on the user.
+Use eval-driven iteration for production/library/governed skills, broadly installed skills, behavior-changing skills, or any skill whose correctness is not obvious from inspection.
 
-### Write the SKILL.md
+1. **Draft realistic eval prompts.** Use real operator-style OpenClaw/Gaia/Type0/Soho/agentic-media tasks. Include should-trigger, should-not-trigger, near-neighbor, source-lane, side-effect, and tenant-boundary cases as relevant.
+2. **Run with-skill and baseline together.** For a new skill, baseline is no skill. For an existing skill, baseline is the previous or snapshotted version. Use the current runtime's fresh subagent/executor; in OpenClaw, use the exposed session runner when available.
+3. **Capture artifacts.** Store prompts, input files, outputs, transcripts, timing/token data when available, tool receipts, source handles, and eval metadata under an iteration workspace.
+4. **Draft assertions while runs execute.** Objective checks should cover observable outputs, source-authority labels, forbidden side effects, receipt presence, and tenant/source boundaries. Keep subjective judgment for human review.
+5. **Grade and aggregate.** Use scripts where checks are deterministic. Produce a benchmark summary and preserve qualitative notes; read transcripts, not only final outputs.
+6. **Show the human the results.** Prefer the bundled `eval-viewer/generate_review.py` with `--static` in headless OpenClaw environments, or an equivalent static report when the viewer is unavailable.
+7. **Iterate on affordance.** Improve context, wording, resources, examples, tool descriptions, or source-lane guidance. Avoid overfitting to a tiny prompt set or adding coercive rules where clearer affordances would work.
+8. **Repeat until acceptable.** Expand the eval set before claiming broad coverage.
 
-Based on the user interview, fill in these components:
-
-- **name**: Skill identifier
-- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic portable skill-authoring tasks that belong to `uber-skill-creator`.
-- **compatibility**: Required tools, dependencies (optional, rarely needed)
-- **the rest of the skill :)**
-
-### Skill Writing Guide
-
-#### Anatomy of a Skill
-
-```
-skill-name/
-├── SKILL.md (required)
-│   ├── YAML frontmatter (name, description required)
-│   └── Markdown instructions
-└── Bundled Resources (optional)
-    ├── scripts/    - Executable code for deterministic/repetitive tasks
-    ├── references/ - Docs loaded into context as needed
-    └── assets/     - Files used in output (templates, icons, fonts)
-```
-
-#### Progressive Disclosure
-
-Skills use a three-level loading system:
-1. **Metadata** (name + description) - Always in context (~100 words)
-2. **SKILL.md body** - In context whenever skill triggers (<500 lines ideal)
-3. **Bundled resources** - As needed (unlimited, scripts can execute without loading)
-
-These word counts are approximate and you can feel free to go longer if needed.
-
-**Key patterns:**
-- Keep SKILL.md under 500 lines; if you're approaching this limit, add an additional layer of hierarchy along with clear pointers about where the model using the skill should go next to follow up.
-- Reference files clearly from SKILL.md with guidance on when to read them
-- For large reference files (>300 lines), include a table of contents
-
-**Domain organization**: When a skill supports multiple domains/frameworks, organize by variant:
-```
-cloud-deploy/
-├── SKILL.md (workflow + selection)
-└── references/
-    ├── aws.md
-    ├── gcp.md
-    └── azure.md
-```
-Claude reads only the relevant reference file.
-
-#### Principle of Lack of Surprise
-
-This goes without saying, but skills must not contain malware, exploit code, or any content that could compromise system security. A skill's contents should not surprise the user in their intent if described. Don't go along with requests to create misleading skills or skills designed to facilitate unauthorized access, data exfiltration, or other malicious activities. Things like a "roleplay as an XYZ" are OK though.
-
-#### Writing Patterns
-
-Prefer using the imperative form in instructions.
-
-**Defining output formats** - You can do it like this:
-```markdown
-## Report structure
-ALWAYS use this exact template:
-# [Title]
-## Executive summary
-## Key findings
-## Recommendations
-```
-
-**Examples pattern** - It's useful to include examples. You can format them like this (but if "Input" and "Output" are in the examples you might want to deviate a little):
-```markdown
-## Commit message format
-**Example 1:**
-Input: Added user authentication with JWT tokens
-Output: feat(auth): implement JWT-based authentication
-```
-
-### Writing Style
-
-Try to explain to the model why things are important in lieu of heavy-handed musty MUSTs. Use theory of mind and try to make the skill general and not super-narrow to specific examples. Start by writing a draft and then look at it with fresh eyes and improve it.
-
-### Test Cases
-
-After writing the skill draft, come up with 2-3 realistic test prompts — the kind of thing a real user would actually say. Share them with the user: [you don't have to use this exact language] "Here are a few test cases I'd like to try. Do these look right, or do you want to add more?" Then run them.
-
-Save test cases to `evals/evals.json`. Don't write assertions yet — just the prompts. You'll draft assertions in the next step while the runs are in progress.
-
-```json
-{
-  "skill_name": "example-skill",
-  "evals": [
-    {
-      "id": 1,
-      "prompt": "User's task prompt",
-      "expected_output": "Description of expected result",
-      "files": []
-    }
-  ]
-}
-```
-
-See `references/schemas.md` for the full schema (including the `assertions` field, which you'll add later).
-
-## Running and evaluating test cases
-
-This section is one continuous sequence — don't stop partway through. Do NOT use `/skill-test` or any other testing skill.
-
-Put results in `<skill-name>-workspace/` as a sibling to the skill directory. Within the workspace, organize results by iteration (`iteration-1/`, `iteration-2/`, etc.) and within that, each test case gets a directory (`eval-0/`, `eval-1/`, etc.). Don't create all of this upfront — just create directories as you go.
-
-### Step 1: Spawn all runs (with-skill AND baseline) in the same turn
-
-For each test case, spawn two subagents in the same turn — one with the skill, one without. This is important: don't spawn the with-skill runs first and then come back for baselines later. Launch everything at once so it all finishes around the same time.
-
-**With-skill run:**
-
-```
-Execute this task:
-- Skill path: <path-to-skill>
-- Task: <eval prompt>
-- Input files: <eval files if any, or "none">
-- Save outputs to: <workspace>/iteration-<N>/eval-<ID>/with_skill/outputs/
-- Outputs to save: <what the user cares about — e.g., "the .docx file", "the final CSV">
-```
-
-**Baseline run** (same prompt, but the baseline depends on context):
-- **Creating a new skill**: no skill at all. Same prompt, no skill path, save to `without_skill/outputs/`.
-- **Improving an existing skill**: the old version. Before editing, snapshot the skill (`cp -r <skill-path> <workspace>/skill-snapshot/`), then point the baseline subagent at the snapshot. Save to `old_skill/outputs/`.
-
-Write an `eval_metadata.json` for each test case (assertions can be empty for now). Give each eval a descriptive name based on what it's testing — not just "eval-0". Use this name for the directory too. If this iteration uses new or modified eval prompts, create these files for each new eval directory — don't assume they carry over from previous iterations.
-
-```json
-{
-  "eval_id": 0,
-  "eval_name": "descriptive-name-here",
-  "prompt": "The user's task prompt",
-  "assertions": []
-}
-```
-
-### Step 2: While runs are in progress, draft assertions
-
-Don't just wait for the runs to finish — you can use this time productively. Draft quantitative assertions for each test case and explain them to the user. If assertions already exist in `evals/evals.json`, review them and explain what they check.
-
-Good assertions are objectively verifiable and have descriptive names — they should read clearly in the benchmark viewer so someone glancing at the results immediately understands what each one checks. Subjective skills (writing style, design quality) are better evaluated qualitatively — don't force assertions onto things that need human judgment.
-
-Update the `eval_metadata.json` files and `evals/evals.json` with the assertions once drafted. Also explain to the user what they'll see in the viewer — both the qualitative outputs and the quantitative benchmark.
-
-### Step 3: As runs complete, capture timing data
-
-When each subagent task completes, you receive a notification containing `total_tokens` and `duration_ms`. Save this data immediately to `timing.json` in the run directory:
-
-```json
-{
-  "total_tokens": 84852,
-  "duration_ms": 23332,
-  "total_duration_seconds": 23.3
-}
-```
-
-This is the only opportunity to capture this data — it comes through the task notification and isn't persisted elsewhere. Process each notification as it arrives rather than trying to batch them.
-
-### Step 4: Grade, aggregate, and launch the viewer
-
-Once all runs are done:
-
-1. **Grade each run** — spawn a grader subagent (or grade inline) that reads `agents/grader.md` and evaluates each assertion against the outputs. Save results to `grading.json` in each run directory. The grading.json expectations array must use the fields `text`, `passed`, and `evidence` (not `name`/`met`/`details` or other variants) — the viewer depends on these exact field names. For assertions that can be checked programmatically, write and run a script rather than eyeballing it — scripts are faster, more reliable, and can be reused across iterations.
-
-2. **Aggregate into benchmark** — run the aggregation script from the skill-creator directory:
-   ```bash
-   python -m scripts.aggregate_benchmark <workspace>/iteration-N --skill-name <name>
-   ```
-   This produces `benchmark.json` and `benchmark.md` with pass_rate, time, and tokens for each configuration, with mean ± stddev and the delta. If generating benchmark.json manually, see `references/schemas.md` for the exact schema the viewer expects.
-Put each with_skill version before its baseline counterpart.
-
-3. **Do an analyst pass** — read the benchmark data and surface patterns the aggregate stats might hide. See `agents/analyzer.md` (the "Analyzing Benchmark Results" section) for what to look for — things like assertions that always pass regardless of skill (non-discriminating), high-variance evals (possibly flaky), and time/token tradeoffs.
-
-4. **Launch the viewer** with both qualitative outputs and quantitative data:
-   ```bash
-   nohup python <skill-creator-path>/eval-viewer/generate_review.py \
-     <workspace>/iteration-N \
-     --skill-name "my-skill" \
-     --benchmark <workspace>/iteration-N/benchmark.json \
-     > /dev/null 2>&1 &
-   VIEWER_PID=$!
-   ```
-   For iteration 2+, also pass `--previous-workspace <workspace>/iteration-<N-1>`.
-
-   **Headless environments:** If `webbrowser.open()` is not available or the environment has no display, use `--static <output_path>` to write a standalone HTML file instead of starting a server. If the viewer writes feedback to a file, copy that feedback file into the workspace directory for the next iteration to pick up.
-
-Note: please use generate_review.py to create the viewer; there's no need to write custom HTML.
-
-5. **Tell the user** something like: "I've opened the results in your browser. There are two tabs — 'Outputs' lets you click through each test case and leave feedback, 'Benchmark' shows the quantitative comparison. When you're done, come back here and let me know."
-
-### What the user sees in the viewer
-
-The "Outputs" tab shows one test case at a time:
-- **Prompt**: the task that was given
-- **Output**: the files the skill produced, rendered inline where possible
-- **Previous Output** (iteration 2+): collapsed section showing last iteration's output
-- **Formal Grades** (if grading was run): collapsed section showing assertion pass/fail
-- **Feedback**: a textbox that auto-saves as they type
-- **Previous Feedback** (iteration 2+): their comments from last time, shown below the textbox
-
-The "Benchmark" tab shows the stats summary: pass rates, timing, and token usage for each configuration, with per-eval breakdowns and analyst observations.
-
-Navigation is via prev/next buttons or arrow keys. When done, they click "Submit All Reviews" which saves all feedback to `feedback.json`.
-
-### Step 5: Read the feedback
-
-When the user tells you they're done, read `feedback.json`:
-
-```json
-{
-  "reviews": [
-    {"run_id": "eval-0-with_skill", "feedback": "the chart is missing axis labels", "timestamp": "..."},
-    {"run_id": "eval-1-with_skill", "feedback": "", "timestamp": "..."},
-    {"run_id": "eval-2-with_skill", "feedback": "perfect, love this", "timestamp": "..."}
-  ],
-  "status": "complete"
-}
-```
-
-Empty feedback means the user thought it was fine. Focus your improvements on the test cases where the user had specific complaints.
-
-Kill the viewer server when you're done with it:
-
-```bash
-kill $VIEWER_PID 2>/dev/null
-```
-
----
-
-## Improving the skill
-
-This is the heart of the loop. You've run the test cases, the user has reviewed the results, and now you need to make the skill better based on their feedback.
-
-### How to think about improvements
-
-1. **Generalize from the feedback.** The big picture thing that's happening here is that we're trying to create skills that can be used a million times (maybe literally, maybe even more who knows) across many different prompts. Here you and the user are iterating on only a few examples over and over again because it helps move faster. The user knows these examples in and out and it's quick for them to assess new outputs. But if the skill you and the user are codeveloping works only for those examples, it's useless. Rather than put in fiddly overfitty changes, or oppressively constrictive MUSTs, if there's some stubborn issue, you might try branching out and using different metaphors, or recommending different patterns of working. It's relatively cheap to try and maybe you'll land on something great.
-
-2. **Keep the prompt lean.** Remove things that aren't pulling their weight. Make sure to read the transcripts, not just the final outputs — if it looks like the skill is making the model waste a bunch of time doing things that are unproductive, you can try getting rid of the parts of the skill that are making it do that and seeing what happens.
-
-3. **Explain the why.** Try hard to explain the **why** behind everything you're asking the model to do. Today's LLMs are *smart*. They have good theory of mind and when given a good harness can go beyond rote instructions and really make things happen. Even if the feedback from the user is terse or frustrated, try to actually understand the task and why the user is writing what they wrote, and what they actually wrote, and then transmit this understanding into the instructions. If you find yourself writing ALWAYS or NEVER in all caps, or using super rigid structures, that's a yellow flag — if possible, reframe and explain the reasoning so that the model understands why the thing you're asking for is important. That's a more humane, powerful, and effective approach.
-
-4. **Look for repeated work across test cases.** Read the transcripts from the test runs and notice if the subagents all independently wrote similar helper scripts or took the same multi-step approach to something. If all 3 test cases resulted in the subagent writing a `create_docx.py` or a `build_chart.py`, that's a strong signal the skill should bundle that script. Write it once, put it in `scripts/`, and tell the skill to use it. This saves every future invocation from reinventing the wheel.
-
-This task is pretty important (we are trying to create billions a year in economic value here!) and your thinking time is not the blocker; take your time and really mull things over. I'd suggest writing a draft revision and then looking at it anew and making improvements. Really do your best to get into the head of the user and understand what they want and need.
-
-### The iteration loop
-
-After improving the skill:
-
-1. Apply your improvements to the skill
-2. Rerun all test cases into a new `iteration-<N+1>/` directory, including baseline runs. If you're creating a new skill, the baseline is always `without_skill` (no skill) — that stays the same across iterations. If you're improving an existing skill, use your judgment on what makes sense as the baseline: the original version the user came in with, or the previous iteration.
-3. Launch the reviewer with `--previous-workspace` pointing at the previous iteration
-4. Wait for the user to review and tell you they're done
-5. Read the new feedback, improve again, repeat
-
-Keep going until:
-- The user says they're happy
-- The feedback is all empty (everything looks good)
-- You're not making meaningful progress
-
----
-
-## Advanced: Blind comparison
-
-For situations where you want a more rigorous comparison between two versions of a skill (e.g., the user asks "is the new version actually better?"), there's a blind comparison system. Read `agents/comparator.md` and `agents/analyzer.md` for the details. The basic idea is: give two outputs to an independent agent without telling it which is which, and let it judge quality. Then analyze why the winner won.
-
-This is optional, requires subagents, and most users won't need it. The human review loop is usually sufficient.
-
----
+Convert missed triggers into trigger evals, bad outputs into output assertions, and script/tool errors into smoke tests or tool-contract fixes.
 
 ## Description Optimization
 
-The description field in SKILL.md frontmatter is the primary mechanism that determines whether an agent invokes a skill. After creating or improving an OpenClaw skill, offer to optimize the description for better triggering accuracy.
+The frontmatter `description` is the primary trigger surface. After creating or materially changing a skill, tune it with held-out trigger evals:
 
-### Step 1: Generate trigger eval queries
+1. Create 20 realistic queries: roughly half should trigger and half should not. Include messy operator phrasing, local project names, channel/source-lane/tool names, abbreviations, adjacent portable-skill requests, and near misses.
+2. Review the eval set with the user when practical; weak trigger evals produce weak descriptions.
+3. Keep a champion and challenger. Score the current description, revise from failures, then retest on held-out examples. Promote only when the challenger improves trigger precision/recall without weakening must-pass cases or stealing portable work from `uber-skill-creator`.
+4. Report before/after descriptions, scores, failure modes, and remaining ambiguity.
 
-Create 20 eval queries — a mix of should-trigger and should-not-trigger. Save as JSON:
+If the current runtime has no approved trigger-eval executor, run the held-out cases manually with fresh context or runtime-supported subagents and record the observed trigger behavior.
 
-```json
-[
-  {"query": "the user prompt", "should_trigger": true},
-  {"query": "another prompt", "should_trigger": false}
-]
-```
+## Packaging And Reporting
 
-The queries must be realistic and something an OpenClaw, Gaia, Type0, Soho, or agentic-media operator would actually type. Not abstract requests, but requests that are concrete and specific and have a good amount of detail. For instance, file paths, local project context, channel names, source-lane names, workflow names, company names, URLs, tool names, or messy user shorthand. Some might be lowercase or contain abbreviations, typos, or casual speech. Use a mix of different lengths, and focus on edge cases rather than making them clear-cut.
+Package only when the current runtime and user need a `.skill` artifact. Otherwise, leave the skill in the repo and report the path, validation commands, proof receipts, and gaps.
 
-Bad: `"Format this data"`, `"Extract text from PDF"`, `"Create a chart"`
+Final reports for OpenClaw skills should state: component classification, model-owned decisions, deterministic harness responsibilities, tools available/missing, memory behavior, source-authority and truth/synthesis boundaries, identity behavior, context behavior, skills used or added, guardrails/approvals, ownership/adoption state, attention behavior, backpressure/budget/fallback behavior, deletion/simplification result, cost/complexity tradeoff, RCA/human-counterfactual if relevant, rollback plan, acceptance proof, manual-proof gaps, and tests/evals added.
 
-Good: `"ok so my boss just sent me this xlsx file (its in my downloads, called something like 'Q4 sales final FINAL v2.xlsx') and she wants me to add a column that shows the profit margin as a percentage. The revenue is in column C and costs are in column D i think"`
+## Reference Files
 
-For the **should-trigger** queries (8-10), think about coverage. You want different phrasings of the same intent — some formal, some casual. Include cases where the user doesn't explicitly name the skill or file type but clearly needs it. Throw in some uncommon use cases and cases where this skill competes with another but should win.
+Read only what the task needs:
 
-For the **should-not-trigger** queries (8-10), the most valuable ones are the near-misses — queries that share keywords or concepts with the skill but actually need something different. Think adjacent domains, ambiguous phrasing where a naive keyword match would trigger but shouldn't, and cases where the query touches on something the skill does but in a context where another tool is more appropriate.
-
-The key thing to avoid: don't make should-not-trigger queries obviously irrelevant. "Write a fibonacci function" as a negative test for a PDF skill is too easy — it doesn't test anything. The negative cases should be genuinely tricky.
-
-### Step 2: Review with user
-
-Present the eval set to the user for review using the HTML template:
-
-1. Read the template from `assets/eval_review.html`
-2. Replace the placeholders:
-   - `__EVAL_DATA_PLACEHOLDER__` → the JSON array of eval items (no quotes around it — it's a JS variable assignment)
-   - `__SKILL_NAME_PLACEHOLDER__` → the skill's name
-   - `__SKILL_DESCRIPTION_PLACEHOLDER__` → the skill's current description
-3. Write to a temp file (e.g., `/tmp/eval_review_<skill-name>.html`) and open it: `open /tmp/eval_review_<skill-name>.html`
-4. The user can edit queries, toggle should-trigger, add/remove entries, then click "Export Eval Set"
-5. The file downloads to `~/Downloads/eval_set.json` — check the Downloads folder for the most recent version in case there are multiple (e.g., `eval_set (1).json`)
-
-This step matters — bad eval queries lead to bad descriptions.
-
-### Step 3: Run the optimization loop
-
-Tell the user: "This will take some time — I'll run or simulate the optimization loop and check on it periodically."
-
-Save the eval set to the workspace. If the current runtime has an approved trigger-eval executor, use it. If it does not, run the held-out trigger/non-trigger cases manually in a fresh context or with runtime-supported subagents, then record the observed trigger behavior and revise the description from that evidence.
-
-This handles the full optimization loop automatically only in runtimes where its executor is available. It splits the eval set into 60% train and 40% held-out test, evaluates the current description, proposes improvements based on what failed, and re-evaluates each new description on both train and test. When the automatic executor is not available, run the eval set manually with a fresh Codex/OpenClaw context and generate a static HTML report from the recorded results.
-
-### How skill triggering works
-
-Understanding the triggering mechanism helps design better eval queries. Skills appear to an agent with their name and description, and the agent decides whether to consult a skill based on that description plus runtime policy. Simple one-step queries may not need a skill even if the description matches. Complex, multi-step, or specialized OpenClaw queries should trigger when the description matches.
-
-This means your eval queries should be substantive enough that Claude would actually benefit from consulting a skill. Simple queries like "read file X" are poor test cases — they won't trigger skills regardless of description quality.
-
-### Step 4: Apply the result
-
-Take `best_description` from the JSON output and update the skill's SKILL.md frontmatter. Show the user before/after and report the scores.
-
----
-
-### Package and Present
-
-Package only when the current runtime and user actually need a portable `.skill` artifact. Otherwise, leave the skill in the repo and report the path.
-
-```bash
-python -m scripts.package_skill <path/to/skill-folder>
-```
-
-After packaging, report the resulting `.skill` file path.
-
----
-
-## Reference files
-
-The agents/ directory contains instructions for specialized subagents. Read them when you need to spawn the relevant subagent.
-
-- `agents/grader.md` — How to evaluate assertions against outputs
-- `agents/comparator.md` — How to do blind A/B comparison between two outputs
-- `agents/analyzer.md` — How to analyze why one version beat another
-
-The references/ directory has additional documentation:
-- `references/schemas.md` — JSON structures for evals.json, grading.json, etc.
-
----
-
-Repeating one more time the core loop here for emphasis:
-
-- Figure out what the skill is about
-- Draft or edit the skill
-- Run a fresh agent or runtime-supported executor with access to the skill on test prompts
-- With the user, evaluate the outputs:
-  - Create benchmark.json and run `eval-viewer/generate_review.py` to help the user review them
-  - Run quantitative evals
-- Repeat until you and the user are satisfied
-- Package the final skill and return it to the user.
-
-Please add steps to your task list, if you have such a thing, to make sure you don't forget. Specifically include "Create evals JSON and run `eval-viewer/generate_review.py` or an equivalent static report so the human can review test cases" before revising the skill from your own judgment.
-
-Good luck!
+- `references/schemas.md` for eval, grading, and benchmark JSON shapes.
+- `agents/grader.md` when grading assertions against outputs.
+- `agents/analyzer.md` when interpreting benchmark patterns and hidden regressions.
+- `agents/comparator.md` for blind A/B comparison when a rigorous version comparison is needed.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/openclaw-agentic-skill-creator/SKILL.md" -->
 
@@ -10804,7 +9950,7 @@ Return a source-lane contract, affected artifact roles, identity policy, authori
 
 ### File: `skills/openclaw-agentic-skill-creator/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-agentic-skill-creator/SKILL.md" sha256="4ecca4ec6a903ca30381d7e2d495522f2eca1efb0e2239b1445c63c35506bcfa" bytes="32794" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-agentic-skill-creator/SKILL.md" sha256="dbca080ae4edef4054c43b56b44ff624cb3a5ce513ae243057abb2502eb20620" bytes="10220" trailing_newline="true" -->
 ````````
 ---
 name: openclaw-agentic-skill-creator
@@ -10813,519 +9959,92 @@ description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic ski
 
 # OpenClaw Agentic Skill Creator
 
-> ## Scope Boundary
->
-> This skill creates and improves **OpenClaw-targeted skills**. It is not the
-> general portable skill creator. For general SKILL.md skills, use
-> `uber-skill-creator` from `agentic-uber-skills` when it is installed.
->
-> This skill is adapted from public skill-creator methodology for the OpenClaw
-> runtime. Keep provenance visible, but do not copy proprietary or leaked code.
->
-> When running from Codex, Claude, or another runtime, translate the workflow into that runtime's terms. Do not run
-> `claude -p`, `sessions_spawn`, Claude.ai, Cowork, or `present_files` steps
-> unless the current runtime explicitly provides them and the user has approved
-> that execution path.
->
-> ## OpenClaw Runtime Notes
->
-> **OpenClaw executor**: In OpenClaw runtimes that expose `sessions_spawn`, use it with `mode: "run"` instead of assuming another runtime's native subagent system. Example:
-> ```
-> sessions_spawn(task="Execute this task with skill at <path>...",
->   mode="run", runTimeoutSeconds=300)
-> ```
->
-> **Legacy description optimization scripts**: The bundled `run_loop.py` and `run_eval.py`
-> scripts originated in Claude Code trigger testing. In Codex or plain OpenClaw sessions,
-> do not run them as-is. Use manual held-out trigger evals, a runtime-native executor, or
-> adapt the scripts before use.
->
-> **Eval viewer (headless)**: OpenClaw typically runs headless. Always use `--static`:
-> ```bash
-> python eval-viewer/generate_review.py <workspace>/iteration-N \
->   --skill-name "my-skill" \
->   --benchmark <workspace>/iteration-N/benchmark.json \
->   --static /tmp/skill-review.html
-> ```
-> Then send the HTML file to the user via `message(action=send, filePath=...)`.
->
-> **Runtime-specific notes**: Runtime-specific automation is optional. The portable
-> contract is intent capture, draft, eval, review, improve, and package.
->
-> ## Local agent-affordance extensions
->
-> For OpenClaw, Type0, Gaia/Gaia Brain, agentic-media, and Soho House, skills should preserve high agent affordance: help agents inspect sources, use clear tools, apply judgment, and leave traces. Do not encode brittle gates or deterministic substitutes for judgment into a skill unless the user explicitly approves that lower-affordance design.
->
-> If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or a summary of it in the skill/eval package.
-
-> ## OpenClaw production contract
->
-> Keep this contract inline because it is short, safety-critical active context
-> for OpenClaw skills that may touch live sources, Slack, tools, memory, or side
-> effects. Put longer examples and runtime-specific recipes in references.
->
-> Before creating or expanding an OpenClaw skill, run the smallest useful
-> non-skill check: direct answer, source note, deterministic script, typed tool,
-> or workflow affordance may be the better artifact. Promote to a skill only when
-> discoverability, repeated agent behavior, source-lane use, or reusable
-> judgment guidance is the actual need.
->
-> For production, library, governed, Slack-visible, side-effecting, or
-> cross-agent OpenClaw skills, capture a compact contract before adding release
-> machinery:
-> - owned recurring job and expected OpenClaw agent behavior
-> - should-trigger, should-not-trigger, and near-neighbor prompts
-> - required source lanes, tools, memory/context packets, and permissions
-> - scripts/assets/references that carry real behavior
-> - trigger evals, output evals, and OpenClaw parity proof receipts
-> - source-authority boundary, side-effect boundary, rollback/idempotency rule,
->   owner, review cadence, and maturity tier
->
-> Use maturity tiers to select gates, not to add ceremony: `Scaffold` gets
-> quick validation; `Production` adds trigger/output evals; `Library` adds
-> packaging/runtime checks and route-confusion coverage; `Governed` adds owner
-> review, regression history, live-safe proof, and explicit acceptance evidence.
->
-> Review findings should be actionable. For every warning or blocker, record the
-> failed gate, why it matters in plain language, the smallest source fix, the
-> evidence artifact, and the verification command or OpenClaw session receipt.
-> Waivers can document warning-level risk, but they do not turn blockers into
-> passes.
->
-> Any usage or drift loop must be metadata-only and local-first by default:
-> skill name/version, event type, source/client, command name without arguments,
-> outcome, failure type, and timestamp are acceptable. Do not store raw prompts,
-> Slack messages, transcripts, private files, model outputs, command arguments,
-> or reviewer notes as telemetry. Convert missed triggers into trigger evals,
-> bad outputs into output eval assertions, and script/tool errors into smoke
-> tests or tool-contract fixes.
-
-A skill for creating new OpenClaw skills and iteratively improving them.
-
-At a high level, the process of creating a skill goes like this:
-
-- Decide what you want the skill to do and roughly how it should do it
-- Write a draft of the skill
-- Create a few test prompts and run a fresh agent or runtime-supported executor with access to the skill
-- Help the user evaluate the results both qualitatively and quantitatively
-  - While the runs happen in the background, draft some quantitative evals if there aren't any (if there are some, you can either use as is or modify if you feel something needs to change about them). Then explain them to the user (or if they already existed, explain the ones that already exist)
-  - Use the `eval-viewer/generate_review.py` script to show the user the results for them to look at, and also let them look at the quantitative metrics
-- Rewrite the skill based on feedback from the user's evaluation of the results (and also if there are any glaring flaws that become apparent from the quantitative benchmarks)
-- Repeat until you're satisfied
-- Expand the test set and try again at larger scale
-
-Your job when using this skill is to figure out where the user is in this process and then jump in and help them progress through these stages. So for instance, maybe they're like "I want to make a skill for X". You can help narrow down what they mean, write a draft, write the test cases, figure out how they want to evaluate, run all the prompts, and repeat.
+Create and improve skills for OpenClaw, Gaia/Gaia Brain, Type0, Soho House, and shared agentic-media work. This skill is the OpenClaw-specific counterpart to `uber-skill-creator`: use this when the skill depends on OpenClaw runtime behavior, tenant/workspace policy, live source lanes, agent affordance, local proof conventions, or live-safe OpenClaw parity receipts. Use `uber-skill-creator` for portable SKILL.md work that should run across Codex, Claude, and compatible agents without OpenClaw-specific assumptions.
 
-On the other hand, maybe they already have a draft of the skill. In this case you can go straight to the eval/iterate part of the loop.
+Keep provenance visible when adapting public skill-creator methods, but do not copy proprietary or leaked code. Translate runtime examples into the current executor; do not assume Claude-specific subprocesses, slash commands, browser viewers, or OpenClaw tools unless this runtime exposes them and the user approved that path.
 
-Of course, you should always be flexible and if the user is like "I don't need to run a bunch of evaluations, just vibe with me", you can do that instead.
+## OpenClaw Production Contract
 
-Then after the skill is done (but again, the order is flexible), you can also run the skill description improver, which we have a whole separate script for, to optimize the triggering of the skill.
+Before creating or expanding a skill, run the smallest useful non-skill check. A direct answer, source note, typed tool, source-lane contract, deterministic script, or workflow affordance may be better. Promote to a skill only when repeated agent behavior, discovery, source-lane use, or reusable judgment guidance is the real need.
 
-Cool? Cool.
+For production, library, governed, Slack-visible, side-effecting, tenant-sensitive, or cross-agent skills, capture the compact contract before adding release machinery:
 
-## Communicating with the user
+- owned recurring job and expected OpenClaw agent behavior;
+- should-trigger, should-not-trigger, and near-neighbor prompts;
+- tenant, workspace, channel, account, project, and actor boundaries;
+- required source lanes, tools, memory/context packets, permissions, and live-data access;
+- scripts, assets, references, and deterministic checks that carry real behavior;
+- trigger evals, output evals, live-safe OpenClaw proof receipts, owner, review cadence, maturity tier, and rollback/idempotency rule;
+- source-authority boundary, identity-resolution behavior, synthesis boundary, side-effect boundary, budget/fallback policy, and attention/notification behavior.
 
-The skill creator is liable to be used by people across a wide range of familiarity with coding jargon. If you haven't heard (and how could you, it's only very recently that it started), there's a trend now where the power of Claude is inspiring plumbers to open up their terminals, parents and grandparents to google "how to install npm". On the other hand, the bulk of users are probably fairly computer-literate.
+Use maturity tiers to select gates, not ceremony: `Scaffold` gets quick validation; `Production` adds trigger/output evals; `Library` adds packaging/runtime checks and route-confusion coverage; `Governed` adds owner review, regression history, live-safe proof, and explicit acceptance evidence.
 
-So please pay attention to context cues to understand how to phrase your communication! In the default case, just to give you some idea:
+Any usage or drift loop must be metadata-only and local-first by default. Acceptable telemetry is skill name/version, event type, source/client, command name without arguments, outcome, failure type, and timestamp. Do not store raw prompts, Slack messages, transcripts, private files, model outputs, command arguments, or reviewer notes as telemetry.
 
-- "evaluation" and "benchmark" are borderline, but OK
-- for "JSON" and "assertion" you want to see serious cues from the user that they know what those things are before using them without explaining them
+## Affordance And Proof Rules
 
-It's OK to briefly explain terms if you're in doubt, and feel free to clarify terms with a short definition if you're unsure if the user will get it.
+Preserve high agent affordance. Help agents inspect sources, choose clear tools, apply judgment, recover from gaps, and leave traces. Do not encode brittle gates, hidden routing layers, semantic judges, or deterministic substitutes for judgment unless the user explicitly approves the lower-affordance design.
 
----
+If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or summary in the skill/eval package.
 
-## Creating a skill
+For behavior that an OpenClaw agent is supposed to perform, prove the workflow before readiness claims:
 
-### Capture Intent
+1. Run a fresh self-subagent or runtime-native executor with the intended context, tools, source lanes, skills, recovery instructions, and no hidden rationale.
+2. If it fails, improve affordances: context packet, skill wording, tool descriptions, source access, task frame, recovery instructions, or audit trail. Do not patch with private harness state.
+3. Run the same workflow with a real OpenClaw agent using only normal OpenClaw scaffold plus the successful context/skill/tool profile.
+4. Preserve receipts: self-subagent result, OpenClaw `sessionKey`/`sessionId` or transcript path, tool outputs, source artifacts, eval outputs, and any redactions.
 
-Start by understanding the user's intent. The current conversation might already contain a workflow the user wants to capture (e.g., they say "turn this into a skill"). If so, extract answers from the conversation history first — the tools used, the sequence of steps, corrections the user made, input/output formats observed. The user may need to fill the gaps, and should confirm before proceeding to the next step.
+If live proof is unsafe or unavailable, label the gap. Do not present local validation or synthetic evals as OpenClaw parity proof.
 
-1. What should this skill enable an OpenClaw agent to do?
-2. When should this skill trigger? (what user phrases/contexts)
-3. What's the expected output format?
-4. Should we set up test cases to verify the skill works? Skills with objectively verifiable outputs (file transforms, data extraction, code generation, fixed workflow steps) benefit from test cases. Skills with subjective outputs (writing style, art) often don't need them. Suggest the appropriate default based on the skill type, but let the user decide.
+## Creation Workflow
 
-### Interview and Research
+1. **Classify and route.** If the request is portable, redirect to `uber-skill-creator`. If it is OpenClaw-specific, continue here.
+2. **Capture intent from evidence first.** Mine the conversation, files, transcripts, source lanes, operator corrections, and observed tools before asking questions.
+3. **Ask only material gaps.** Clarify trigger/non-trigger contexts, expected outputs, tenant/source/tool permissions, side effects, success criteria, and proof requirements.
+4. **Draft the skill.** Keep trigger information in the frontmatter `description`. Keep the body procedural, concise, and OpenClaw-specific. Use imperative instructions, short rationale where it improves behavior, and references/scripts/assets only when they reduce active-context load or repeated work.
+5. **Use progressive disclosure.** `SKILL.md` is active context; larger examples, schemas, and recipes belong in `references/`; deterministic repeatable work belongs in `scripts/`; reusable output inputs belong in `assets/`. For multi-variant skills, route to only the relevant reference.
+6. **Validate shape.** Run the available quick validator and any package-specific lint/tests. Validation checks package integrity; it does not replace agentic proof.
 
-Proactively ask questions about edge cases, input/output formats, example files, success criteria, and dependencies. Wait to write test prompts until you've got this part ironed out.
+## Eval-Driven Iteration
 
-Check available MCPs - if useful for research (searching docs, finding similar skills, looking up best practices), research in parallel via subagents if available, otherwise inline. Come prepared with context to reduce burden on the user.
+Use eval-driven iteration for production/library/governed skills, broadly installed skills, behavior-changing skills, or any skill whose correctness is not obvious from inspection.
 
-### Write the SKILL.md
+1. **Draft realistic eval prompts.** Use real operator-style OpenClaw/Gaia/Type0/Soho/agentic-media tasks. Include should-trigger, should-not-trigger, near-neighbor, source-lane, side-effect, and tenant-boundary cases as relevant.
+2. **Run with-skill and baseline together.** For a new skill, baseline is no skill. For an existing skill, baseline is the previous or snapshotted version. Use the current runtime's fresh subagent/executor; in OpenClaw, use the exposed session runner when available.
+3. **Capture artifacts.** Store prompts, input files, outputs, transcripts, timing/token data when available, tool receipts, source handles, and eval metadata under an iteration workspace.
+4. **Draft assertions while runs execute.** Objective checks should cover observable outputs, source-authority labels, forbidden side effects, receipt presence, and tenant/source boundaries. Keep subjective judgment for human review.
+5. **Grade and aggregate.** Use scripts where checks are deterministic. Produce a benchmark summary and preserve qualitative notes; read transcripts, not only final outputs.
+6. **Show the human the results.** Prefer the bundled `eval-viewer/generate_review.py` with `--static` in headless OpenClaw environments, or an equivalent static report when the viewer is unavailable.
+7. **Iterate on affordance.** Improve context, wording, resources, examples, tool descriptions, or source-lane guidance. Avoid overfitting to a tiny prompt set or adding coercive rules where clearer affordances would work.
+8. **Repeat until acceptable.** Expand the eval set before claiming broad coverage.
 
-Based on the user interview, fill in these components:
-
-- **name**: Skill identifier
-- **description**: When to trigger, what it does. This is the primary triggering mechanism - include both what the skill does AND specific OpenClaw contexts for when to use it. All "when to use" info goes here, not in the body. Make the description concrete enough to trigger for realistic OpenClaw/Gaia/Type0/Soho/agentic-media asks while avoiding generic portable skill-authoring tasks that belong to `uber-skill-creator`.
-- **compatibility**: Required tools, dependencies (optional, rarely needed)
-- **the rest of the skill :)**
-
-### Skill Writing Guide
-
-#### Anatomy of a Skill
-
-```
-skill-name/
-├── SKILL.md (required)
-│   ├── YAML frontmatter (name, description required)
-│   └── Markdown instructions
-└── Bundled Resources (optional)
-    ├── scripts/    - Executable code for deterministic/repetitive tasks
-    ├── references/ - Docs loaded into context as needed
-    └── assets/     - Files used in output (templates, icons, fonts)
-```
-
-#### Progressive Disclosure
-
-Skills use a three-level loading system:
-1. **Metadata** (name + description) - Always in context (~100 words)
-2. **SKILL.md body** - In context whenever skill triggers (<500 lines ideal)
-3. **Bundled resources** - As needed (unlimited, scripts can execute without loading)
-
-These word counts are approximate and you can feel free to go longer if needed.
-
-**Key patterns:**
-- Keep SKILL.md under 500 lines; if you're approaching this limit, add an additional layer of hierarchy along with clear pointers about where the model using the skill should go next to follow up.
-- Reference files clearly from SKILL.md with guidance on when to read them
-- For large reference files (>300 lines), include a table of contents
-
-**Domain organization**: When a skill supports multiple domains/frameworks, organize by variant:
-```
-cloud-deploy/
-├── SKILL.md (workflow + selection)
-└── references/
-    ├── aws.md
-    ├── gcp.md
-    └── azure.md
-```
-Claude reads only the relevant reference file.
-
-#### Principle of Lack of Surprise
-
-This goes without saying, but skills must not contain malware, exploit code, or any content that could compromise system security. A skill's contents should not surprise the user in their intent if described. Don't go along with requests to create misleading skills or skills designed to facilitate unauthorized access, data exfiltration, or other malicious activities. Things like a "roleplay as an XYZ" are OK though.
-
-#### Writing Patterns
-
-Prefer using the imperative form in instructions.
-
-**Defining output formats** - You can do it like this:
-```markdown
-## Report structure
-ALWAYS use this exact template:
-# [Title]
-## Executive summary
-## Key findings
-## Recommendations
-```
-
-**Examples pattern** - It's useful to include examples. You can format them like this (but if "Input" and "Output" are in the examples you might want to deviate a little):
-```markdown
-## Commit message format
-**Example 1:**
-Input: Added user authentication with JWT tokens
-Output: feat(auth): implement JWT-based authentication
-```
-
-### Writing Style
-
-Try to explain to the model why things are important in lieu of heavy-handed musty MUSTs. Use theory of mind and try to make the skill general and not super-narrow to specific examples. Start by writing a draft and then look at it with fresh eyes and improve it.
-
-### Test Cases
-
-After writing the skill draft, come up with 2-3 realistic test prompts — the kind of thing a real user would actually say. Share them with the user: [you don't have to use this exact language] "Here are a few test cases I'd like to try. Do these look right, or do you want to add more?" Then run them.
-
-Save test cases to `evals/evals.json`. Don't write assertions yet — just the prompts. You'll draft assertions in the next step while the runs are in progress.
-
-```json
-{
-  "skill_name": "example-skill",
-  "evals": [
-    {
-      "id": 1,
-      "prompt": "User's task prompt",
-      "expected_output": "Description of expected result",
-      "files": []
-    }
-  ]
-}
-```
-
-See `references/schemas.md` for the full schema (including the `assertions` field, which you'll add later).
-
-## Running and evaluating test cases
-
-This section is one continuous sequence — don't stop partway through. Do NOT use `/skill-test` or any other testing skill.
-
-Put results in `<skill-name>-workspace/` as a sibling to the skill directory. Within the workspace, organize results by iteration (`iteration-1/`, `iteration-2/`, etc.) and within that, each test case gets a directory (`eval-0/`, `eval-1/`, etc.). Don't create all of this upfront — just create directories as you go.
-
-### Step 1: Spawn all runs (with-skill AND baseline) in the same turn
-
-For each test case, spawn two subagents in the same turn — one with the skill, one without. This is important: don't spawn the with-skill runs first and then come back for baselines later. Launch everything at once so it all finishes around the same time.
-
-**With-skill run:**
-
-```
-Execute this task:
-- Skill path: <path-to-skill>
-- Task: <eval prompt>
-- Input files: <eval files if any, or "none">
-- Save outputs to: <workspace>/iteration-<N>/eval-<ID>/with_skill/outputs/
-- Outputs to save: <what the user cares about — e.g., "the .docx file", "the final CSV">
-```
-
-**Baseline run** (same prompt, but the baseline depends on context):
-- **Creating a new skill**: no skill at all. Same prompt, no skill path, save to `without_skill/outputs/`.
-- **Improving an existing skill**: the old version. Before editing, snapshot the skill (`cp -r <skill-path> <workspace>/skill-snapshot/`), then point the baseline subagent at the snapshot. Save to `old_skill/outputs/`.
-
-Write an `eval_metadata.json` for each test case (assertions can be empty for now). Give each eval a descriptive name based on what it's testing — not just "eval-0". Use this name for the directory too. If this iteration uses new or modified eval prompts, create these files for each new eval directory — don't assume they carry over from previous iterations.
-
-```json
-{
-  "eval_id": 0,
-  "eval_name": "descriptive-name-here",
-  "prompt": "The user's task prompt",
-  "assertions": []
-}
-```
-
-### Step 2: While runs are in progress, draft assertions
-
-Don't just wait for the runs to finish — you can use this time productively. Draft quantitative assertions for each test case and explain them to the user. If assertions already exist in `evals/evals.json`, review them and explain what they check.
-
-Good assertions are objectively verifiable and have descriptive names — they should read clearly in the benchmark viewer so someone glancing at the results immediately understands what each one checks. Subjective skills (writing style, design quality) are better evaluated qualitatively — don't force assertions onto things that need human judgment.
-
-Update the `eval_metadata.json` files and `evals/evals.json` with the assertions once drafted. Also explain to the user what they'll see in the viewer — both the qualitative outputs and the quantitative benchmark.
-
-### Step 3: As runs complete, capture timing data
-
-When each subagent task completes, you receive a notification containing `total_tokens` and `duration_ms`. Save this data immediately to `timing.json` in the run directory:
-
-```json
-{
-  "total_tokens": 84852,
-  "duration_ms": 23332,
-  "total_duration_seconds": 23.3
-}
-```
-
-This is the only opportunity to capture this data — it comes through the task notification and isn't persisted elsewhere. Process each notification as it arrives rather than trying to batch them.
-
-### Step 4: Grade, aggregate, and launch the viewer
-
-Once all runs are done:
-
-1. **Grade each run** — spawn a grader subagent (or grade inline) that reads `agents/grader.md` and evaluates each assertion against the outputs. Save results to `grading.json` in each run directory. The grading.json expectations array must use the fields `text`, `passed`, and `evidence` (not `name`/`met`/`details` or other variants) — the viewer depends on these exact field names. For assertions that can be checked programmatically, write and run a script rather than eyeballing it — scripts are faster, more reliable, and can be reused across iterations.
-
-2. **Aggregate into benchmark** — run the aggregation script from the skill-creator directory:
-   ```bash
-   python -m scripts.aggregate_benchmark <workspace>/iteration-N --skill-name <name>
-   ```
-   This produces `benchmark.json` and `benchmark.md` with pass_rate, time, and tokens for each configuration, with mean ± stddev and the delta. If generating benchmark.json manually, see `references/schemas.md` for the exact schema the viewer expects.
-Put each with_skill version before its baseline counterpart.
-
-3. **Do an analyst pass** — read the benchmark data and surface patterns the aggregate stats might hide. See `agents/analyzer.md` (the "Analyzing Benchmark Results" section) for what to look for — things like assertions that always pass regardless of skill (non-discriminating), high-variance evals (possibly flaky), and time/token tradeoffs.
-
-4. **Launch the viewer** with both qualitative outputs and quantitative data:
-   ```bash
-   nohup python <skill-creator-path>/eval-viewer/generate_review.py \
-     <workspace>/iteration-N \
-     --skill-name "my-skill" \
-     --benchmark <workspace>/iteration-N/benchmark.json \
-     > /dev/null 2>&1 &
-   VIEWER_PID=$!
-   ```
-   For iteration 2+, also pass `--previous-workspace <workspace>/iteration-<N-1>`.
-
-   **Headless environments:** If `webbrowser.open()` is not available or the environment has no display, use `--static <output_path>` to write a standalone HTML file instead of starting a server. If the viewer writes feedback to a file, copy that feedback file into the workspace directory for the next iteration to pick up.
-
-Note: please use generate_review.py to create the viewer; there's no need to write custom HTML.
-
-5. **Tell the user** something like: "I've opened the results in your browser. There are two tabs — 'Outputs' lets you click through each test case and leave feedback, 'Benchmark' shows the quantitative comparison. When you're done, come back here and let me know."
-
-### What the user sees in the viewer
-
-The "Outputs" tab shows one test case at a time:
-- **Prompt**: the task that was given
-- **Output**: the files the skill produced, rendered inline where possible
-- **Previous Output** (iteration 2+): collapsed section showing last iteration's output
-- **Formal Grades** (if grading was run): collapsed section showing assertion pass/fail
-- **Feedback**: a textbox that auto-saves as they type
-- **Previous Feedback** (iteration 2+): their comments from last time, shown below the textbox
-
-The "Benchmark" tab shows the stats summary: pass rates, timing, and token usage for each configuration, with per-eval breakdowns and analyst observations.
-
-Navigation is via prev/next buttons or arrow keys. When done, they click "Submit All Reviews" which saves all feedback to `feedback.json`.
-
-### Step 5: Read the feedback
-
-When the user tells you they're done, read `feedback.json`:
-
-```json
-{
-  "reviews": [
-    {"run_id": "eval-0-with_skill", "feedback": "the chart is missing axis labels", "timestamp": "..."},
-    {"run_id": "eval-1-with_skill", "feedback": "", "timestamp": "..."},
-    {"run_id": "eval-2-with_skill", "feedback": "perfect, love this", "timestamp": "..."}
-  ],
-  "status": "complete"
-}
-```
-
-Empty feedback means the user thought it was fine. Focus your improvements on the test cases where the user had specific complaints.
-
-Kill the viewer server when you're done with it:
-
-```bash
-kill $VIEWER_PID 2>/dev/null
-```
-
----
-
-## Improving the skill
-
-This is the heart of the loop. You've run the test cases, the user has reviewed the results, and now you need to make the skill better based on their feedback.
-
-### How to think about improvements
-
-1. **Generalize from the feedback.** The big picture thing that's happening here is that we're trying to create skills that can be used a million times (maybe literally, maybe even more who knows) across many different prompts. Here you and the user are iterating on only a few examples over and over again because it helps move faster. The user knows these examples in and out and it's quick for them to assess new outputs. But if the skill you and the user are codeveloping works only for those examples, it's useless. Rather than put in fiddly overfitty changes, or oppressively constrictive MUSTs, if there's some stubborn issue, you might try branching out and using different metaphors, or recommending different patterns of working. It's relatively cheap to try and maybe you'll land on something great.
-
-2. **Keep the prompt lean.** Remove things that aren't pulling their weight. Make sure to read the transcripts, not just the final outputs — if it looks like the skill is making the model waste a bunch of time doing things that are unproductive, you can try getting rid of the parts of the skill that are making it do that and seeing what happens.
-
-3. **Explain the why.** Try hard to explain the **why** behind everything you're asking the model to do. Today's LLMs are *smart*. They have good theory of mind and when given a good harness can go beyond rote instructions and really make things happen. Even if the feedback from the user is terse or frustrated, try to actually understand the task and why the user is writing what they wrote, and what they actually wrote, and then transmit this understanding into the instructions. If you find yourself writing ALWAYS or NEVER in all caps, or using super rigid structures, that's a yellow flag — if possible, reframe and explain the reasoning so that the model understands why the thing you're asking for is important. That's a more humane, powerful, and effective approach.
-
-4. **Look for repeated work across test cases.** Read the transcripts from the test runs and notice if the subagents all independently wrote similar helper scripts or took the same multi-step approach to something. If all 3 test cases resulted in the subagent writing a `create_docx.py` or a `build_chart.py`, that's a strong signal the skill should bundle that script. Write it once, put it in `scripts/`, and tell the skill to use it. This saves every future invocation from reinventing the wheel.
-
-This task is pretty important (we are trying to create billions a year in economic value here!) and your thinking time is not the blocker; take your time and really mull things over. I'd suggest writing a draft revision and then looking at it anew and making improvements. Really do your best to get into the head of the user and understand what they want and need.
-
-### The iteration loop
-
-After improving the skill:
-
-1. Apply your improvements to the skill
-2. Rerun all test cases into a new `iteration-<N+1>/` directory, including baseline runs. If you're creating a new skill, the baseline is always `without_skill` (no skill) — that stays the same across iterations. If you're improving an existing skill, use your judgment on what makes sense as the baseline: the original version the user came in with, or the previous iteration.
-3. Launch the reviewer with `--previous-workspace` pointing at the previous iteration
-4. Wait for the user to review and tell you they're done
-5. Read the new feedback, improve again, repeat
-
-Keep going until:
-- The user says they're happy
-- The feedback is all empty (everything looks good)
-- You're not making meaningful progress
-
----
-
-## Advanced: Blind comparison
-
-For situations where you want a more rigorous comparison between two versions of a skill (e.g., the user asks "is the new version actually better?"), there's a blind comparison system. Read `agents/comparator.md` and `agents/analyzer.md` for the details. The basic idea is: give two outputs to an independent agent without telling it which is which, and let it judge quality. Then analyze why the winner won.
-
-This is optional, requires subagents, and most users won't need it. The human review loop is usually sufficient.
-
----
+Convert missed triggers into trigger evals, bad outputs into output assertions, and script/tool errors into smoke tests or tool-contract fixes.
 
 ## Description Optimization
 
-The description field in SKILL.md frontmatter is the primary mechanism that determines whether an agent invokes a skill. After creating or improving an OpenClaw skill, offer to optimize the description for better triggering accuracy.
+The frontmatter `description` is the primary trigger surface. After creating or materially changing a skill, tune it with held-out trigger evals:
 
-### Step 1: Generate trigger eval queries
+1. Create 20 realistic queries: roughly half should trigger and half should not. Include messy operator phrasing, local project names, channel/source-lane/tool names, abbreviations, adjacent portable-skill requests, and near misses.
+2. Review the eval set with the user when practical; weak trigger evals produce weak descriptions.
+3. Keep a champion and challenger. Score the current description, revise from failures, then retest on held-out examples. Promote only when the challenger improves trigger precision/recall without weakening must-pass cases or stealing portable work from `uber-skill-creator`.
+4. Report before/after descriptions, scores, failure modes, and remaining ambiguity.
 
-Create 20 eval queries — a mix of should-trigger and should-not-trigger. Save as JSON:
+If the current runtime has no approved trigger-eval executor, run the held-out cases manually with fresh context or runtime-supported subagents and record the observed trigger behavior.
 
-```json
-[
-  {"query": "the user prompt", "should_trigger": true},
-  {"query": "another prompt", "should_trigger": false}
-]
-```
+## Packaging And Reporting
 
-The queries must be realistic and something an OpenClaw, Gaia, Type0, Soho, or agentic-media operator would actually type. Not abstract requests, but requests that are concrete and specific and have a good amount of detail. For instance, file paths, local project context, channel names, source-lane names, workflow names, company names, URLs, tool names, or messy user shorthand. Some might be lowercase or contain abbreviations, typos, or casual speech. Use a mix of different lengths, and focus on edge cases rather than making them clear-cut.
+Package only when the current runtime and user need a `.skill` artifact. Otherwise, leave the skill in the repo and report the path, validation commands, proof receipts, and gaps.
 
-Bad: `"Format this data"`, `"Extract text from PDF"`, `"Create a chart"`
+Final reports for OpenClaw skills should state: component classification, model-owned decisions, deterministic harness responsibilities, tools available/missing, memory behavior, source-authority and truth/synthesis boundaries, identity behavior, context behavior, skills used or added, guardrails/approvals, ownership/adoption state, attention behavior, backpressure/budget/fallback behavior, deletion/simplification result, cost/complexity tradeoff, RCA/human-counterfactual if relevant, rollback plan, acceptance proof, manual-proof gaps, and tests/evals added.
 
-Good: `"ok so my boss just sent me this xlsx file (its in my downloads, called something like 'Q4 sales final FINAL v2.xlsx') and she wants me to add a column that shows the profit margin as a percentage. The revenue is in column C and costs are in column D i think"`
+## Reference Files
 
-For the **should-trigger** queries (8-10), think about coverage. You want different phrasings of the same intent — some formal, some casual. Include cases where the user doesn't explicitly name the skill or file type but clearly needs it. Throw in some uncommon use cases and cases where this skill competes with another but should win.
+Read only what the task needs:
 
-For the **should-not-trigger** queries (8-10), the most valuable ones are the near-misses — queries that share keywords or concepts with the skill but actually need something different. Think adjacent domains, ambiguous phrasing where a naive keyword match would trigger but shouldn't, and cases where the query touches on something the skill does but in a context where another tool is more appropriate.
-
-The key thing to avoid: don't make should-not-trigger queries obviously irrelevant. "Write a fibonacci function" as a negative test for a PDF skill is too easy — it doesn't test anything. The negative cases should be genuinely tricky.
-
-### Step 2: Review with user
-
-Present the eval set to the user for review using the HTML template:
-
-1. Read the template from `assets/eval_review.html`
-2. Replace the placeholders:
-   - `__EVAL_DATA_PLACEHOLDER__` → the JSON array of eval items (no quotes around it — it's a JS variable assignment)
-   - `__SKILL_NAME_PLACEHOLDER__` → the skill's name
-   - `__SKILL_DESCRIPTION_PLACEHOLDER__` → the skill's current description
-3. Write to a temp file (e.g., `/tmp/eval_review_<skill-name>.html`) and open it: `open /tmp/eval_review_<skill-name>.html`
-4. The user can edit queries, toggle should-trigger, add/remove entries, then click "Export Eval Set"
-5. The file downloads to `~/Downloads/eval_set.json` — check the Downloads folder for the most recent version in case there are multiple (e.g., `eval_set (1).json`)
-
-This step matters — bad eval queries lead to bad descriptions.
-
-### Step 3: Run the optimization loop
-
-Tell the user: "This will take some time — I'll run or simulate the optimization loop and check on it periodically."
-
-Save the eval set to the workspace. If the current runtime has an approved trigger-eval executor, use it. If it does not, run the held-out trigger/non-trigger cases manually in a fresh context or with runtime-supported subagents, then record the observed trigger behavior and revise the description from that evidence.
-
-This handles the full optimization loop automatically only in runtimes where its executor is available. It splits the eval set into 60% train and 40% held-out test, evaluates the current description, proposes improvements based on what failed, and re-evaluates each new description on both train and test. When the automatic executor is not available, run the eval set manually with a fresh Codex/OpenClaw context and generate a static HTML report from the recorded results.
-
-### How skill triggering works
-
-Understanding the triggering mechanism helps design better eval queries. Skills appear to an agent with their name and description, and the agent decides whether to consult a skill based on that description plus runtime policy. Simple one-step queries may not need a skill even if the description matches. Complex, multi-step, or specialized OpenClaw queries should trigger when the description matches.
-
-This means your eval queries should be substantive enough that Claude would actually benefit from consulting a skill. Simple queries like "read file X" are poor test cases — they won't trigger skills regardless of description quality.
-
-### Step 4: Apply the result
-
-Take `best_description` from the JSON output and update the skill's SKILL.md frontmatter. Show the user before/after and report the scores.
-
----
-
-### Package and Present
-
-Package only when the current runtime and user actually need a portable `.skill` artifact. Otherwise, leave the skill in the repo and report the path.
-
-```bash
-python -m scripts.package_skill <path/to/skill-folder>
-```
-
-After packaging, report the resulting `.skill` file path.
-
----
-
-## Reference files
-
-The agents/ directory contains instructions for specialized subagents. Read them when you need to spawn the relevant subagent.
-
-- `agents/grader.md` — How to evaluate assertions against outputs
-- `agents/comparator.md` — How to do blind A/B comparison between two outputs
-- `agents/analyzer.md` — How to analyze why one version beat another
-
-The references/ directory has additional documentation:
-- `references/schemas.md` — JSON structures for evals.json, grading.json, etc.
-
----
-
-Repeating one more time the core loop here for emphasis:
-
-- Figure out what the skill is about
-- Draft or edit the skill
-- Run a fresh agent or runtime-supported executor with access to the skill on test prompts
-- With the user, evaluate the outputs:
-  - Create benchmark.json and run `eval-viewer/generate_review.py` to help the user review them
-  - Run quantitative evals
-- Repeat until you and the user are satisfied
-- Package the final skill and return it to the user.
-
-Please add steps to your task list, if you have such a thing, to make sure you don't forget. Specifically include "Create evals JSON and run `eval-viewer/generate_review.py` or an equivalent static report so the human can review test cases" before revising the skill from your own judgment.
-
-Good luck!
+- `references/schemas.md` for eval, grading, and benchmark JSON shapes.
+- `agents/grader.md` when grading assertions against outputs.
+- `agents/analyzer.md` when interpreting benchmark patterns and hidden regressions.
+- `agents/comparator.md` for blind A/B comparison when a rigorous version comparison is needed.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="skills/openclaw-agentic-skill-creator/SKILL.md" -->
 
@@ -11651,7 +10370,7 @@ def test_lint_tool_contract_rejects_unhelpful_error_codes(tmp_path: Path) -> Non
 
 ### File: `tests/agentic/test_openclaw_skill_creator_contract.py`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="tests/agentic/test_openclaw_skill_creator_contract.py" sha256="bf954addbcffbcbb9fdcc25a89026ae4bfc548780dd7ade6a519b2ab6d3704da" bytes="1911" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="tests/agentic/test_openclaw_skill_creator_contract.py" sha256="07259f8eb141cf3b269f4e77564d72401135bb28a6e243d42c9516c0c455ce19" bytes="1844" trailing_newline="true" -->
 ````````
 from pathlib import Path
 import unittest
@@ -11665,25 +10384,26 @@ class OpenClawSkillCreatorContractTests(unittest.TestCase):
     def test_keeps_production_contract_and_privacy_boundary(self) -> None:
         body = SKILL.read_text(encoding="utf-8")
 
-        self.assertIn("OpenClaw production contract", body)
-        self.assertIn("Keep this contract inline because it is short, safety-critical active context", body)
-        self.assertIn("non-skill check", body)
-        self.assertIn("direct answer, source note, deterministic script, typed tool", body)
+        self.assertIn("## OpenClaw Production Contract", body)
+        self.assertIn("smallest useful non-skill check", body)
+        self.assertIn("direct answer, source note, typed tool, source-lane contract, deterministic script", body)
         self.assertIn("should-trigger, should-not-trigger, and near-neighbor prompts", body)
-        self.assertIn("required source lanes, tools, memory/context packets, and permissions", body)
-        self.assertIn("OpenClaw parity proof receipts", body)
-        self.assertIn("source-authority boundary, side-effect boundary, rollback/idempotency rule", body)
+        self.assertIn(
+            "required source lanes, tools, memory/context packets, permissions, and live-data access",
+            body,
+        )
+        self.assertIn("live-safe OpenClaw proof receipts", body)
+        self.assertIn("source-authority boundary", body)
+        self.assertIn("side-effect boundary", body)
+        self.assertIn("rollback/idempotency rule", body)
         self.assertIn("Scaffold", body)
         self.assertIn("Production", body)
         self.assertIn("Library", body)
         self.assertIn("Governed", body)
-        self.assertIn("verification command or OpenClaw session receipt", body)
         self.assertIn("metadata-only and local-first", body)
         self.assertIn("Do not store raw prompts", body)
 
-        section = body.split("> ## OpenClaw production contract", 1)[1].split(
-            "A skill for creating new OpenClaw skills", 1
-        )[0]
+        section = body.split("## OpenClaw Production Contract", 1)[1].split("## Affordance And Proof Rules", 1)[0]
         self.assertLess(len(section.encode("utf-8")), 3000)
         self.assertNotIn("```python", section)
         self.assertNotIn("```sh", section)
