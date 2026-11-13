@@ -20,7 +20,7 @@ Simplicity is a first-class design constraint: question requirements, delete unn
 - `scripts/` and `tests/` — lightweight validation/eval checks that keep the guide operational instead of purely aspirational.
 - `docs/` — detailed architecture docs for tools, memory, context, evals, source authority, subagents, durable execution, and cross-agent operating model.
 - `.agentic/` — starter YAML policies/catalogs/schemas.
-- `skills/` — starter skills for designing tools, memory, context engines, source lanes, and evals.
+- `skills/` — one skill, `openclaw-agentic-tool-designer`, for designing tools that agents call. Six short checklist skills (memory, context, source lanes, evals, architecture review) and the OpenClaw skill creator were removed on 2026-11-13: current models cover them unaided, and `docs/` remains the reference. Commit `e30ab57` is the last one that has them.
 
 ## Use on a new computer
 

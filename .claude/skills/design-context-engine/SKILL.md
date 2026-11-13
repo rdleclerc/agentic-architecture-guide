@@ -1,1 +1,0 @@
-../../../skills/design-context-engine/SKILL.md

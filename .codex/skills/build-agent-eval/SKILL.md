@@ -1,1 +1,0 @@
-../../../skills/build-agent-eval/SKILL.md

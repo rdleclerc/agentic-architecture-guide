@@ -14,16 +14,7 @@ Prefer high-agent-affordance architecture: better source access, typed tools, co
 
 If you believe a lower-affordance pattern is correct, explain why and get explicit approval before implementing it.
 
-## Use this procedure
-
-1. **Name the affordance.** State what this lets the agent see, decide, verify, or do that it could not do before.
-2. **Delete first.** Ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill/source lane instead.
-3. **Choose the right primitive.** Use the decision table below before writing code.
-4. **Write a tool contract.** Include purpose, use/non-use, schemas, side effects, idempotency, errors, traces, and evals.
-5. **Design for the model caller.** Tool and parameter descriptions are UX copy for the model. Include examples and misuse examples.
-6. **Separate evidence from synthesis.** Raw source output, memory recall, model synthesis, candidate signal, and outbound artifact must be labeled differently.
-7. **Make failure recoverable.** Return structured error codes, human-readable cause, and the next safe action. Do not swallow failures.
-8. **Test tool choice and misuse.** Add evals where the agent should call the tool, should not call it, passes bad args, lacks permission, or faces conflicting tools.
+Before you add a tool, ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill or source lane instead.
 
 ## Choose skill vs tool vs source lane vs harness
 
@@ -61,6 +52,13 @@ Minimum fields:
 
 Run `scripts/lint_tool_contract.py <contract.json>` when you have a JSON contract.
 
+What the fields are for:
+
+- `model_description` and the parameter descriptions are UX copy for the model. Say when to use the tool and when not to.
+- `source_authority_role` keeps raw source output, memory recall, model synthesis, candidate signal, and outbound artifact labeled differently.
+- Each error code gives the cause and the next safe action. Do not swallow failures.
+- `eval_cases` test tool choice and misuse, not only schemas: the agent should call the tool, should not call it, passes bad arguments, lacks permission, or faces a conflicting tool.
+
 ## Agent-facing CLI requirements
 
 If the tool is a CLI command agents will call:
@@ -91,16 +89,6 @@ See `references/interface-failure-patterns.md` for examples. Watch especially fo
 - **Gaia / Gaia Brain memory:** a memory tool should distinguish raw source, remembered claim, synthesis, contradiction, and confidence. Writes need provenance and idempotency.
 - **Soho House bookmarks:** a bookmark-intake tool should expose original URL/text/media, classification candidate, and source gaps. It should not bury the trail behind a single score.
 
-## Output format
+## Approval
 
-Return:
-
-1. `Tool or non-tool decision` — keep/delete/skill/tool/source-lane/harness.
-2. `Tool contract` — with the required fields above.
-3. `Implementation notes` — smallest viable surface and where validation lives.
-4. `Tests/evals` — tool-choice, schema, permission, side-effect, source-authority, and misuse cases.
-5. `Approval needed` — any lower-affordance design, external write, destructive action, or live side effect.
-
-## When composing with Skill Creator
-
-If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-agentic-skill-creator` for the draft → eval → improve lifecycle.
+Get approval before any lower-affordance design, external write, destructive action, or live side effect.

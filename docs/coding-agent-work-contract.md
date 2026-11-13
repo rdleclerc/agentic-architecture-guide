@@ -182,4 +182,4 @@ Do not create duplicate planning bureaucracy.
 
 - Tier 0 / tiny deterministic work: inline note is enough.
 - Tier 1 / contained non-trivial coding: this work contract is usually the plan artifact.
-- Tier 2/3 / high-risk, agentic-system, runtime, prompt/skill, cross-repo, deletion/refactor, or ambiguous architecture work: `uberplan` may extend this contract into a full plan contract, but should reuse the same objective, scope, evidence, and stop-condition fields instead of creating an unrelated second plan.
+- Tier 2/3 / high-risk, agentic-system, runtime, prompt/skill, cross-repo, deletion/refactor, or ambiguous architecture work: a fuller plan may extend this contract, but should reuse the same objective, scope, evidence, and stop-condition fields instead of creating an unrelated second plan.

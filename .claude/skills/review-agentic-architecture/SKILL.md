@@ -1,1 +1,0 @@
-../../../skills/review-agentic-architecture/SKILL.md

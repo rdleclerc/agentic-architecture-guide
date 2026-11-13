@@ -527,20 +527,8 @@ The rebuild parser checks each file payload against the SHA-256 and byte count i
 ├── .agentic/skill_registry.yaml
 ├── .agentic/source_authority.yaml
 ├── .agentic/tool_catalog.yaml
-├── .claude/skills/build-agent-eval/SKILL.md
-├── .claude/skills/design-agent-memory/SKILL.md
-├── .claude/skills/design-context-engine/SKILL.md
-├── .claude/skills/design-source-lane/SKILL.md
-├── .claude/skills/openclaw-agentic-skill-creator/SKILL.md
 ├── .claude/skills/openclaw-agentic-tool-designer/SKILL.md
-├── .claude/skills/review-agentic-architecture/SKILL.md
-├── .codex/skills/build-agent-eval/SKILL.md
-├── .codex/skills/design-agent-memory/SKILL.md
-├── .codex/skills/design-context-engine/SKILL.md
-├── .codex/skills/design-source-lane/SKILL.md
-├── .codex/skills/openclaw-agentic-skill-creator/SKILL.md
 ├── .codex/skills/openclaw-agentic-tool-designer/SKILL.md
-├── .codex/skills/review-agentic-architecture/SKILL.md
 ├── .github/pull_request_template.md
 ├── .gitignore
 ├── AGENTS.md
@@ -573,18 +561,11 @@ The rebuild parser checks each file payload against the SHA-256 and byte count i
 ├── docs/version-and-adoption.md
 ├── rebuild_agentic_architecture.py
 ├── scripts/validate_agentic_pack.py
-├── skills/build-agent-eval/SKILL.md
-├── skills/design-agent-memory/SKILL.md
-├── skills/design-context-engine/SKILL.md
-├── skills/design-source-lane/SKILL.md
-├── skills/openclaw-agentic-skill-creator/SKILL.md
 ├── skills/openclaw-agentic-tool-designer/SKILL.md
-├── skills/review-agentic-architecture/SKILL.md
 ├── tests/__init__.py
 ├── tests/agentic/__init__.py
 ├── tests/agentic/behavior_fixtures.json
 ├── tests/agentic/test_lint_tool_contract.py
-├── tests/agentic/test_openclaw_skill_creator_contract.py
 ├── tests/agentic/test_validate_agentic_pack.py
 ```
 
@@ -609,8 +590,8 @@ files:
     sha256: 7ec7f08c887daf2ee78352d3dd44f9466c5424549cc998201315a9d4191a08f6
     trailing_newline: true
   - path: .agentic/skill_registry.yaml
-    bytes: 3129
-    sha256: f9ad40a326b953a8fae73901b9b7ec9588f8b1bd01138edfeb3140cd280b1ff5
+    bytes: 883
+    sha256: 48cc60796b7620e9c388c5517fa8383260ecc3d094f77ba4be4c713ff7295a09
     trailing_newline: true
   - path: .agentic/source_authority.yaml
     bytes: 1487
@@ -620,61 +601,13 @@ files:
     bytes: 3619
     sha256: d459cd2e8721766914dfdf777d24e78c21eb6420b6469d86b6fcb58d0f58fa66
     trailing_newline: true
-  - path: .claude/skills/build-agent-eval/SKILL.md
-    bytes: 531
-    sha256: 89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c
-    trailing_newline: true
-  - path: .claude/skills/design-agent-memory/SKILL.md
-    bytes: 692
-    sha256: bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1
-    trailing_newline: true
-  - path: .claude/skills/design-context-engine/SKILL.md
-    bytes: 624
-    sha256: 34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4
-    trailing_newline: true
-  - path: .claude/skills/design-source-lane/SKILL.md
-    bytes: 1208
-    sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
-    trailing_newline: true
-  - path: .claude/skills/openclaw-agentic-skill-creator/SKILL.md
-    bytes: 10220
-    sha256: dbca080ae4edef4054c43b56b44ff624cb3a5ce513ae243057abb2502eb20620
-    trailing_newline: true
   - path: .claude/skills/openclaw-agentic-tool-designer/SKILL.md
-    bytes: 6255
-    sha256: 8fbe222b7bf2298fd52cb35049dfb23fd36f06f4c825fec1bf650ae1997b1fe5
-    trailing_newline: true
-  - path: .claude/skills/review-agentic-architecture/SKILL.md
-    bytes: 812
-    sha256: 16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164
-    trailing_newline: true
-  - path: .codex/skills/build-agent-eval/SKILL.md
-    bytes: 531
-    sha256: 89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c
-    trailing_newline: true
-  - path: .codex/skills/design-agent-memory/SKILL.md
-    bytes: 692
-    sha256: bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1
-    trailing_newline: true
-  - path: .codex/skills/design-context-engine/SKILL.md
-    bytes: 624
-    sha256: 34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4
-    trailing_newline: true
-  - path: .codex/skills/design-source-lane/SKILL.md
-    bytes: 1208
-    sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
-    trailing_newline: true
-  - path: .codex/skills/openclaw-agentic-skill-creator/SKILL.md
-    bytes: 10220
-    sha256: dbca080ae4edef4054c43b56b44ff624cb3a5ce513ae243057abb2502eb20620
+    bytes: 5154
+    sha256: aa537992d0e6c119f11f458d91daaf07adbd60928a76f296c7cd35c43d618634
     trailing_newline: true
   - path: .codex/skills/openclaw-agentic-tool-designer/SKILL.md
-    bytes: 6255
-    sha256: 8fbe222b7bf2298fd52cb35049dfb23fd36f06f4c825fec1bf650ae1997b1fe5
-    trailing_newline: true
-  - path: .codex/skills/review-agentic-architecture/SKILL.md
-    bytes: 812
-    sha256: 16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164
+    bytes: 5154
+    sha256: aa537992d0e6c119f11f458d91daaf07adbd60928a76f296c7cd35c43d618634
     trailing_newline: true
   - path: .github/pull_request_template.md
     bytes: 1943
@@ -685,16 +618,16 @@ files:
     sha256: 56ad3185f6dc57e0053b17879f412e81f15e5a19f70d04d8fdd58ba17e9b6ab1
     trailing_newline: true
   - path: AGENTS.md
-    bytes: 12149
-    sha256: a9298eadb1012b21c7fee649774e71242b27f5667ffb788d59e06ecb93b43131
+    bytes: 11984
+    sha256: 2a2f8bf963beb1e51a4f6315e0bc6d5ff4ec85015409a3b5ff432396bb60fbb8
     trailing_newline: true
   - path: CLAUDE.md
     bytes: 371
     sha256: 7d72f8c077d97bf402d1f169f28fee9cc292d4ae6f04fee511cebb317075c3a8
     trailing_newline: true
   - path: README.md
-    bytes: 4250
-    sha256: 3b5f3a94c03e53ebba2008518d08f8ea8280d697e44f58fa2a1fdbe82206b584
+    bytes: 4511
+    sha256: 9f938cbedb113dc5fcd4bed5a5334488bcf4a856a2ef526ad644a6ecbc7a42eb
     trailing_newline: true
   - path: build_agentic_architecture_singlefile.py
     bytes: 5948
@@ -705,8 +638,8 @@ files:
     sha256: df340c22d206d48efa58b8def42801172f9a5c890562c9b1f52f8b1dc984b638
     trailing_newline: true
   - path: docs/QUICK_REFERENCE.md
-    bytes: 16413
-    sha256: 584d884aff7bb210ad82d40f562d3c5b851a740cf5811734f247f8e3e7b97a25
+    bytes: 16416
+    sha256: ebcb3548f1280e312b802b1cf647705e7607cfc710b3e98c4b13d0b2d2049b09
     trailing_newline: true
   - path: docs/a2a-contracts.md
     bytes: 6980
@@ -729,8 +662,8 @@ files:
     sha256: 2aaf243f4ab4b17b374607162fb2ce62a911a987e74c0e57825090b395334edb
     trailing_newline: true
   - path: docs/coding-agent-work-contract.md
-    bytes: 7398
-    sha256: 6359cd69ffb71e08c73b811406589bf2da4b7cc2e51cbd90b67ac43a26d01904
+    bytes: 7375
+    sha256: 359fc1d0b0aa6c292bb6e3092998926079439750c004bd1b9306bdc8dcf15406
     trailing_newline: true
   - path: docs/context-engineering.md
     bytes: 1741
@@ -773,8 +706,8 @@ files:
     sha256: f79134a08564df1494da4bdc30a4149801e71f0597c506895e4c348279a55eb5
     trailing_newline: true
   - path: docs/skills.md
-    bytes: 3090
-    sha256: 8be0b43b18dcfc78f8ee1a503a3f46d0b6b6d38567dc3a5f16e453c363a71741
+    bytes: 2737
+    sha256: ccb7c6237e94332451ccfe87ff45c991b96667b47f04bc9e17b947ee68051160
     trailing_newline: true
   - path: docs/source-authority-and-truth-lanes.md
     bytes: 3286
@@ -804,33 +737,9 @@ files:
     bytes: 18184
     sha256: 8ded9da55631e726e1a2748283922803eb3cca2b18e8010ab360e02778532d0a
     trailing_newline: true
-  - path: skills/build-agent-eval/SKILL.md
-    bytes: 531
-    sha256: 89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c
-    trailing_newline: true
-  - path: skills/design-agent-memory/SKILL.md
-    bytes: 692
-    sha256: bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1
-    trailing_newline: true
-  - path: skills/design-context-engine/SKILL.md
-    bytes: 624
-    sha256: 34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4
-    trailing_newline: true
-  - path: skills/design-source-lane/SKILL.md
-    bytes: 1208
-    sha256: a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460
-    trailing_newline: true
-  - path: skills/openclaw-agentic-skill-creator/SKILL.md
-    bytes: 10220
-    sha256: dbca080ae4edef4054c43b56b44ff624cb3a5ce513ae243057abb2502eb20620
-    trailing_newline: true
   - path: skills/openclaw-agentic-tool-designer/SKILL.md
-    bytes: 6255
-    sha256: 8fbe222b7bf2298fd52cb35049dfb23fd36f06f4c825fec1bf650ae1997b1fe5
-    trailing_newline: true
-  - path: skills/review-agentic-architecture/SKILL.md
-    bytes: 812
-    sha256: 16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164
+    bytes: 5154
+    sha256: aa537992d0e6c119f11f458d91daaf07adbd60928a76f296c7cd35c43d618634
     trailing_newline: true
   - path: tests/__init__.py
     bytes: 0
@@ -847,10 +756,6 @@ files:
   - path: tests/agentic/test_lint_tool_contract.py
     bytes: 3336
     sha256: 1f2f12c089e703c38af6a54568e2ac086d3ed1212b150697689974444c2e9d10
-    trailing_newline: true
-  - path: tests/agentic/test_openclaw_skill_creator_contract.py
-    bytes: 1844
-    sha256: 07259f8eb141cf3b269f4e77564d72401135bb28a6e243d42c9516c0c455ce19
     trailing_newline: true
   - path: tests/agentic/test_validate_agentic_pack.py
     bytes: 5771
@@ -1083,7 +988,7 @@ memory:
 
 ### File: `.agentic/skill_registry.yaml`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/skill_registry.yaml" sha256="f9ad40a326b953a8fae73901b9b7ec9588f8b1bd01138edfeb3140cd280b1ff5" bytes="3129" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".agentic/skill_registry.yaml" sha256="48cc60796b7620e9c388c5517fa8383260ecc3d094f77ba4be4c713ff7295a09" bytes="883" trailing_newline="true" -->
 ````````
 version: 1
 canonical_root: skills
@@ -1094,48 +999,12 @@ policy:
   canonical_source: skills/<skill-name>/SKILL.md
   adapter_contract: Adapter skill paths mirror the canonical skill directories for runtime compatibility. Do not edit adapter paths directly; update the canonical skill and regenerate or refresh adapters.
 skills:
-  - name: openclaw-agentic-skill-creator
-    description: Use when creating, modifying, improving, evaluating, benchmarking, or packaging an OpenClaw-targeted skill; includes draft/eval/improve lifecycle and trigger-description optimization. Do not use as the general portable skill creator; use uber-skill-creator for general SKILL.md skills when it is installed.
-    path: skills/openclaw-agentic-skill-creator/SKILL.md
-    adapter_paths:
-      claude: .claude/skills/openclaw-agentic-skill-creator/SKILL.md
-      codex: .codex/skills/openclaw-agentic-skill-creator/SKILL.md
   - name: openclaw-agentic-tool-designer
     description: Use when adding, modifying, reviewing, or debugging any tool exposed to an agent, including OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or workflow commands.
     path: skills/openclaw-agentic-tool-designer/SKILL.md
     adapter_paths:
       claude: .claude/skills/openclaw-agentic-tool-designer/SKILL.md
       codex: .codex/skills/openclaw-agentic-tool-designer/SKILL.md
-  - name: design-agent-memory
-    description: Use when adding or reviewing memory search, memory writes, promotion, contradiction, or recall behavior.
-    path: skills/design-agent-memory/SKILL.md
-    adapter_paths:
-      claude: .claude/skills/design-agent-memory/SKILL.md
-      codex: .codex/skills/design-agent-memory/SKILL.md
-  - name: design-source-lane
-    description: Use when adding or reviewing a source lane, source-authority rule, identity-resolution path, noisy-lane promotion policy, sidecar adoption state, or synthesis boundary.
-    path: skills/design-source-lane/SKILL.md
-    adapter_paths:
-      claude: .claude/skills/design-source-lane/SKILL.md
-      codex: .codex/skills/design-source-lane/SKILL.md
-  - name: design-context-engine
-    description: Use when changing context assembly, compaction, retrieval, or prompt budgeting.
-    path: skills/design-context-engine/SKILL.md
-    adapter_paths:
-      claude: .claude/skills/design-context-engine/SKILL.md
-      codex: .codex/skills/design-context-engine/SKILL.md
-  - name: build-agent-eval
-    description: Use when adding tests or evals for agentic behavior.
-    path: skills/build-agent-eval/SKILL.md
-    adapter_paths:
-      claude: .claude/skills/build-agent-eval/SKILL.md
-      codex: .codex/skills/build-agent-eval/SKILL.md
-  - name: review-agentic-architecture
-    description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
-    path: skills/review-agentic-architecture/SKILL.md
-    adapter_paths:
-      claude: .claude/skills/review-agentic-architecture/SKILL.md
-      codex: .codex/skills/review-agentic-architecture/SKILL.md
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".agentic/skill_registry.yaml" -->
 
@@ -1280,219 +1149,9 @@ tools:
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".agentic/tool_catalog.yaml" -->
 
-### File: `.claude/skills/build-agent-eval/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/build-agent-eval/SKILL.md" sha256="89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c" bytes="531" trailing_newline="true" -->
-````````
----
-name: build-agent-eval
-description: Use when adding tests or evals for agentic behavior.
----
-
-# Build Agent Eval
-
-## Procedure
-
-1. Identify the behavior being tested.
-2. Create positive and negative cases.
-3. Test process, not only final answer.
-4. Capture tool choice, memory retrieval, context use, approval gates, recovery, and stop conditions.
-5. Add cheap tests for CI and heavier tests for release or nightly runs.
-6. Ensure failures are traceable.
-
-## Output
-
-Return eval cases, expected traces, and pass/fail criteria.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/build-agent-eval/SKILL.md" -->
-
-### File: `.claude/skills/design-agent-memory/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-agent-memory/SKILL.md" sha256="bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1" bytes="692" trailing_newline="true" -->
-````````
----
-name: design-agent-memory
-description: Use when adding or reviewing memory search, memory writes, promotion, contradiction, or recall behavior.
----
-
-# Design Agent Memory
-
-## Procedure
-
-1. Identify the memory type: working, episodic, semantic, or procedural.
-2. Define scope: user, org, repo, project, entity, session, or agent.
-3. Require evidence for durable claims.
-4. Use candidate writes before promotion unless policy allows direct promotion.
-5. Handle contradiction, supersession, staleness, and expiration.
-6. Ensure memory retrieval is evaluated.
-7. Ensure memory used in final answers is traceable.
-
-## Output
-
-Return memory schema changes, memory tool changes, and eval cases.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-agent-memory/SKILL.md" -->
-
-### File: `.claude/skills/design-context-engine/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-context-engine/SKILL.md" sha256="34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4" bytes="624" trailing_newline="true" -->
-````````
----
-name: design-context-engine
-description: Use when changing context assembly, compaction, retrieval, or prompt budgeting.
----
-
-# Design Context Engine
-
-## Procedure
-
-1. Define always-loaded context.
-2. Define retrieval-loaded context.
-3. Define activation-loaded context such as full tool schemas and skill bodies.
-4. Add token budgets and priority rules.
-5. Add source ledger entries for every context item.
-6. Define compaction triggers.
-7. Test that goals, constraints, evidence, open questions, pending approvals, and artifacts survive compaction.
-
-## Output
-
-Return context policy changes and compaction eval cases.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-context-engine/SKILL.md" -->
-
-### File: `.claude/skills/design-source-lane/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/design-source-lane/SKILL.md" sha256="a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460" bytes="1208" trailing_newline="true" -->
-````````
----
-name: design-source-lane
-description: Use when adding or reviewing a source lane, source-authority rule, identity-resolution path, noisy-lane promotion policy, sidecar adoption state, or synthesis boundary.
----
-
-# Design Source Lane
-
-## Procedure
-
-1. Identify the artifact role: raw source, structured truth, retrieval index, recall memory, synthesis artifact, candidate signal, sidecar, or outbound artifact.
-2. Define raw capture and idempotency.
-3. Define identity resolution: aliases, external IDs, merge evidence, and unmerge path.
-4. Define claim categories and source authority by category.
-5. Define freshness, staleness, and contradiction behavior.
-6. Define promotion rules and review queues.
-7. Define health checks and trace fields.
-8. Define synthesis behavior without making synthesis authoritative by default.
-9. Define attention behavior: silent, internal record, review queue, ask, notify, interrupt, or approval.
-10. Add evals for conflict, stale evidence, bad identity merge, noisy-lane promotion, and accidental sidecar promotion.
-
-## Output
-
-Return a source-lane contract, affected artifact roles, identity policy, authority matrix, adoption state, attention policy, and eval cases.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/design-source-lane/SKILL.md" -->
-
-### File: `.claude/skills/openclaw-agentic-skill-creator/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-agentic-skill-creator/SKILL.md" sha256="dbca080ae4edef4054c43b56b44ff624cb3a5ce513ae243057abb2502eb20620" bytes="10220" trailing_newline="true" -->
-````````
----
-name: openclaw-agentic-skill-creator
-description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
----
-
-# OpenClaw Agentic Skill Creator
-
-Create and improve skills for OpenClaw, Gaia/Gaia Brain, Type0, Soho House, and shared agentic-media work. This skill is the OpenClaw-specific counterpart to `uber-skill-creator`: use this when the skill depends on OpenClaw runtime behavior, tenant/workspace policy, live source lanes, agent affordance, local proof conventions, or live-safe OpenClaw parity receipts. Use `uber-skill-creator` for portable SKILL.md work that should run across Codex, Claude, and compatible agents without OpenClaw-specific assumptions.
-
-Keep provenance visible when adapting public skill-creator methods, but do not copy proprietary or leaked code. Translate runtime examples into the current executor; do not assume Claude-specific subprocesses, slash commands, browser viewers, or OpenClaw tools unless this runtime exposes them and the user approved that path.
-
-## OpenClaw Production Contract
-
-Before creating or expanding a skill, run the smallest useful non-skill check. A direct answer, source note, typed tool, source-lane contract, deterministic script, or workflow affordance may be better. Promote to a skill only when repeated agent behavior, discovery, source-lane use, or reusable judgment guidance is the real need.
-
-For production, library, governed, Slack-visible, side-effecting, tenant-sensitive, or cross-agent skills, capture the compact contract before adding release machinery:
-
-- owned recurring job and expected OpenClaw agent behavior;
-- should-trigger, should-not-trigger, and near-neighbor prompts;
-- tenant, workspace, channel, account, project, and actor boundaries;
-- required source lanes, tools, memory/context packets, permissions, and live-data access;
-- scripts, assets, references, and deterministic checks that carry real behavior;
-- trigger evals, output evals, live-safe OpenClaw proof receipts, owner, review cadence, maturity tier, and rollback/idempotency rule;
-- source-authority boundary, identity-resolution behavior, synthesis boundary, side-effect boundary, budget/fallback policy, and attention/notification behavior.
-
-Use maturity tiers to select gates, not ceremony: `Scaffold` gets quick validation; `Production` adds trigger/output evals; `Library` adds packaging/runtime checks and route-confusion coverage; `Governed` adds owner review, regression history, live-safe proof, and explicit acceptance evidence.
-
-Any usage or drift loop must be metadata-only and local-first by default. Acceptable telemetry is skill name/version, event type, source/client, command name without arguments, outcome, failure type, and timestamp. Do not store raw prompts, Slack messages, transcripts, private files, model outputs, command arguments, or reviewer notes as telemetry.
-
-## Affordance And Proof Rules
-
-Preserve high agent affordance. Help agents inspect sources, choose clear tools, apply judgment, recover from gaps, and leave traces. Do not encode brittle gates, hidden routing layers, semantic judges, or deterministic substitutes for judgment unless the user explicitly approves the lower-affordance design.
-
-If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or summary in the skill/eval package.
-
-For behavior that an OpenClaw agent is supposed to perform, prove the workflow before readiness claims:
-
-1. Run a fresh self-subagent or runtime-native executor with the intended context, tools, source lanes, skills, recovery instructions, and no hidden rationale.
-2. If it fails, improve affordances: context packet, skill wording, tool descriptions, source access, task frame, recovery instructions, or audit trail. Do not patch with private harness state.
-3. Run the same workflow with a real OpenClaw agent using only normal OpenClaw scaffold plus the successful context/skill/tool profile.
-4. Preserve receipts: self-subagent result, OpenClaw `sessionKey`/`sessionId` or transcript path, tool outputs, source artifacts, eval outputs, and any redactions.
-
-If live proof is unsafe or unavailable, label the gap. Do not present local validation or synthetic evals as OpenClaw parity proof.
-
-## Creation Workflow
-
-1. **Classify and route.** If the request is portable, redirect to `uber-skill-creator`. If it is OpenClaw-specific, continue here.
-2. **Capture intent from evidence first.** Mine the conversation, files, transcripts, source lanes, operator corrections, and observed tools before asking questions.
-3. **Ask only material gaps.** Clarify trigger/non-trigger contexts, expected outputs, tenant/source/tool permissions, side effects, success criteria, and proof requirements.
-4. **Draft the skill.** Keep trigger information in the frontmatter `description`. Keep the body procedural, concise, and OpenClaw-specific. Use imperative instructions, short rationale where it improves behavior, and references/scripts/assets only when they reduce active-context load or repeated work.
-5. **Use progressive disclosure.** `SKILL.md` is active context; larger examples, schemas, and recipes belong in `references/`; deterministic repeatable work belongs in `scripts/`; reusable output inputs belong in `assets/`. For multi-variant skills, route to only the relevant reference.
-6. **Validate shape.** Run the available quick validator and any package-specific lint/tests. Validation checks package integrity; it does not replace agentic proof.
-
-## Eval-Driven Iteration
-
-Use eval-driven iteration for production/library/governed skills, broadly installed skills, behavior-changing skills, or any skill whose correctness is not obvious from inspection.
-
-1. **Draft realistic eval prompts.** Use real operator-style OpenClaw/Gaia/Type0/Soho/agentic-media tasks. Include should-trigger, should-not-trigger, near-neighbor, source-lane, side-effect, and tenant-boundary cases as relevant.
-2. **Run with-skill and baseline together.** For a new skill, baseline is no skill. For an existing skill, baseline is the previous or snapshotted version. Use the current runtime's fresh subagent/executor; in OpenClaw, use the exposed session runner when available.
-3. **Capture artifacts.** Store prompts, input files, outputs, transcripts, timing/token data when available, tool receipts, source handles, and eval metadata under an iteration workspace.
-4. **Draft assertions while runs execute.** Objective checks should cover observable outputs, source-authority labels, forbidden side effects, receipt presence, and tenant/source boundaries. Keep subjective judgment for human review.
-5. **Grade and aggregate.** Use scripts where checks are deterministic. Produce a benchmark summary and preserve qualitative notes; read transcripts, not only final outputs.
-6. **Show the human the results.** Prefer the bundled `eval-viewer/generate_review.py` with `--static` in headless OpenClaw environments, or an equivalent static report when the viewer is unavailable.
-7. **Iterate on affordance.** Improve context, wording, resources, examples, tool descriptions, or source-lane guidance. Avoid overfitting to a tiny prompt set or adding coercive rules where clearer affordances would work.
-8. **Repeat until acceptable.** Expand the eval set before claiming broad coverage.
-
-Convert missed triggers into trigger evals, bad outputs into output assertions, and script/tool errors into smoke tests or tool-contract fixes.
-
-## Description Optimization
-
-The frontmatter `description` is the primary trigger surface. After creating or materially changing a skill, tune it with held-out trigger evals:
-
-1. Create 20 realistic queries: roughly half should trigger and half should not. Include messy operator phrasing, local project names, channel/source-lane/tool names, abbreviations, adjacent portable-skill requests, and near misses.
-2. Review the eval set with the user when practical; weak trigger evals produce weak descriptions.
-3. Keep a champion and challenger. Score the current description, revise from failures, then retest on held-out examples. Promote only when the challenger improves trigger precision/recall without weakening must-pass cases or stealing portable work from `uber-skill-creator`.
-4. Report before/after descriptions, scores, failure modes, and remaining ambiguity.
-
-If the current runtime has no approved trigger-eval executor, run the held-out cases manually with fresh context or runtime-supported subagents and record the observed trigger behavior.
-
-## Packaging And Reporting
-
-Package only when the current runtime and user need a `.skill` artifact. Otherwise, leave the skill in the repo and report the path, validation commands, proof receipts, and gaps.
-
-Final reports for OpenClaw skills should state: component classification, model-owned decisions, deterministic harness responsibilities, tools available/missing, memory behavior, source-authority and truth/synthesis boundaries, identity behavior, context behavior, skills used or added, guardrails/approvals, ownership/adoption state, attention behavior, backpressure/budget/fallback behavior, deletion/simplification result, cost/complexity tradeoff, RCA/human-counterfactual if relevant, rollback plan, acceptance proof, manual-proof gaps, and tests/evals added.
-
-## Reference Files
-
-Read only what the task needs:
-
-- `references/schemas.md` for eval, grading, and benchmark JSON shapes.
-- `agents/grader.md` when grading assertions against outputs.
-- `agents/analyzer.md` when interpreting benchmark patterns and hidden regressions.
-- `agents/comparator.md` for blind A/B comparison when a rigorous version comparison is needed.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/openclaw-agentic-skill-creator/SKILL.md" -->
-
 ### File: `.claude/skills/openclaw-agentic-tool-designer/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-agentic-tool-designer/SKILL.md" sha256="8fbe222b7bf2298fd52cb35049dfb23fd36f06f4c825fec1bf650ae1997b1fe5" bytes="6255" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/openclaw-agentic-tool-designer/SKILL.md" sha256="aa537992d0e6c119f11f458d91daaf07adbd60928a76f296c7cd35c43d618634" bytes="5154" trailing_newline="true" -->
 ````````
 ---
 name: openclaw-agentic-tool-designer
@@ -1510,16 +1169,7 @@ Prefer high-agent-affordance architecture: better source access, typed tools, co
 
 If you believe a lower-affordance pattern is correct, explain why and get explicit approval before implementing it.
 
-## Use this procedure
-
-1. **Name the affordance.** State what this lets the agent see, decide, verify, or do that it could not do before.
-2. **Delete first.** Ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill/source lane instead.
-3. **Choose the right primitive.** Use the decision table below before writing code.
-4. **Write a tool contract.** Include purpose, use/non-use, schemas, side effects, idempotency, errors, traces, and evals.
-5. **Design for the model caller.** Tool and parameter descriptions are UX copy for the model. Include examples and misuse examples.
-6. **Separate evidence from synthesis.** Raw source output, memory recall, model synthesis, candidate signal, and outbound artifact must be labeled differently.
-7. **Make failure recoverable.** Return structured error codes, human-readable cause, and the next safe action. Do not swallow failures.
-8. **Test tool choice and misuse.** Add evals where the agent should call the tool, should not call it, passes bad args, lacks permission, or faces conflicting tools.
+Before you add a tool, ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill or source lane instead.
 
 ## Choose skill vs tool vs source lane vs harness
 
@@ -1557,6 +1207,13 @@ Minimum fields:
 
 Run `scripts/lint_tool_contract.py <contract.json>` when you have a JSON contract.
 
+What the fields are for:
+
+- `model_description` and the parameter descriptions are UX copy for the model. Say when to use the tool and when not to.
+- `source_authority_role` keeps raw source output, memory recall, model synthesis, candidate signal, and outbound artifact labeled differently.
+- Each error code gives the cause and the next safe action. Do not swallow failures.
+- `eval_cases` test tool choice and misuse, not only schemas: the agent should call the tool, should not call it, passes bad arguments, lacks permission, or faces a conflicting tool.
+
 ## Agent-facing CLI requirements
 
 If the tool is a CLI command agents will call:
@@ -1587,264 +1244,15 @@ See `references/interface-failure-patterns.md` for examples. Watch especially fo
 - **Gaia / Gaia Brain memory:** a memory tool should distinguish raw source, remembered claim, synthesis, contradiction, and confidence. Writes need provenance and idempotency.
 - **Soho House bookmarks:** a bookmark-intake tool should expose original URL/text/media, classification candidate, and source gaps. It should not bury the trail behind a single score.
 
-## Output format
+## Approval
 
-Return:
-
-1. `Tool or non-tool decision` — keep/delete/skill/tool/source-lane/harness.
-2. `Tool contract` — with the required fields above.
-3. `Implementation notes` — smallest viable surface and where validation lives.
-4. `Tests/evals` — tool-choice, schema, permission, side-effect, source-authority, and misuse cases.
-5. `Approval needed` — any lower-affordance design, external write, destructive action, or live side effect.
-
-## When composing with Skill Creator
-
-If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-agentic-skill-creator` for the draft → eval → improve lifecycle.
+Get approval before any lower-affordance design, external write, destructive action, or live side effect.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/openclaw-agentic-tool-designer/SKILL.md" -->
 
-### File: `.claude/skills/review-agentic-architecture/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".claude/skills/review-agentic-architecture/SKILL.md" sha256="16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164" bytes="812" trailing_newline="true" -->
-````````
----
-name: review-agentic-architecture
-description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
----
-
-# Review Agentic Architecture
-
-## Checklist
-
-- Is the component correctly classified?
-- Are model-owned decisions separated from harness-owned responsibilities?
-- Are ambiguous decisions handled by adaptive policy rather than brittle regex or keyword routing?
-- Are tools typed, permissioned, observable, and tested?
-- Is memory scoped, evidenced, and contradiction-aware?
-- Is context assembled by policy rather than dumping everything?
-- Are risky side effects gated by approval and idempotency?
-- Are checkpoints and replay behavior safe?
-- Are evals included for positive and negative cases?
-
-## Output
-
-Return pass/fail with required changes.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".claude/skills/review-agentic-architecture/SKILL.md" -->
-
-### File: `.codex/skills/build-agent-eval/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/build-agent-eval/SKILL.md" sha256="89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c" bytes="531" trailing_newline="true" -->
-````````
----
-name: build-agent-eval
-description: Use when adding tests or evals for agentic behavior.
----
-
-# Build Agent Eval
-
-## Procedure
-
-1. Identify the behavior being tested.
-2. Create positive and negative cases.
-3. Test process, not only final answer.
-4. Capture tool choice, memory retrieval, context use, approval gates, recovery, and stop conditions.
-5. Add cheap tests for CI and heavier tests for release or nightly runs.
-6. Ensure failures are traceable.
-
-## Output
-
-Return eval cases, expected traces, and pass/fail criteria.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/build-agent-eval/SKILL.md" -->
-
-### File: `.codex/skills/design-agent-memory/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/design-agent-memory/SKILL.md" sha256="bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1" bytes="692" trailing_newline="true" -->
-````````
----
-name: design-agent-memory
-description: Use when adding or reviewing memory search, memory writes, promotion, contradiction, or recall behavior.
----
-
-# Design Agent Memory
-
-## Procedure
-
-1. Identify the memory type: working, episodic, semantic, or procedural.
-2. Define scope: user, org, repo, project, entity, session, or agent.
-3. Require evidence for durable claims.
-4. Use candidate writes before promotion unless policy allows direct promotion.
-5. Handle contradiction, supersession, staleness, and expiration.
-6. Ensure memory retrieval is evaluated.
-7. Ensure memory used in final answers is traceable.
-
-## Output
-
-Return memory schema changes, memory tool changes, and eval cases.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/design-agent-memory/SKILL.md" -->
-
-### File: `.codex/skills/design-context-engine/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/design-context-engine/SKILL.md" sha256="34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4" bytes="624" trailing_newline="true" -->
-````````
----
-name: design-context-engine
-description: Use when changing context assembly, compaction, retrieval, or prompt budgeting.
----
-
-# Design Context Engine
-
-## Procedure
-
-1. Define always-loaded context.
-2. Define retrieval-loaded context.
-3. Define activation-loaded context such as full tool schemas and skill bodies.
-4. Add token budgets and priority rules.
-5. Add source ledger entries for every context item.
-6. Define compaction triggers.
-7. Test that goals, constraints, evidence, open questions, pending approvals, and artifacts survive compaction.
-
-## Output
-
-Return context policy changes and compaction eval cases.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/design-context-engine/SKILL.md" -->
-
-### File: `.codex/skills/design-source-lane/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/design-source-lane/SKILL.md" sha256="a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460" bytes="1208" trailing_newline="true" -->
-````````
----
-name: design-source-lane
-description: Use when adding or reviewing a source lane, source-authority rule, identity-resolution path, noisy-lane promotion policy, sidecar adoption state, or synthesis boundary.
----
-
-# Design Source Lane
-
-## Procedure
-
-1. Identify the artifact role: raw source, structured truth, retrieval index, recall memory, synthesis artifact, candidate signal, sidecar, or outbound artifact.
-2. Define raw capture and idempotency.
-3. Define identity resolution: aliases, external IDs, merge evidence, and unmerge path.
-4. Define claim categories and source authority by category.
-5. Define freshness, staleness, and contradiction behavior.
-6. Define promotion rules and review queues.
-7. Define health checks and trace fields.
-8. Define synthesis behavior without making synthesis authoritative by default.
-9. Define attention behavior: silent, internal record, review queue, ask, notify, interrupt, or approval.
-10. Add evals for conflict, stale evidence, bad identity merge, noisy-lane promotion, and accidental sidecar promotion.
-
-## Output
-
-Return a source-lane contract, affected artifact roles, identity policy, authority matrix, adoption state, attention policy, and eval cases.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/design-source-lane/SKILL.md" -->
-
-### File: `.codex/skills/openclaw-agentic-skill-creator/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-agentic-skill-creator/SKILL.md" sha256="dbca080ae4edef4054c43b56b44ff624cb3a5ce513ae243057abb2502eb20620" bytes="10220" trailing_newline="true" -->
-````````
----
-name: openclaw-agentic-skill-creator
-description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
----
-
-# OpenClaw Agentic Skill Creator
-
-Create and improve skills for OpenClaw, Gaia/Gaia Brain, Type0, Soho House, and shared agentic-media work. This skill is the OpenClaw-specific counterpart to `uber-skill-creator`: use this when the skill depends on OpenClaw runtime behavior, tenant/workspace policy, live source lanes, agent affordance, local proof conventions, or live-safe OpenClaw parity receipts. Use `uber-skill-creator` for portable SKILL.md work that should run across Codex, Claude, and compatible agents without OpenClaw-specific assumptions.
-
-Keep provenance visible when adapting public skill-creator methods, but do not copy proprietary or leaked code. Translate runtime examples into the current executor; do not assume Claude-specific subprocesses, slash commands, browser viewers, or OpenClaw tools unless this runtime exposes them and the user approved that path.
-
-## OpenClaw Production Contract
-
-Before creating or expanding a skill, run the smallest useful non-skill check. A direct answer, source note, typed tool, source-lane contract, deterministic script, or workflow affordance may be better. Promote to a skill only when repeated agent behavior, discovery, source-lane use, or reusable judgment guidance is the real need.
-
-For production, library, governed, Slack-visible, side-effecting, tenant-sensitive, or cross-agent skills, capture the compact contract before adding release machinery:
-
-- owned recurring job and expected OpenClaw agent behavior;
-- should-trigger, should-not-trigger, and near-neighbor prompts;
-- tenant, workspace, channel, account, project, and actor boundaries;
-- required source lanes, tools, memory/context packets, permissions, and live-data access;
-- scripts, assets, references, and deterministic checks that carry real behavior;
-- trigger evals, output evals, live-safe OpenClaw proof receipts, owner, review cadence, maturity tier, and rollback/idempotency rule;
-- source-authority boundary, identity-resolution behavior, synthesis boundary, side-effect boundary, budget/fallback policy, and attention/notification behavior.
-
-Use maturity tiers to select gates, not ceremony: `Scaffold` gets quick validation; `Production` adds trigger/output evals; `Library` adds packaging/runtime checks and route-confusion coverage; `Governed` adds owner review, regression history, live-safe proof, and explicit acceptance evidence.
-
-Any usage or drift loop must be metadata-only and local-first by default. Acceptable telemetry is skill name/version, event type, source/client, command name without arguments, outcome, failure type, and timestamp. Do not store raw prompts, Slack messages, transcripts, private files, model outputs, command arguments, or reviewer notes as telemetry.
-
-## Affordance And Proof Rules
-
-Preserve high agent affordance. Help agents inspect sources, choose clear tools, apply judgment, recover from gaps, and leave traces. Do not encode brittle gates, hidden routing layers, semantic judges, or deterministic substitutes for judgment unless the user explicitly approves the lower-affordance design.
-
-If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or summary in the skill/eval package.
-
-For behavior that an OpenClaw agent is supposed to perform, prove the workflow before readiness claims:
-
-1. Run a fresh self-subagent or runtime-native executor with the intended context, tools, source lanes, skills, recovery instructions, and no hidden rationale.
-2. If it fails, improve affordances: context packet, skill wording, tool descriptions, source access, task frame, recovery instructions, or audit trail. Do not patch with private harness state.
-3. Run the same workflow with a real OpenClaw agent using only normal OpenClaw scaffold plus the successful context/skill/tool profile.
-4. Preserve receipts: self-subagent result, OpenClaw `sessionKey`/`sessionId` or transcript path, tool outputs, source artifacts, eval outputs, and any redactions.
-
-If live proof is unsafe or unavailable, label the gap. Do not present local validation or synthetic evals as OpenClaw parity proof.
-
-## Creation Workflow
-
-1. **Classify and route.** If the request is portable, redirect to `uber-skill-creator`. If it is OpenClaw-specific, continue here.
-2. **Capture intent from evidence first.** Mine the conversation, files, transcripts, source lanes, operator corrections, and observed tools before asking questions.
-3. **Ask only material gaps.** Clarify trigger/non-trigger contexts, expected outputs, tenant/source/tool permissions, side effects, success criteria, and proof requirements.
-4. **Draft the skill.** Keep trigger information in the frontmatter `description`. Keep the body procedural, concise, and OpenClaw-specific. Use imperative instructions, short rationale where it improves behavior, and references/scripts/assets only when they reduce active-context load or repeated work.
-5. **Use progressive disclosure.** `SKILL.md` is active context; larger examples, schemas, and recipes belong in `references/`; deterministic repeatable work belongs in `scripts/`; reusable output inputs belong in `assets/`. For multi-variant skills, route to only the relevant reference.
-6. **Validate shape.** Run the available quick validator and any package-specific lint/tests. Validation checks package integrity; it does not replace agentic proof.
-
-## Eval-Driven Iteration
-
-Use eval-driven iteration for production/library/governed skills, broadly installed skills, behavior-changing skills, or any skill whose correctness is not obvious from inspection.
-
-1. **Draft realistic eval prompts.** Use real operator-style OpenClaw/Gaia/Type0/Soho/agentic-media tasks. Include should-trigger, should-not-trigger, near-neighbor, source-lane, side-effect, and tenant-boundary cases as relevant.
-2. **Run with-skill and baseline together.** For a new skill, baseline is no skill. For an existing skill, baseline is the previous or snapshotted version. Use the current runtime's fresh subagent/executor; in OpenClaw, use the exposed session runner when available.
-3. **Capture artifacts.** Store prompts, input files, outputs, transcripts, timing/token data when available, tool receipts, source handles, and eval metadata under an iteration workspace.
-4. **Draft assertions while runs execute.** Objective checks should cover observable outputs, source-authority labels, forbidden side effects, receipt presence, and tenant/source boundaries. Keep subjective judgment for human review.
-5. **Grade and aggregate.** Use scripts where checks are deterministic. Produce a benchmark summary and preserve qualitative notes; read transcripts, not only final outputs.
-6. **Show the human the results.** Prefer the bundled `eval-viewer/generate_review.py` with `--static` in headless OpenClaw environments, or an equivalent static report when the viewer is unavailable.
-7. **Iterate on affordance.** Improve context, wording, resources, examples, tool descriptions, or source-lane guidance. Avoid overfitting to a tiny prompt set or adding coercive rules where clearer affordances would work.
-8. **Repeat until acceptable.** Expand the eval set before claiming broad coverage.
-
-Convert missed triggers into trigger evals, bad outputs into output assertions, and script/tool errors into smoke tests or tool-contract fixes.
-
-## Description Optimization
-
-The frontmatter `description` is the primary trigger surface. After creating or materially changing a skill, tune it with held-out trigger evals:
-
-1. Create 20 realistic queries: roughly half should trigger and half should not. Include messy operator phrasing, local project names, channel/source-lane/tool names, abbreviations, adjacent portable-skill requests, and near misses.
-2. Review the eval set with the user when practical; weak trigger evals produce weak descriptions.
-3. Keep a champion and challenger. Score the current description, revise from failures, then retest on held-out examples. Promote only when the challenger improves trigger precision/recall without weakening must-pass cases or stealing portable work from `uber-skill-creator`.
-4. Report before/after descriptions, scores, failure modes, and remaining ambiguity.
-
-If the current runtime has no approved trigger-eval executor, run the held-out cases manually with fresh context or runtime-supported subagents and record the observed trigger behavior.
-
-## Packaging And Reporting
-
-Package only when the current runtime and user need a `.skill` artifact. Otherwise, leave the skill in the repo and report the path, validation commands, proof receipts, and gaps.
-
-Final reports for OpenClaw skills should state: component classification, model-owned decisions, deterministic harness responsibilities, tools available/missing, memory behavior, source-authority and truth/synthesis boundaries, identity behavior, context behavior, skills used or added, guardrails/approvals, ownership/adoption state, attention behavior, backpressure/budget/fallback behavior, deletion/simplification result, cost/complexity tradeoff, RCA/human-counterfactual if relevant, rollback plan, acceptance proof, manual-proof gaps, and tests/evals added.
-
-## Reference Files
-
-Read only what the task needs:
-
-- `references/schemas.md` for eval, grading, and benchmark JSON shapes.
-- `agents/grader.md` when grading assertions against outputs.
-- `agents/analyzer.md` when interpreting benchmark patterns and hidden regressions.
-- `agents/comparator.md` for blind A/B comparison when a rigorous version comparison is needed.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/openclaw-agentic-skill-creator/SKILL.md" -->
-
 ### File: `.codex/skills/openclaw-agentic-tool-designer/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-agentic-tool-designer/SKILL.md" sha256="8fbe222b7bf2298fd52cb35049dfb23fd36f06f4c825fec1bf650ae1997b1fe5" bytes="6255" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/openclaw-agentic-tool-designer/SKILL.md" sha256="aa537992d0e6c119f11f458d91daaf07adbd60928a76f296c7cd35c43d618634" bytes="5154" trailing_newline="true" -->
 ````````
 ---
 name: openclaw-agentic-tool-designer
@@ -1862,16 +1270,7 @@ Prefer high-agent-affordance architecture: better source access, typed tools, co
 
 If you believe a lower-affordance pattern is correct, explain why and get explicit approval before implementing it.
 
-## Use this procedure
-
-1. **Name the affordance.** State what this lets the agent see, decide, verify, or do that it could not do before.
-2. **Delete first.** Ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill/source lane instead.
-3. **Choose the right primitive.** Use the decision table below before writing code.
-4. **Write a tool contract.** Include purpose, use/non-use, schemas, side effects, idempotency, errors, traces, and evals.
-5. **Design for the model caller.** Tool and parameter descriptions are UX copy for the model. Include examples and misuse examples.
-6. **Separate evidence from synthesis.** Raw source output, memory recall, model synthesis, candidate signal, and outbound artifact must be labeled differently.
-7. **Make failure recoverable.** Return structured error codes, human-readable cause, and the next safe action. Do not swallow failures.
-8. **Test tool choice and misuse.** Add evals where the agent should call the tool, should not call it, passes bad args, lacks permission, or faces conflicting tools.
+Before you add a tool, ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill or source lane instead.
 
 ## Choose skill vs tool vs source lane vs harness
 
@@ -1909,6 +1308,13 @@ Minimum fields:
 
 Run `scripts/lint_tool_contract.py <contract.json>` when you have a JSON contract.
 
+What the fields are for:
+
+- `model_description` and the parameter descriptions are UX copy for the model. Say when to use the tool and when not to.
+- `source_authority_role` keeps raw source output, memory recall, model synthesis, candidate signal, and outbound artifact labeled differently.
+- Each error code gives the cause and the next safe action. Do not swallow failures.
+- `eval_cases` test tool choice and misuse, not only schemas: the agent should call the tool, should not call it, passes bad arguments, lacks permission, or faces a conflicting tool.
+
 ## Agent-facing CLI requirements
 
 If the tool is a CLI command agents will call:
@@ -1939,50 +1345,11 @@ See `references/interface-failure-patterns.md` for examples. Watch especially fo
 - **Gaia / Gaia Brain memory:** a memory tool should distinguish raw source, remembered claim, synthesis, contradiction, and confidence. Writes need provenance and idempotency.
 - **Soho House bookmarks:** a bookmark-intake tool should expose original URL/text/media, classification candidate, and source gaps. It should not bury the trail behind a single score.
 
-## Output format
+## Approval
 
-Return:
-
-1. `Tool or non-tool decision` — keep/delete/skill/tool/source-lane/harness.
-2. `Tool contract` — with the required fields above.
-3. `Implementation notes` — smallest viable surface and where validation lives.
-4. `Tests/evals` — tool-choice, schema, permission, side-effect, source-authority, and misuse cases.
-5. `Approval needed` — any lower-affordance design, external write, destructive action, or live side effect.
-
-## When composing with Skill Creator
-
-If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-agentic-skill-creator` for the draft → eval → improve lifecycle.
+Get approval before any lower-affordance design, external write, destructive action, or live side effect.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/openclaw-agentic-tool-designer/SKILL.md" -->
-
-### File: `.codex/skills/review-agentic-architecture/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path=".codex/skills/review-agentic-architecture/SKILL.md" sha256="16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164" bytes="812" trailing_newline="true" -->
-````````
----
-name: review-agentic-architecture
-description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
----
-
-# Review Agentic Architecture
-
-## Checklist
-
-- Is the component correctly classified?
-- Are model-owned decisions separated from harness-owned responsibilities?
-- Are ambiguous decisions handled by adaptive policy rather than brittle regex or keyword routing?
-- Are tools typed, permissioned, observable, and tested?
-- Is memory scoped, evidenced, and contradiction-aware?
-- Is context assembled by policy rather than dumping everything?
-- Are risky side effects gated by approval and idempotency?
-- Are checkpoints and replay behavior safe?
-- Are evals included for positive and negative cases?
-
-## Output
-
-Return pass/fail with required changes.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path=".codex/skills/review-agentic-architecture/SKILL.md" -->
 
 ### File: `.github/pull_request_template.md`
 
@@ -2069,7 +1436,7 @@ agentic_architecture_pack/
 
 ### File: `AGENTS.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="a9298eadb1012b21c7fee649774e71242b27f5667ffb788d59e06ecb93b43131" bytes="12149" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="AGENTS.md" sha256="2a2f8bf963beb1e51a4f6315e0bc6d5ff4ec85015409a3b5ff432396bb60fbb8" bytes="11984" trailing_newline="true" -->
 ````````
 # AGENTS.md
 
@@ -2141,7 +1508,7 @@ Unit tests, schema validation, static checks, local deterministic simulations, a
 
 Deterministic code may enforce invariants, permissions, idempotency, schemas, source-authority labels, budgets, sandbox/tool policy, runtime status, request-level retries, audit logs, and side-effect gates. It must not become the agent's private reasoning loop.
 
-Skill/tool creation rule: use `skills/openclaw-agentic-skill-creator` when creating or improving OpenClaw-targeted skills. Use `uber-skill-creator` for general portable SKILL.md skills when it is installed; otherwise use the current runtime's general skill creator. Use `skills/openclaw-agentic-tool-designer` before implementing or reviewing OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
+Skill/tool creation rule: use the current runtime's skill creator when creating or improving skills. Use `skills/openclaw-agentic-tool-designer` before implementing or reviewing OpenClaw tools, MCP tools, function-calling schemas, agent-facing CLIs/scripts, source readers, memory APIs, write/publish actions, or tool-like workflow commands.
 
 Second rule: simplicity/deletion before machinery. Complexity has hidden downstream cost. Before adding an agent, schema, router, policy layer, eval harness, guardrail, workflow, dependency, or automation, run the deletion-first order:
 
@@ -2234,7 +1601,7 @@ If a Claude workflow needs specialized packaging, keep it as an adapter that poi
 
 ### File: `README.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="README.md" sha256="3b5f3a94c03e53ebba2008518d08f8ea8280d697e44f58fa2a1fdbe82206b584" bytes="4250" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="README.md" sha256="9f938cbedb113dc5fcd4bed5a5334488bcf4a856a2ef526ad644a6ecbc7a42eb" bytes="4511" trailing_newline="true" -->
 ````````
 # Agentic Architecture Guide
 
@@ -2258,7 +1625,7 @@ Simplicity is a first-class design constraint: question requirements, delete unn
 - `scripts/` and `tests/` — lightweight validation/eval checks that keep the guide operational instead of purely aspirational.
 - `docs/` — detailed architecture docs for tools, memory, context, evals, source authority, subagents, durable execution, and cross-agent operating model.
 - `.agentic/` — starter YAML policies/catalogs/schemas.
-- `skills/` — starter skills for designing tools, memory, context engines, source lanes, and evals.
+- `skills/` — one skill, `openclaw-agentic-tool-designer`, for designing tools that agents call. Six short checklist skills (memory, context, source lanes, evals, architecture review) and the OpenClaw skill creator were removed on 2026-11-13: current models cover them unaided, and `docs/` remains the reference. Commit `e30ab57` is the last one that has them.
 
 ## Use on a new computer
 
@@ -2614,7 +1981,7 @@ Report known gaps explicitly instead of letting "tests pass" stand in for system
 
 ### File: `docs/QUICK_REFERENCE.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/QUICK_REFERENCE.md" sha256="584d884aff7bb210ad82d40f562d3c5b851a740cf5811734f247f8e3e7b97a25" bytes="16413" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/QUICK_REFERENCE.md" sha256="ebcb3548f1280e312b802b1cf647705e7607cfc710b3e98c4b13d0b2d2049b09" bytes="16416" trailing_newline="true" -->
 ````````
 # Quick reference for coding agents
 
@@ -2645,7 +2012,7 @@ If your task touches **ambiguous intent, context selection, tool choice, memory 
 
 Before editing, fill or assemble `docs/coding-agent-work-contract.md` using `.agentic/coding_agent_work_contract_template.md` unless the task is tiny and deterministic. Minimum fields: Objective · In scope · Out of scope/stop conditions · Orientation evidence · Plan · Evidence required · Skipped evidence/gaps · Learning trail.
 
-Artifact precedence: Tier 1 contained coding work can use this contract as the plan; Tier 2/3 `uberplan` should extend it, not duplicate it.
+Artifact precedence: Tier 1 contained coding work can use this contract as the plan; a fuller Tier 2/3 plan should extend it, not duplicate it.
 
 ---
 
@@ -7410,7 +6777,7 @@ source -> identity -> claim -> authority -> contradiction -> synthesis -> action
 
 ### File: `docs/coding-agent-work-contract.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/coding-agent-work-contract.md" sha256="6359cd69ffb71e08c73b811406589bf2da4b7cc2e51cbd90b67ac43a26d01904" bytes="7398" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/coding-agent-work-contract.md" sha256="359fc1d0b0aa6c292bb6e3092998926079439750c004bd1b9306bdc8dcf15406" bytes="7375" trailing_newline="true" -->
 ````````
 # Coding Agent Work Contract
 
@@ -7596,7 +6963,7 @@ Do not create duplicate planning bureaucracy.
 
 - Tier 0 / tiny deterministic work: inline note is enough.
 - Tier 1 / contained non-trivial coding: this work contract is usually the plan artifact.
-- Tier 2/3 / high-risk, agentic-system, runtime, prompt/skill, cross-repo, deletion/refactor, or ambiguous architecture work: `uberplan` may extend this contract into a full plan contract, but should reuse the same objective, scope, evidence, and stop-condition fields instead of creating an unrelated second plan.
+- Tier 2/3 / high-risk, agentic-system, runtime, prompt/skill, cross-repo, deletion/refactor, or ambiguous architecture work: a fuller plan may extend this contract, but should reuse the same objective, scope, evidence, and stop-condition fields instead of creating an unrelated second plan.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/coding-agent-work-contract.md" -->
 
@@ -8799,7 +8166,7 @@ Both are required. Neither replaces the other.
 
 ### File: `docs/skills.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="docs/skills.md" sha256="8be0b43b18dcfc78f8ee1a503a3f46d0b6b6d38567dc3a5f16e453c363a71741" bytes="3090" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="docs/skills.md" sha256="ccb7c6237e94332451ccfe87ff45c991b96667b47f04bc9e17b947ee68051160" bytes="2737" trailing_newline="true" -->
 ````````
 # Skills for Agentic Systems
 
@@ -8852,15 +8219,9 @@ A skill should specify:
 
 Keep root instructions short. Put detailed procedures in skills so they load only when relevant. Keep each `SKILL.md` concise enough for agent context; move bulky examples, fixtures, and reference material into optional subdirectories.
 
-## Initial skills in this pack
+## Skills in this pack
 
-- `openclaw-agentic-skill-creator`
 - `openclaw-agentic-tool-designer`
-- `design-agent-memory`
-- `design-source-lane`
-- `design-context-engine`
-- `build-agent-eval`
-- `review-agentic-architecture`
 
 ## Skills for operating systems
 
@@ -8868,7 +8229,7 @@ Skills should package procedures that prevent architectural drift: designing sou
 
 Prefer a skill when the repo needs a repeatable way to do a class of work. Prefer a deterministic script or eval when consistency matters more than judgment. Prefer deleting or simplifying the process when the skill would only preserve unnecessary complexity.
 
-When creating or improving OpenClaw-targeted skills, use `openclaw-agentic-skill-creator` as the lifecycle: capture intent, draft, test with realistic prompts, compare against a baseline when possible, collect human feedback, and iterate. For general portable SKILL.md skills, use `uber-skill-creator` when it is installed; otherwise use the current runtime's general skill creator. If the OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, use `openclaw-agentic-tool-designer` before implementation so the resulting affordance is agent-usable, typed, recoverable, and traceable.
+When creating or improving a skill, use the current runtime's skill creator: capture intent, draft, test with realistic prompts, compare against a baseline when possible, collect human feedback, and iterate. If the skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, use `openclaw-agentic-tool-designer` before implementation so the resulting affordance is agent-usable, typed, recoverable, and traceable.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="docs/skills.md" -->
 
@@ -9838,219 +9199,9 @@ if __name__ == "__main__":
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="scripts/validate_agentic_pack.py" -->
 
-### File: `skills/build-agent-eval/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/build-agent-eval/SKILL.md" sha256="89475b2196b994dd4c316d49beb760e80eea65db8d932c7dae02dfb8f8fc1f9c" bytes="531" trailing_newline="true" -->
-````````
----
-name: build-agent-eval
-description: Use when adding tests or evals for agentic behavior.
----
-
-# Build Agent Eval
-
-## Procedure
-
-1. Identify the behavior being tested.
-2. Create positive and negative cases.
-3. Test process, not only final answer.
-4. Capture tool choice, memory retrieval, context use, approval gates, recovery, and stop conditions.
-5. Add cheap tests for CI and heavier tests for release or nightly runs.
-6. Ensure failures are traceable.
-
-## Output
-
-Return eval cases, expected traces, and pass/fail criteria.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path="skills/build-agent-eval/SKILL.md" -->
-
-### File: `skills/design-agent-memory/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/design-agent-memory/SKILL.md" sha256="bc252292cace006a3496b0e9e547a053100f63da47f4f1b36b5135b9ae69c5d1" bytes="692" trailing_newline="true" -->
-````````
----
-name: design-agent-memory
-description: Use when adding or reviewing memory search, memory writes, promotion, contradiction, or recall behavior.
----
-
-# Design Agent Memory
-
-## Procedure
-
-1. Identify the memory type: working, episodic, semantic, or procedural.
-2. Define scope: user, org, repo, project, entity, session, or agent.
-3. Require evidence for durable claims.
-4. Use candidate writes before promotion unless policy allows direct promotion.
-5. Handle contradiction, supersession, staleness, and expiration.
-6. Ensure memory retrieval is evaluated.
-7. Ensure memory used in final answers is traceable.
-
-## Output
-
-Return memory schema changes, memory tool changes, and eval cases.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path="skills/design-agent-memory/SKILL.md" -->
-
-### File: `skills/design-context-engine/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/design-context-engine/SKILL.md" sha256="34e530f38a210b85d75a5cd8ee214f8a80880fc08ac42d6882b6febfda4e1bd4" bytes="624" trailing_newline="true" -->
-````````
----
-name: design-context-engine
-description: Use when changing context assembly, compaction, retrieval, or prompt budgeting.
----
-
-# Design Context Engine
-
-## Procedure
-
-1. Define always-loaded context.
-2. Define retrieval-loaded context.
-3. Define activation-loaded context such as full tool schemas and skill bodies.
-4. Add token budgets and priority rules.
-5. Add source ledger entries for every context item.
-6. Define compaction triggers.
-7. Test that goals, constraints, evidence, open questions, pending approvals, and artifacts survive compaction.
-
-## Output
-
-Return context policy changes and compaction eval cases.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path="skills/design-context-engine/SKILL.md" -->
-
-### File: `skills/design-source-lane/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/design-source-lane/SKILL.md" sha256="a26e7e4d13a5d4775fe85e265fd7a74083e75d28faf3fc541955f199c0ba9460" bytes="1208" trailing_newline="true" -->
-````````
----
-name: design-source-lane
-description: Use when adding or reviewing a source lane, source-authority rule, identity-resolution path, noisy-lane promotion policy, sidecar adoption state, or synthesis boundary.
----
-
-# Design Source Lane
-
-## Procedure
-
-1. Identify the artifact role: raw source, structured truth, retrieval index, recall memory, synthesis artifact, candidate signal, sidecar, or outbound artifact.
-2. Define raw capture and idempotency.
-3. Define identity resolution: aliases, external IDs, merge evidence, and unmerge path.
-4. Define claim categories and source authority by category.
-5. Define freshness, staleness, and contradiction behavior.
-6. Define promotion rules and review queues.
-7. Define health checks and trace fields.
-8. Define synthesis behavior without making synthesis authoritative by default.
-9. Define attention behavior: silent, internal record, review queue, ask, notify, interrupt, or approval.
-10. Add evals for conflict, stale evidence, bad identity merge, noisy-lane promotion, and accidental sidecar promotion.
-
-## Output
-
-Return a source-lane contract, affected artifact roles, identity policy, authority matrix, adoption state, attention policy, and eval cases.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path="skills/design-source-lane/SKILL.md" -->
-
-### File: `skills/openclaw-agentic-skill-creator/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-agentic-skill-creator/SKILL.md" sha256="dbca080ae4edef4054c43b56b44ff624cb3a5ce513ae243057abb2502eb20620" bytes="10220" trailing_newline="true" -->
-````````
----
-name: openclaw-agentic-skill-creator
-description: Create, modify, evaluate, or optimize OpenClaw-targeted agentic skills and skill-like workflows. Use when Codex, Claude, or another coding agent is asked to turn an OpenClaw/Gaia/Type0/Soho/agentic-media workflow into a skill, improve an OpenClaw skill, run eval-driven OpenClaw skill iteration, benchmark an OpenClaw skill, or tune an OpenClaw skill description. Do not use as the general portable skill creator; use `uber-skill-creator` for general SKILL.md skills when it is installed.
----
-
-# OpenClaw Agentic Skill Creator
-
-Create and improve skills for OpenClaw, Gaia/Gaia Brain, Type0, Soho House, and shared agentic-media work. This skill is the OpenClaw-specific counterpart to `uber-skill-creator`: use this when the skill depends on OpenClaw runtime behavior, tenant/workspace policy, live source lanes, agent affordance, local proof conventions, or live-safe OpenClaw parity receipts. Use `uber-skill-creator` for portable SKILL.md work that should run across Codex, Claude, and compatible agents without OpenClaw-specific assumptions.
-
-Keep provenance visible when adapting public skill-creator methods, but do not copy proprietary or leaked code. Translate runtime examples into the current executor; do not assume Claude-specific subprocesses, slash commands, browser viewers, or OpenClaw tools unless this runtime exposes them and the user approved that path.
-
-## OpenClaw Production Contract
-
-Before creating or expanding a skill, run the smallest useful non-skill check. A direct answer, source note, typed tool, source-lane contract, deterministic script, or workflow affordance may be better. Promote to a skill only when repeated agent behavior, discovery, source-lane use, or reusable judgment guidance is the real need.
-
-For production, library, governed, Slack-visible, side-effecting, tenant-sensitive, or cross-agent skills, capture the compact contract before adding release machinery:
-
-- owned recurring job and expected OpenClaw agent behavior;
-- should-trigger, should-not-trigger, and near-neighbor prompts;
-- tenant, workspace, channel, account, project, and actor boundaries;
-- required source lanes, tools, memory/context packets, permissions, and live-data access;
-- scripts, assets, references, and deterministic checks that carry real behavior;
-- trigger evals, output evals, live-safe OpenClaw proof receipts, owner, review cadence, maturity tier, and rollback/idempotency rule;
-- source-authority boundary, identity-resolution behavior, synthesis boundary, side-effect boundary, budget/fallback policy, and attention/notification behavior.
-
-Use maturity tiers to select gates, not ceremony: `Scaffold` gets quick validation; `Production` adds trigger/output evals; `Library` adds packaging/runtime checks and route-confusion coverage; `Governed` adds owner review, regression history, live-safe proof, and explicit acceptance evidence.
-
-Any usage or drift loop must be metadata-only and local-first by default. Acceptable telemetry is skill name/version, event type, source/client, command name without arguments, outcome, failure type, and timestamp. Do not store raw prompts, Slack messages, transcripts, private files, model outputs, command arguments, or reviewer notes as telemetry.
-
-## Affordance And Proof Rules
-
-Preserve high agent affordance. Help agents inspect sources, choose clear tools, apply judgment, recover from gaps, and leave traces. Do not encode brittle gates, hidden routing layers, semantic judges, or deterministic substitutes for judgment unless the user explicitly approves the lower-affordance design.
-
-If the skill introduces or changes scripts, CLIs, MCP tools, function-calling schemas, source readers, memory APIs, write/publish actions, or side effects, use `openclaw-agentic-tool-designer` before implementation and include the resulting tool contract or summary in the skill/eval package.
-
-For behavior that an OpenClaw agent is supposed to perform, prove the workflow before readiness claims:
-
-1. Run a fresh self-subagent or runtime-native executor with the intended context, tools, source lanes, skills, recovery instructions, and no hidden rationale.
-2. If it fails, improve affordances: context packet, skill wording, tool descriptions, source access, task frame, recovery instructions, or audit trail. Do not patch with private harness state.
-3. Run the same workflow with a real OpenClaw agent using only normal OpenClaw scaffold plus the successful context/skill/tool profile.
-4. Preserve receipts: self-subagent result, OpenClaw `sessionKey`/`sessionId` or transcript path, tool outputs, source artifacts, eval outputs, and any redactions.
-
-If live proof is unsafe or unavailable, label the gap. Do not present local validation or synthetic evals as OpenClaw parity proof.
-
-## Creation Workflow
-
-1. **Classify and route.** If the request is portable, redirect to `uber-skill-creator`. If it is OpenClaw-specific, continue here.
-2. **Capture intent from evidence first.** Mine the conversation, files, transcripts, source lanes, operator corrections, and observed tools before asking questions.
-3. **Ask only material gaps.** Clarify trigger/non-trigger contexts, expected outputs, tenant/source/tool permissions, side effects, success criteria, and proof requirements.
-4. **Draft the skill.** Keep trigger information in the frontmatter `description`. Keep the body procedural, concise, and OpenClaw-specific. Use imperative instructions, short rationale where it improves behavior, and references/scripts/assets only when they reduce active-context load or repeated work.
-5. **Use progressive disclosure.** `SKILL.md` is active context; larger examples, schemas, and recipes belong in `references/`; deterministic repeatable work belongs in `scripts/`; reusable output inputs belong in `assets/`. For multi-variant skills, route to only the relevant reference.
-6. **Validate shape.** Run the available quick validator and any package-specific lint/tests. Validation checks package integrity; it does not replace agentic proof.
-
-## Eval-Driven Iteration
-
-Use eval-driven iteration for production/library/governed skills, broadly installed skills, behavior-changing skills, or any skill whose correctness is not obvious from inspection.
-
-1. **Draft realistic eval prompts.** Use real operator-style OpenClaw/Gaia/Type0/Soho/agentic-media tasks. Include should-trigger, should-not-trigger, near-neighbor, source-lane, side-effect, and tenant-boundary cases as relevant.
-2. **Run with-skill and baseline together.** For a new skill, baseline is no skill. For an existing skill, baseline is the previous or snapshotted version. Use the current runtime's fresh subagent/executor; in OpenClaw, use the exposed session runner when available.
-3. **Capture artifacts.** Store prompts, input files, outputs, transcripts, timing/token data when available, tool receipts, source handles, and eval metadata under an iteration workspace.
-4. **Draft assertions while runs execute.** Objective checks should cover observable outputs, source-authority labels, forbidden side effects, receipt presence, and tenant/source boundaries. Keep subjective judgment for human review.
-5. **Grade and aggregate.** Use scripts where checks are deterministic. Produce a benchmark summary and preserve qualitative notes; read transcripts, not only final outputs.
-6. **Show the human the results.** Prefer the bundled `eval-viewer/generate_review.py` with `--static` in headless OpenClaw environments, or an equivalent static report when the viewer is unavailable.
-7. **Iterate on affordance.** Improve context, wording, resources, examples, tool descriptions, or source-lane guidance. Avoid overfitting to a tiny prompt set or adding coercive rules where clearer affordances would work.
-8. **Repeat until acceptable.** Expand the eval set before claiming broad coverage.
-
-Convert missed triggers into trigger evals, bad outputs into output assertions, and script/tool errors into smoke tests or tool-contract fixes.
-
-## Description Optimization
-
-The frontmatter `description` is the primary trigger surface. After creating or materially changing a skill, tune it with held-out trigger evals:
-
-1. Create 20 realistic queries: roughly half should trigger and half should not. Include messy operator phrasing, local project names, channel/source-lane/tool names, abbreviations, adjacent portable-skill requests, and near misses.
-2. Review the eval set with the user when practical; weak trigger evals produce weak descriptions.
-3. Keep a champion and challenger. Score the current description, revise from failures, then retest on held-out examples. Promote only when the challenger improves trigger precision/recall without weakening must-pass cases or stealing portable work from `uber-skill-creator`.
-4. Report before/after descriptions, scores, failure modes, and remaining ambiguity.
-
-If the current runtime has no approved trigger-eval executor, run the held-out cases manually with fresh context or runtime-supported subagents and record the observed trigger behavior.
-
-## Packaging And Reporting
-
-Package only when the current runtime and user need a `.skill` artifact. Otherwise, leave the skill in the repo and report the path, validation commands, proof receipts, and gaps.
-
-Final reports for OpenClaw skills should state: component classification, model-owned decisions, deterministic harness responsibilities, tools available/missing, memory behavior, source-authority and truth/synthesis boundaries, identity behavior, context behavior, skills used or added, guardrails/approvals, ownership/adoption state, attention behavior, backpressure/budget/fallback behavior, deletion/simplification result, cost/complexity tradeoff, RCA/human-counterfactual if relevant, rollback plan, acceptance proof, manual-proof gaps, and tests/evals added.
-
-## Reference Files
-
-Read only what the task needs:
-
-- `references/schemas.md` for eval, grading, and benchmark JSON shapes.
-- `agents/grader.md` when grading assertions against outputs.
-- `agents/analyzer.md` when interpreting benchmark patterns and hidden regressions.
-- `agents/comparator.md` for blind A/B comparison when a rigorous version comparison is needed.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path="skills/openclaw-agentic-skill-creator/SKILL.md" -->
-
 ### File: `skills/openclaw-agentic-tool-designer/SKILL.md`
 
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-agentic-tool-designer/SKILL.md" sha256="8fbe222b7bf2298fd52cb35049dfb23fd36f06f4c825fec1bf650ae1997b1fe5" bytes="6255" trailing_newline="true" -->
+<!-- AGENTIC_BUNDLE_FILE_START path="skills/openclaw-agentic-tool-designer/SKILL.md" sha256="aa537992d0e6c119f11f458d91daaf07adbd60928a76f296c7cd35c43d618634" bytes="5154" trailing_newline="true" -->
 ````````
 ---
 name: openclaw-agentic-tool-designer
@@ -10068,16 +9219,7 @@ Prefer high-agent-affordance architecture: better source access, typed tools, co
 
 If you believe a lower-affordance pattern is correct, explain why and get explicit approval before implementing it.
 
-## Use this procedure
-
-1. **Name the affordance.** State what this lets the agent see, decide, verify, or do that it could not do before.
-2. **Delete first.** Ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill/source lane instead.
-3. **Choose the right primitive.** Use the decision table below before writing code.
-4. **Write a tool contract.** Include purpose, use/non-use, schemas, side effects, idempotency, errors, traces, and evals.
-5. **Design for the model caller.** Tool and parameter descriptions are UX copy for the model. Include examples and misuse examples.
-6. **Separate evidence from synthesis.** Raw source output, memory recall, model synthesis, candidate signal, and outbound artifact must be labeled differently.
-7. **Make failure recoverable.** Return structured error codes, human-readable cause, and the next safe action. Do not swallow failures.
-8. **Test tool choice and misuse.** Add evals where the agent should call the tool, should not call it, passes bad args, lacks permission, or faces conflicting tools.
+Before you add a tool, ask whether the requirement can be removed, simplified, handled by an existing tool, or expressed as a skill or source lane instead.
 
 ## Choose skill vs tool vs source lane vs harness
 
@@ -10115,6 +9257,13 @@ Minimum fields:
 
 Run `scripts/lint_tool_contract.py <contract.json>` when you have a JSON contract.
 
+What the fields are for:
+
+- `model_description` and the parameter descriptions are UX copy for the model. Say when to use the tool and when not to.
+- `source_authority_role` keeps raw source output, memory recall, model synthesis, candidate signal, and outbound artifact labeled differently.
+- Each error code gives the cause and the next safe action. Do not swallow failures.
+- `eval_cases` test tool choice and misuse, not only schemas: the agent should call the tool, should not call it, passes bad arguments, lacks permission, or faces a conflicting tool.
+
 ## Agent-facing CLI requirements
 
 If the tool is a CLI command agents will call:
@@ -10145,50 +9294,11 @@ See `references/interface-failure-patterns.md` for examples. Watch especially fo
 - **Gaia / Gaia Brain memory:** a memory tool should distinguish raw source, remembered claim, synthesis, contradiction, and confidence. Writes need provenance and idempotency.
 - **Soho House bookmarks:** a bookmark-intake tool should expose original URL/text/media, classification candidate, and source gaps. It should not bury the trail behind a single score.
 
-## Output format
+## Approval
 
-Return:
-
-1. `Tool or non-tool decision` — keep/delete/skill/tool/source-lane/harness.
-2. `Tool contract` — with the required fields above.
-3. `Implementation notes` — smallest viable surface and where validation lives.
-4. `Tests/evals` — tool-choice, schema, permission, side-effect, source-authority, and misuse cases.
-5. `Approval needed` — any lower-affordance design, external write, destructive action, or live side effect.
-
-## When composing with Skill Creator
-
-If a new or changed OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, invoke this tool-design procedure before shipping the skill. If you are creating or improving the OpenClaw skill itself, use `openclaw-agentic-skill-creator` for the draft → eval → improve lifecycle.
+Get approval before any lower-affordance design, external write, destructive action, or live side effect.
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="skills/openclaw-agentic-tool-designer/SKILL.md" -->
-
-### File: `skills/review-agentic-architecture/SKILL.md`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="skills/review-agentic-architecture/SKILL.md" sha256="16a052fb650ea9d4f198406374f3d30a60fe1140b0bdcda305f7fb200a9cf164" bytes="812" trailing_newline="true" -->
-````````
----
-name: review-agentic-architecture
-description: Use before merging changes to agent loops, tools, memory, context, skills, subagents, guardrails, or evals.
----
-
-# Review Agentic Architecture
-
-## Checklist
-
-- Is the component correctly classified?
-- Are model-owned decisions separated from harness-owned responsibilities?
-- Are ambiguous decisions handled by adaptive policy rather than brittle regex or keyword routing?
-- Are tools typed, permissioned, observable, and tested?
-- Is memory scoped, evidenced, and contradiction-aware?
-- Is context assembled by policy rather than dumping everything?
-- Are risky side effects gated by approval and idempotency?
-- Are checkpoints and replay behavior safe?
-- Are evals included for positive and negative cases?
-
-## Output
-
-Return pass/fail with required changes.
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path="skills/review-agentic-architecture/SKILL.md" -->
 
 ### File: `tests/__init__.py`
 
@@ -10367,56 +9477,6 @@ def test_lint_tool_contract_rejects_unhelpful_error_codes(tmp_path: Path) -> Non
     assert "error_codes[0]_missing_agent_next_action" in payload["errors"]
 ````````
 <!-- AGENTIC_BUNDLE_FILE_END path="tests/agentic/test_lint_tool_contract.py" -->
-
-### File: `tests/agentic/test_openclaw_skill_creator_contract.py`
-
-<!-- AGENTIC_BUNDLE_FILE_START path="tests/agentic/test_openclaw_skill_creator_contract.py" sha256="07259f8eb141cf3b269f4e77564d72401135bb28a6e243d42c9516c0c455ce19" bytes="1844" trailing_newline="true" -->
-````````
-from pathlib import Path
-import unittest
-
-
-ROOT = Path(__file__).resolve().parents[2]
-SKILL = ROOT / "skills" / "openclaw-agentic-skill-creator" / "SKILL.md"
-
-
-class OpenClawSkillCreatorContractTests(unittest.TestCase):
-    def test_keeps_production_contract_and_privacy_boundary(self) -> None:
-        body = SKILL.read_text(encoding="utf-8")
-
-        self.assertIn("## OpenClaw Production Contract", body)
-        self.assertIn("smallest useful non-skill check", body)
-        self.assertIn("direct answer, source note, typed tool, source-lane contract, deterministic script", body)
-        self.assertIn("should-trigger, should-not-trigger, and near-neighbor prompts", body)
-        self.assertIn(
-            "required source lanes, tools, memory/context packets, permissions, and live-data access",
-            body,
-        )
-        self.assertIn("live-safe OpenClaw proof receipts", body)
-        self.assertIn("source-authority boundary", body)
-        self.assertIn("side-effect boundary", body)
-        self.assertIn("rollback/idempotency rule", body)
-        self.assertIn("Scaffold", body)
-        self.assertIn("Production", body)
-        self.assertIn("Library", body)
-        self.assertIn("Governed", body)
-        self.assertIn("metadata-only and local-first", body)
-        self.assertIn("Do not store raw prompts", body)
-
-        section = body.split("## OpenClaw Production Contract", 1)[1].split("## Affordance And Proof Rules", 1)[0]
-        self.assertLess(len(section.encode("utf-8")), 3000)
-        self.assertNotIn("```python", section)
-        self.assertNotIn("```sh", section)
-        self.assertNotIn("```bash", section)
-        self.assertNotIn("```js", section)
-        self.assertNotIn("subprocess", section)
-        self.assertNotIn("sqlite", section.lower())
-
-
-if __name__ == "__main__":
-    unittest.main()
-````````
-<!-- AGENTIC_BUNDLE_FILE_END path="tests/agentic/test_openclaw_skill_creator_contract.py" -->
 
 ### File: `tests/agentic/test_validate_agentic_pack.py`
 

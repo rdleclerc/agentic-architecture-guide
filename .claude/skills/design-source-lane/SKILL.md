@@ -1,1 +1,0 @@
-../../../skills/design-source-lane/SKILL.md

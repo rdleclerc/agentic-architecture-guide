@@ -1,1 +1,0 @@
-../../../skills/design-agent-memory/SKILL.md

@@ -27,7 +27,7 @@ If your task touches **ambiguous intent, context selection, tool choice, memory 
 
 Before editing, fill or assemble `docs/coding-agent-work-contract.md` using `.agentic/coding_agent_work_contract_template.md` unless the task is tiny and deterministic. Minimum fields: Objective · In scope · Out of scope/stop conditions · Orientation evidence · Plan · Evidence required · Skipped evidence/gaps · Learning trail.
 
-Artifact precedence: Tier 1 contained coding work can use this contract as the plan; Tier 2/3 `uberplan` should extend it, not duplicate it.
+Artifact precedence: Tier 1 contained coding work can use this contract as the plan; a fuller Tier 2/3 plan should extend it, not duplicate it.
 
 ---
 

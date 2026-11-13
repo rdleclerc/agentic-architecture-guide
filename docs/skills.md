@@ -49,15 +49,9 @@ A skill should specify:
 
 Keep root instructions short. Put detailed procedures in skills so they load only when relevant. Keep each `SKILL.md` concise enough for agent context; move bulky examples, fixtures, and reference material into optional subdirectories.
 
-## Initial skills in this pack
+## Skills in this pack
 
-- `openclaw-agentic-skill-creator`
 - `openclaw-agentic-tool-designer`
-- `design-agent-memory`
-- `design-source-lane`
-- `design-context-engine`
-- `build-agent-eval`
-- `review-agentic-architecture`
 
 ## Skills for operating systems
 
@@ -65,4 +59,4 @@ Skills should package procedures that prevent architectural drift: designing sou
 
 Prefer a skill when the repo needs a repeatable way to do a class of work. Prefer a deterministic script or eval when consistency matters more than judgment. Prefer deleting or simplifying the process when the skill would only preserve unnecessary complexity.
 
-When creating or improving OpenClaw-targeted skills, use `openclaw-agentic-skill-creator` as the lifecycle: capture intent, draft, test with realistic prompts, compare against a baseline when possible, collect human feedback, and iterate. For general portable SKILL.md skills, use `uber-skill-creator` when it is installed; otherwise use the current runtime's general skill creator. If the OpenClaw skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, use `openclaw-agentic-tool-designer` before implementation so the resulting affordance is agent-usable, typed, recoverable, and traceable.
+When creating or improving a skill, use the current runtime's skill creator: capture intent, draft, test with realistic prompts, compare against a baseline when possible, collect human feedback, and iterate. If the skill introduces scripts, CLIs, MCP tools, function-calling schemas, source lanes, memory APIs, or side effects, use `openclaw-agentic-tool-designer` before implementation so the resulting affordance is agent-usable, typed, recoverable, and traceable.
